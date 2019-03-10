@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  
+  <url>
+    <loc>http://blog.acwong.org/2019/02/28/one-pixel-image-send-data/</loc>
+    
+    <lastmod>2019-03-10T08:54:52.066Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.acwong.org/tags/index.html</loc>
+    
+    <lastmod>2019-03-10T08:54:52.066Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.acwong.org/2016/09/05/notes-of-javascript-patterns-observer/</loc>
+    
+    <lastmod>2019-03-10T08:54:52.066Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.acwong.org/2016/12/21/notes-of-javascript-patterns-mediator/</loc>
+    
+    <lastmod>2019-03-10T08:54:52.066Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.acwong.org/2016/08/16/notes-of-javascript-patterns-proxy/</loc>
+    
+    <lastmod>2019-03-10T08:54:52.066Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.acwong.org/2016/07/23/notes-of-javascript-patterns-singleton/</loc>
+    
+    <lastmod>2019-03-10T08:54:52.066Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.acwong.org/2016/12/24/notes-of-javascript-patterns-state/</loc>
+    
+    <lastmod>2019-03-10T08:54:52.066Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.acwong.org/2016/08/02/notes-of-javascript-patterns-strategy/</loc>
+    
+    <lastmod>2019-03-10T08:54:52.066Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.acwong.org/2016/08/28/notes-of-javascript-patterns-iterator/</loc>
+    
+    <lastmod>2019-03-10T08:54:52.066Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.acwong.org/2016/12/13/notes-of-javascript-patterns-template-method/</loc>
+    
+    <lastmod>2019-03-10T08:54:52.066Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.acwong.org/2018/05/19/sql-n-to-m-with-bitwise-operation/</loc>
+    
+    <lastmod>2019-03-10T08:54:52.066Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.acwong.org/2014/12/30/standard-event-object-and-IE-event-object/</loc>
+    
+    <lastmod>2019-03-10T08:54:52.066Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.acwong.org/2019/03/10/three-column-layout/</loc>
+    
+    <lastmod>2019-03-10T08:54:52.066Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.acwong.org/2017/03/28/vuex-gank-app/</loc>
+    
+    <lastmod>2019-03-10T08:54:52.066Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.acwong.org/about/index.html</loc>
+    
+    <lastmod>2019-03-10T08:54:52.066Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.acwong.org/categories/index.html</loc>
+    
+    <lastmod>2019-03-10T08:54:52.066Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.acwong.org/2015/06/22/es6-promise/</loc>
+    
+    <lastmod>2019-03-10T08:54:52.062Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.acwong.org/2018/04/18/introduction-to-IIFE/</loc>
+    
+    <lastmod>2019-03-10T08:54:52.062Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.acwong.org/2018/07/29/javascript-object-notes/</loc>
+    
+    <lastmod>2019-03-10T08:54:52.062Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.acwong.org/2018/07/23/javascript-this/</loc>
+    
+    <lastmod>2019-03-10T08:54:52.062Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.acwong.org/2015/03/05/json-notes/</loc>
+    
+    <lastmod>2019-03-10T08:54:52.062Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.acwong.org/2016/12/28/list-of-javascript-patterns-notes/</loc>
+    
+    <lastmod>2019-03-10T08:54:52.062Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.acwong.org/2015/03/23/make-animation-with-steps-and-css-sprite/</loc>
+    
+    <lastmod>2019-03-10T08:54:52.062Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.acwong.org/2014/12/06/negative-margins/</loc>
+    
+    <lastmod>2019-03-10T08:54:52.062Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.acwong.org/2014/11/15/2048-with-seajs/</loc>
+    
+    <lastmod>2019-03-10T08:54:52.062Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.acwong.org/2017/06/24/javascript-async-programming/</loc>
+    
+    <lastmod>2019-03-10T08:54:52.062Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.acwong.org/2015/03/03/node-test-of-mysql-and-redis/</loc>
+    
+    <lastmod>2019-03-10T08:54:52.062Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.acwong.org/2016/12/26/notes-of-javascript-patterns-adapter/</loc>
+    
+    <lastmod>2019-03-10T08:54:52.062Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.acwong.org/2016/12/20/notes-of-javascript-patterns-chain-of-responsibility/</loc>
+    
+    <lastmod>2019-03-10T08:54:52.062Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.acwong.org/2016/11/30/notes-of-javascript-patterns-command/</loc>
+    
+    <lastmod>2019-03-10T08:54:52.062Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.acwong.org/2016/12/06/notes-of-javascript-patterns-composite/</loc>
+    
+    <lastmod>2019-03-10T08:54:52.062Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.acwong.org/2016/12/22/notes-of-javascript-patterns-decorator/</loc>
+    
+    <lastmod>2019-03-10T08:54:52.062Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.acwong.org/2014/11/16/2048-with-seajs-and-spm3/</loc>
+    
+    <lastmod>2019-03-10T08:54:52.062Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.acwong.org/2016/12/16/notes-of-javascript-patterns-flyweight/</loc>
+    
+    <lastmod>2019-03-10T08:54:52.062Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.acwong.org/2016/08/23/a-new-tecknology-of-prohibiting-from-selecting-text/</loc>
+    
+    <lastmod>2019-03-10T08:54:52.062Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.acwong.org/2016/03/20/auto-deploy-hexo-with-travis-CI/</loc>
+    
+    <lastmod>2019-03-10T08:54:52.062Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.acwong.org/2015/04/22/backbone-command-line-with-webpack-and-gulp/</loc>
+    
+    <lastmod>2019-03-10T08:54:52.062Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.acwong.org/2015/04/13/backbone-command-line/</loc>
+    
+    <lastmod>2019-03-10T08:54:52.062Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.acwong.org/2014/10/28/bubbling-and-capturing/</loc>
+    
+    <lastmod>2019-03-10T08:54:52.062Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.acwong.org/2016/03/05/change-webpack-certificate/</loc>
+    
+    <lastmod>2019-03-10T08:54:52.062Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.acwong.org/2015/05/26/chrome-file-associations-debugging/</loc>
+    
+    <lastmod>2019-03-10T08:54:52.062Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.acwong.org/2015/05/20/clean-torrents-update/</loc>
+    
+    <lastmod>2019-03-10T08:54:52.062Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.acwong.org/2015/03/25/clean-your-torrent-with-node/</loc>
+    
+    <lastmod>2019-03-10T08:54:52.062Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.acwong.org/2015/03/17/common-picture-hover-effects/</loc>
+    
+    <lastmod>2019-03-10T08:54:52.062Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.acwong.org/2014/12/21/css3-middle-translate-and-relative/</loc>
+    
+    <lastmod>2019-03-10T08:54:52.062Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.acwong.org/2015/01/19/different-of-mouse-event/</loc>
+    
+    <lastmod>2019-03-10T08:54:52.062Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.acwong.org/2017/09/23/es6-destructuring-assignment/</loc>
+    
+    <lastmod>2019-03-10T08:54:52.062Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.acwong.org/2014/11/08/drag-and-drop/</loc>
+    
+    <lastmod>2019-03-10T08:54:52.062Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.acwong.org/2015/01/29/node-draw-number-on-head-image/</loc>
+    
+    <lastmod>2019-03-10T08:54:52.062Z</lastmod>
+    
+  </url>
+  
+</urlset>

@@ -1,0 +1,25 @@
+<!DOCTYPE html><html><head><meta name="generator" content="Hexo 3.8.0"><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> 清洗种子脚本更新 | ac黄的博客</title><meta name="description" content="清洗种子脚本更新。"><link rel="canonical" href="http://blog.acwong.org/2015/05/20/clean-torrents-update/"><link rel="alternative" href="http://blog.acwong.org/2015/05/20/clean-torrents-update/" hreflang="zh-cn"><link rel="alternate" href="/atom.xml" title="acwong"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="short icon" href="/favicon.png"><link rel="stylesheet" href="/css/apollo.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600" type="text/css"></head><body><header><a href="/" class="logo-link"><img src="/favicon.png"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="/archives/" target="_self" class="nav-list-link">ARCHIVE</a></li><li class="nav-list-item"><a href="/tags/" target="_self" class="nav-list-link">TAG</a></li><li class="nav-list-item"><a href="/about/" target="_self" class="nav-list-link">ABOUT</a></li><li class="nav-list-item"><a href="/atom.xml" target="_self" class="nav-list-link">RSS</a></li></ul></header><section class="container"><div class="post"><article class="post-block"><h1 class="post-title">清洗种子脚本更新</h1><div class="post-time">May 20, 2015</div><div class="post-content"><p><a href="http://blog.acwong.org/2015/03/25/clean-your-torrent-with-node/">之前的文章</a>当中探讨了使用 Node.js 和 parse-torrent 库来清洗 BT 种子文件。发布了源码之后有些朋友给了我一些反馈意见，有些种子在清洗之后会导致种子失效。</p>
+<h2 id="种子失效的问题"><a href="#种子失效的问题" class="headerlink" title="种子失效的问题"></a>种子失效的问题</h2><p>在研究一番之后发现原来的脚本有两个问题。</p>
+<p>首先，没有分清楚单文件种子和多文件种子的区别。先看看种子文件的典型结构。</p>
+<p><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2015-03_torrent-structure.PNG" alt></p>
+<p>对于单文件种子，文件名的信息会直接存在 info 的 name 字段当中，而没有 files 字段。而多文件种子则会把所有文件名的信息存在 files 的 path当中。</p>
+<p>第二个问题，对于某些种子文件使用 parse-torrent 库解析之后会出现不同的解析结构，而且仅仅使用当中 info 对象来生成新的清洗后的种子也会导致未知的错误。</p>
+<h2 id="nt-库"><a href="#nt-库" class="headerlink" title="nt 库"></a>nt 库</h2><p>为了解决这两个问题，新的脚本采用了一个新的 BT 种子解析库—— <a href="https://github.com/fent/node-torrent" target="_blank" rel="noopener">node-torrent</a>。</p>
+<p>使用这个库的好处在于，它在解析各个种子文件时候返回的对象结构比较统一，使用一个 metadata 的对象处理整个种子文件。而且 node-torrent 集成了生产种子文件的 API，不需要再像之前使用 node 的文件系统去生成新的种子文件。</p>
+<h2 id="新的特性"><a href="#新的特性" class="headerlink" title="新的特性"></a>新的特性</h2><ul>
+<li>支持批量清洗整个文件夹的种子。</li>
+<li>支持批量转换整个文件夹的种子为磁力链接。</li>
+<li>添加了对 comment 和 publisher 的清洗。</li>
+</ul>
+<p><a href="https://github.com/acwong00/Clean-Torrents" target="_blank" rel="noopener">新版本传送门</a>。大家继续支持哦！</p>
+<p>感谢你的阅读，有不足之处请为我指出。</p>
+<p>本文地址 <a href="http://blog.acwong.org/2015/05/20/clean-torrents-update/">http://blog.acwong.org/2015/05/20/clean-torrents-update/</a> </p>
+</div><div class="post-tag"><a href="/tags/Node-js/">#Node.js</a><a href="/tags/bt种子/">#bt种子</a></div></article></div></section><footer><div class="paginator"><a href="/2015/05/26/chrome-file-associations-debugging/" class="prev">PRVE</a><a href="/2015/04/22/backbone-command-line-with-webpack-and-gulp/" class="next">NEXT</a></div><div id="disqus_thread"></div><script>var disqus_shortname = 'acwong';
+var disqus_identifier = '2015/05/20/clean-torrents-update/';
+var disqus_title = '清洗种子脚本更新';
+var disqus_url = 'http://blog.acwong.org/2015/05/20/clean-torrents-update/';
+(function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();</script><script id="dsq-count-scr" src="//acwong.disqus.com/count.js" async></script><div class="copyright"><p>© 2014 - 2019 <a href="http://blog.acwong.org">acwong</a>, powered by <a href="https://hexo.io/">hexo</a>, theme <a href="https://github.com/pinggod/hexo-theme-apollo">Apollo</a>.</p></div></footer><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"UA-51278674-1",'auto');ga('send','pageview');</script><script>var _hmt = _hmt || [];(function() {var hm = document.createElement("script");hm.src = "//hm.baidu.com/hm.js?671aac020a5151c07d7f2143a0f38ab4";var s = document.getElementsByTagName("script")[0]; s.parentNode.insertBefore(hm, s);})();</script><script src="https://cdn.bootcss.com/mathjax/2.5.3/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script></body></html>
