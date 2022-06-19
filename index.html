@@ -69,6 +69,93 @@
 
   
     
+    <h3 class="article-title"><a href="/2022/06/19/grid-avatar/"><span>头像拼接需求的Grid布局实现</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2022/06/19/grid-avatar/" rel="bookmark">
+        <time class="entry-date published" datetime="2022-06-19T08:18:08.000Z">
+          2022-06-19
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>最近看项目的代码，有一个群聊头像拼接的需求，会获取到群聊成员的四个或者三个头像进行拼接（如下图，四头像拼接和三头像拼接），目前是使用 <code>position: absolut</code> 为各个头像进行绝对定位，感觉这样的解决方案不够优雅，由于项目是基于 electron 因此不用考虑兼容性问题，所以可以使用 Grid 布局的解决方案。</p>
+<p><img src="https://user-images.githubusercontent.com/6183922/165456572-c3468379-e057-49cc-a8ac-f356c49dae62.png" alt="20220427143721"></p>
+<p><img src="https://user-images.githubusercontent.com/6183922/165456551-90ab4517-2aa8-4acd-8a6f-68b7a69dcdbf.png" alt="20220427143721"></p>
+<h2 id="四人头像"><a href="#四人头像" class="headerlink" title="四人头像"></a>四人头像</h2><p>与 flex 布局为一维布局不同，grid 为二维的布局属性，所以非常适合完成头像拼接这种二维布局的样式，首先是初始的 HTML 结构。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;container&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;item&quot;</span> <span class="attr">style</span>=<span class="string">&quot;background-color: red;&quot;</span>&gt;</span>1<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;item&quot;</span> <span class="attr">style</span>=<span class="string">&quot;background-color: yellow;&quot;</span>&gt;</span>2<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;item&quot;</span> <span class="attr">style</span>=<span class="string">&quot;background-color: blue;&quot;</span>&gt;</span>3<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;item&quot;</span> <span class="attr">style</span>=<span class="string">&quot;background-color: green;&quot;</span>&gt;</span>4<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>容器设置为 grid 布局，设置行和列。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.container</span> &#123;</span><br><span class="line">  <span class="attribute">display</span>: grid;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">180px</span>;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">180px</span>;</span><br><span class="line">  <span class="attribute">grid-template-columns</span>: <span class="number">1</span>fr <span class="number">1</span>fr;</span><br><span class="line">  <span class="attribute">grid-template-rows</span>: <span class="number">1</span>fr <span class="number">1</span>fr;</span><br><span class="line">  <span class="attribute">border-radius</span>: <span class="number">50%</span>;</span><br><span class="line">  <span class="attribute">overflow</span>: hidden;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>grid-template-rows</code> 和 <code>grid-template-columns</code> 分别设置布局当中的行和列，可以看到现在是一个 2x2 的两行两列结构，设置容器固定宽高为 180x180，用 <code>fr</code> 单位就相当于 flex 布局当中元素占满剩余的区域，当前将每一列和行的宽度都设置为 <code>1fr</code> 就相当于元素平分了宽度和高度。</p>
+<p>可以看到原本绝对定位布局需要针对下方每一个元素设置定位数值，而使用 grid 布局就只需要写数行代码。</p>
+<h2 id="三人头像"><a href="#三人头像" class="headerlink" title="三人头像"></a>三人头像</h2><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;container&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;item&quot;</span> <span class="attr">style</span>=<span class="string">&quot;background-color: red;&quot;</span>&gt;</span>1<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;item&quot;</span> <span class="attr">style</span>=<span class="string">&quot;background-color: yellow;&quot;</span>&gt;</span>2<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;item&quot;</span> <span class="attr">style</span>=<span class="string">&quot;background-color: blue;&quot;</span>&gt;</span>3<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.container</span> &#123;</span><br><span class="line">  <span class="attribute">display</span>: grid;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">180px</span>;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">180px</span>;</span><br><span class="line">  <span class="attribute">grid-template-columns</span>: <span class="number">1</span>fr <span class="number">1</span>fr;</span><br><span class="line">  <span class="attribute">grid-template-rows</span>: <span class="number">1</span>fr <span class="number">1</span>fr;</span><br><span class="line">  <span class="attribute">grid-auto-flow</span>: column;</span><br><span class="line">  <span class="attribute">border-radius</span>: <span class="number">50%</span>;</span><br><span class="line">  <span class="attribute">overflow</span>: hidden;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>由于三号头像需要在拼接的右侧，因此需要改变 <code>grid-auto-flow</code> 属性，这个属性的默认值为 <code>row</code> 意思是顺序的放置为先行后列，而改为 <code>column</code> 之后就改变为先列后行。</p>
+<p>然后针对三号头像进行 <code>grid-row</code> 属性设置。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.container</span> <span class="selector-class">.item</span><span class="selector-pseudo">:last-child</span> &#123;</span><br><span class="line">  <span class="attribute">grid-row</span>: <span class="number">1</span> / <span class="number">3</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>要解释 <code>grid-row</code> 这个属性，首先要理解网格线这个概念，例如现在头像是一个「田」字型的布局，可以看作是横竖各三条网格线将一个平面分割成四分。而 <code>grid-row: 1 / 3</code> 这种写法也可以拆分为：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.container</span> <span class="selector-class">.item</span><span class="selector-pseudo">:last-child</span> &#123;</span><br><span class="line">  <span class="attribute">grid-row-start</span>: <span class="number">1</span>;</span><br><span class="line">  <span class="attribute">grid-row-end</span>: <span class="number">3</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>意思就是该元素上边边框处于第一条网格线，下边边框处于第三条网格线，因此就可以完成需求的布局。</p>
+<h2 id="后续"><a href="#后续" class="headerlink" title="后续"></a>后续</h2><p>后续如果遇到产品改需求，需要改变头像显示的顺序也非常简单，除了 <code>grid-auto-flow</code> 可以按照行列改变头像显示的顺序以外，还可以手动指定头像的位置，比如说要把1号头像放到右下角的位置。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.container</span> &#123;</span><br><span class="line">  <span class="attribute">display</span>: grid;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">180px</span>;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">180px</span>;</span><br><span class="line">  <span class="attribute">grid-template-columns</span>: <span class="number">1</span>fr <span class="number">1</span>fr;</span><br><span class="line">  <span class="attribute">grid-template-rows</span>: <span class="number">1</span>fr <span class="number">1</span>fr;</span><br><span class="line">  <span class="attribute">border-radius</span>: <span class="number">50%</span>;</span><br><span class="line">  <span class="attribute">overflow</span>: hidden;</span><br><span class="line">  <span class="attribute">grid-template-areas</span>: <span class="string">&#x27;a b&#x27;</span></span><br><span class="line">                       <span class="string">&#x27;c d&#x27;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.container</span> <span class="selector-class">.item</span><span class="selector-pseudo">:first</span>-child &#123;</span><br><span class="line">  <span class="attribute">grid-area</span>: d;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>为 container 添加 <code>grid-template-areas</code> 手动定义每一个区块的名称，然后在对应的子元素添加 <code>grid-area</code> 属性，指定它所在的区块。</p>
+<p>总的来说 grid 布局方法为二维布局提供了许多相当简便又容易理解的布局方法，比 flex 布局又强大了许多。</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/技术实践/">技术实践</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/CSS/">CSS</a><a href="/tags/布局/">布局</a><a href="/tags/grid/">grid</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2019/03/10/three-column-layout/"><span>三栏布局 —— 圣杯布局、双飞翼布局和 flex</span></a></h3>
     
   
@@ -413,257 +500,6 @@
     <span class="post-tags">
       <i class="icon-tags"></i>
         <a href="/tags/JavaScript/">JavaScript</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2018/05/19/sql-n-to-m-with-bitwise-operation/"><span>使用位运算处理关系型数据库多对多关系</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2018/05/19/sql-n-to-m-with-bitwise-operation/" rel="bookmark">
-        <time class="entry-date published" datetime="2018-05-19T09:53:23.000Z">
-          2018-05-19
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <p>最近在工作当中需要处理一个本地 SQLite 数据库多对多查询的需求，一般情况下关系型数据库多对多关系都是通过一张关系表来记录，令多对多关系变成一对多关系来处理，但是相对来说这样的设计查询效率会较差。下面就记录一下这次使用二进制按位运算的方法来解决多对多的问题。</p>
-<h2 id="定义数据库结构"><a href="#定义数据库结构" class="headerlink" title="定义数据库结构"></a>定义数据库结构</h2><p>定义科目和学生是多对多的关系，分别使用科目表和学生表来储存数据。以 SQLite 为例。</p>
-<p><strong>科目表 subject</strong></p>
-<table>
-<thead>
-<tr>
-<th>字段</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>id</td>
-<td>自增id</td>
-</tr>
-<tr>
-<td>subject_name</td>
-<td>科目名</td>
-</tr>
-<tr>
-<td>subject_bit</td>
-<td>记录二进制位 1 的十进制数</td>
-</tr>
-</tbody></table>
-<p>科目表里面的 subject_bit 是一个十进制数，记录的是当前的科目对应的是哪个二进制位的一，举个例子：</p>
-<ul>
-<li>256 代表二进制 100000000</li>
-<li>1024 代表二进制 10000000000</li>
-</ul>
-<p><strong>学生表 student</strong></p>
-<table>
-<thead>
-<tr>
-<th>字段</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>id</td>
-<td>自增id</td>
-</tr>
-<tr>
-<td>student_name</td>
-<td>学生名</td>
-</tr>
-<tr>
-<td>subjects</td>
-<td>记录各学科按位或的结果</td>
-</tr>
-</tbody></table>
-<p>学生表里面的 subjects 字段同样是一个十进制数，记录的是学习对应的各个科目 subject_bit 按位或运算的结果，举个例子：</p>
-<ul>
-<li>10 代表学生同时选修 subject_bit 为 2 和 8 的科目</li>
-<li>1025 代表学生同时选修 subject_bit 为 1 和 1024 的科目</li>
-</ul>
-<h2 id="数据查询"><a href="#数据查询" class="headerlink" title="数据查询"></a>数据查询</h2><p>示例数据</p>
-<p><strong>subject</strong></p>
-<table>
-<thead>
-<tr>
-<th>id</th>
-<th>subject_name</th>
-<th>subject_bit</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>1</td>
-<td>语文</td>
-<td>1</td>
-</tr>
-<tr>
-<td>2</td>
-<td>数学</td>
-<td>2</td>
-</tr>
-<tr>
-<td>3</td>
-<td>英语</td>
-<td>4</td>
-</tr>
-<tr>
-<td>4</td>
-<td>政治</td>
-<td>8</td>
-</tr>
-<tr>
-<td>5</td>
-<td>地理</td>
-<td>16</td>
-</tr>
-<tr>
-<td>6</td>
-<td>历史</td>
-<td>32</td>
-</tr>
-<tr>
-<td>7</td>
-<td>物理</td>
-<td>64</td>
-</tr>
-<tr>
-<td>8</td>
-<td>生物</td>
-<td>128</td>
-</tr>
-<tr>
-<td>9</td>
-<td>化学</td>
-<td>256</td>
-</tr>
-</tbody></table>
-<p><strong>student</strong></p>
-<table>
-<thead>
-<tr>
-<th>id</th>
-<th>student_name</th>
-<th>subjects</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>1</td>
-<td>Amy</td>
-<td>234</td>
-</tr>
-<tr>
-<td>2</td>
-<td>Bill</td>
-<td>34</td>
-</tr>
-<tr>
-<td>3</td>
-<td>Cody</td>
-<td>3</td>
-</tr>
-<tr>
-<td>4</td>
-<td>David</td>
-<td>15</td>
-</tr>
-<tr>
-<td>5</td>
-<td>Eva</td>
-<td>26</td>
-</tr>
-</tbody></table>
-<p><strong>根据科目查询所属学生</strong></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> student <span class="keyword">WHERE</span> subject_bit <span class="operator">&amp;</span> <span class="number">32</span> <span class="operator">!=</span> <span class="number">0</span></span><br></pre></td></tr></table></figure>
-
-<table>
-<thead>
-<tr>
-<th>id</th>
-<th>student_name</th>
-<th>subjects</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>1</td>
-<td>Amy</td>
-<td>234</td>
-</tr>
-<tr>
-<td>2</td>
-<td>Bill</td>
-<td>34</td>
-</tr>
-</tbody></table>
-<p><strong>根据学生查询科目</strong></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> subject <span class="keyword">WHERE</span> subject_bit <span class="operator">&amp;</span> </span><br><span class="line">(<span class="keyword">SELECT</span> subjects <span class="keyword">FROM</span> student <span class="keyword">WHERE</span> student_name <span class="operator">=</span> <span class="string">&#x27;Cody&#x27;</span>) <span class="operator">!=</span> <span class="number">0</span></span><br></pre></td></tr></table></figure>
-
-<table>
-<thead>
-<tr>
-<th>id</th>
-<th>subject_name</th>
-<th>subject_bit</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>1</td>
-<td>语文</td>
-<td>1</td>
-</tr>
-<tr>
-<td>2</td>
-<td>数学</td>
-<td>2</td>
-</tr>
-</tbody></table>
-<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>虽然这种方式能够提高部分查询效率，但是同样有非常大的局限性。</p>
-<p>首先，以二进制方式来标识类目的方法要将类目数量限制在 32 个以下。然后，虽然查询的 SQL 语句并不复杂，但是当要修改数据的时候就会非常麻烦。</p>
-<p>因为笔者本次开发的需求是一个纯查询的数据库，而且类目数量少于 32 所以采取了这个方案，大家参考的时候必须要结合自身的需要。</p>
-
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/学习笔记/">学习笔记</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/关系型数据库/">关系型数据库</a><a href="/tags/SQL/">SQL</a><a href="/tags/位运算/">位运算</a><a href="/tags/数据库设计/">数据库设计</a>
     </span>
     
 

@@ -69,6 +69,107 @@
 
   
     
+    <h3 class="article-title"><a href="/2014/12/30/standard-event-object-and-IE-event-object/"><span>JavaScript 笔记 —— 标准事件对象与 IE 事件对象</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2014/12/30/standard-event-object-and-IE-event-object/" rel="bookmark">
+        <time class="entry-date published" datetime="2014-12-30T13:26:22.000Z">
+          2014-12-30
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>标准的事件绑定函数是 <code>addEventListener</code> 函数，而 IE 浏览器（IE9 以下）则是用 <code>attachEvent</code>。 这两个函数中的事件处理函数都可以传入一个 <code>event</code> 参数，就是我们所说的事件对象，本文就来总结一下两者的区别。</p>
+<h2 id="获取事件的目标"><a href="#获取事件的目标" class="headerlink" title="获取事件的目标"></a>获取事件的目标</h2><p>事件的目标就是指当前触发事件的元素。</p>
+<p>有如下的 HTML：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">body</span> <span class="attr">id</span>=<span class="string">&quot;myBody&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">button</span> <span class="attr">id</span>=<span class="string">&quot;myButton&quot;</span>&gt;</span>click<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>标准事件对象使用 <code>event</code> 的 <code>target</code> 属性获取事件目标。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> btn = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;myButton&#x27;</span>);</span><br><span class="line">btn.<span class="title function_">addEventListener</span>(<span class="string">&quot;click&quot;</span>, <span class="keyword">function</span>(<span class="params">event</span>) &#123;</span><br><span class="line">    <span class="title function_">alert</span>(event.<span class="property">target</span>.<span class="property">id</span>);    <span class="comment">// myButton</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>IE 事件对象使用 <code>event</code> 的 <code>srcElement</code> 属性获取事件目标。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> btn = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;myButton&quot;</span>);</span><br><span class="line">btn.<span class="title function_">attachEvent</span>(<span class="string">&quot;onclick&quot;</span>, <span class="keyword">function</span>(<span class="params">event</span>) &#123;</span><br><span class="line">    <span class="title function_">alert</span>(event.<span class="property">srcElement</span>.<span class="property">id</span>);    <span class="comment">// myButton</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p><strong>另外</strong>，标准事件对象还有一个 <code>currentTarget</code> 属性，该属性在事件处理函数当中始终与 <code>this</code> 相等，而 <code>target</code> 属性则是指向事件触发的具体目标。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">document</span>.<span class="property">body</span>.<span class="title function_">addEventListener</span>(<span class="string">&quot;click&quot;</span>, <span class="keyword">function</span> (<span class="params">event</span>) &#123;</span><br><span class="line">    <span class="title function_">alert</span>(event.<span class="property">currentTarget</span>.<span class="property">id</span>);    <span class="comment">// myBody</span></span><br><span class="line">    <span class="title function_">alert</span>(event.<span class="property">target</span>.<span class="property">id</span>);           <span class="comment">// myButton</span></span><br><span class="line">    <span class="title function_">alert</span>(<span class="variable language_">this</span>.<span class="property">id</span>);                   <span class="comment">// myBody</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h2 id="取消事件默认行为"><a href="#取消事件默认行为" class="headerlink" title="取消事件默认行为"></a>取消事件默认行为</h2><p>有如下的 HTML：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">a</span> <span class="attr">id</span>=<span class="string">&quot;myLink&quot;</span> <span class="attr">href</span>=<span class="string">&quot;http://blog.acwong.org&quot;</span>&gt;</span>acwong blog<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>标准事件对象使用 <code>event</code> 的 <code>preventDefault()</code> 方法取消事件默认行为。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> myLink = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;myLink&#x27;</span>);</span><br><span class="line">myLink.<span class="title function_">addEventListener</span>(<span class="string">&quot;click&quot;</span>,<span class="keyword">function</span>(<span class="params">event</span>) &#123;</span><br><span class="line">    <span class="title function_">alert</span>(<span class="string">&quot;haha&quot;</span>);          <span class="comment">// haha</span></span><br><span class="line">    event.<span class="title function_">preventDefault</span>(); <span class="comment">// 浏览器不会跳转</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>IE 事件对象使用 <code>event</code> 的 <code>returnValue</code> 属性取消事件默认行为，该属性默认值为 <code>true</code> 设置为 <code>false</code> 就可以取消事件默认行为。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> myLink = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;myLink&#x27;</span>);</span><br><span class="line">myLink.<span class="title function_">attaxchEvent</span>(<span class="string">&quot;onclick&quot;</span>,<span class="keyword">function</span>(<span class="params">event</span>) &#123;</span><br><span class="line">    <span class="title function_">alert</span>(<span class="string">&quot;haha&quot;</span>);                  <span class="comment">// haha</span></span><br><span class="line">    event.<span class="property">returnValue</span> = <span class="literal">false</span>;      <span class="comment">// 浏览器不会跳转</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h2 id="禁止事件冒泡"><a href="#禁止事件冒泡" class="headerlink" title="禁止事件冒泡"></a>禁止事件冒泡</h2><p>有如下的 HTML:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">body</span> <span class="attr">id</span>=<span class="string">&quot;myBody&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">button</span> <span class="attr">id</span>=<span class="string">&quot;myButton&quot;</span>&gt;</span>click<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>标准事件对象使用 <code>event</code> 的 <code>stopPropagation()</code> 方法禁止事件冒泡。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> btn = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;myButton&quot;</span>);</span><br><span class="line">btn.<span class="title function_">addEventListener</span>(<span class="string">&quot;click&quot;</span>, <span class="keyword">function</span>(<span class="params">event</span>) &#123;</span><br><span class="line">    <span class="title function_">alert</span>(<span class="variable language_">this</span>.<span class="property">id</span>);            <span class="comment">// myButton</span></span><br><span class="line">    event.<span class="title function_">stopPropagation</span>();   <span class="comment">// 禁止事件冒泡</span></span><br><span class="line">&#125;);</span><br><span class="line"><span class="variable language_">document</span>.<span class="property">body</span>.<span class="title function_">addEventListener</span>(<span class="string">&quot;click&quot;</span>,<span class="keyword">function</span>(<span class="params">event</span>) &#123;</span><br><span class="line">    <span class="title function_">alert</span>(<span class="variable language_">this</span>.<span class="property">id</span>);           <span class="comment">// 不会出现</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>IE 事件对象使用 <code>event</code> 的 <code>cancelBubble</code> 属性禁止事件冒泡，该属性值默认为 <code>false</code>，设置为 <code>true</code> 就可以禁止事件冒泡。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> btn = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;myButton&quot;</span>);</span><br><span class="line">btn.<span class="title function_">attachEvent</span>(<span class="string">&quot;onclick&quot;</span>, <span class="keyword">function</span>(<span class="params">event</span>) &#123;</span><br><span class="line">    <span class="title function_">alert</span>(<span class="string">&quot;haha&quot;</span>);              <span class="comment">// haha</span></span><br><span class="line">    event.<span class="property">cancelBubble</span> = <span class="literal">true</span>;  <span class="comment">// 禁止事件冒泡</span></span><br><span class="line">&#125;);</span><br><span class="line"><span class="variable language_">document</span>.<span class="property">body</span>.<span class="title function_">attachEvent</span>(<span class="string">&quot;onclick&quot;</span>,<span class="keyword">function</span>(<span class="params">event</span>) &#123;</span><br><span class="line">    <span class="title function_">alert</span>(<span class="string">&quot;hehe&quot;</span>);             <span class="comment">// 不会出现</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h2 id="IE-事件处理函数中的-this"><a href="#IE-事件处理函数中的-this" class="headerlink" title="IE 事件处理函数中的 this"></a>IE 事件处理函数中的 <code>this</code></h2><p>最后，还要一个与事件对象无关的小点，在 IE 事件处理函数当中 <code>this</code> 的值并不等于被绑定元素，而是等于 <code>window</code> 对象。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> btn = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;myButton&quot;</span>);</span><br><span class="line">btn.<span class="title function_">attachEvent</span>(<span class="string">&quot;onclick&quot;</span>, <span class="keyword">function</span>(<span class="params">event</span>) &#123;</span><br><span class="line">    <span class="title function_">alert</span>(<span class="variable language_">this</span> === <span class="variable language_">window</span>);              <span class="comment">// true</span></span><br><span class="line">    <span class="title function_">alert</span>(<span class="variable language_">this</span>.<span class="property">id</span>)                       <span class="comment">// undefined</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>而在标准事件绑定当中，<code>this</code> 的值等于被绑定的元素。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> btn = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;myButton&quot;</span>);</span><br><span class="line">btn.<span class="title function_">addEventListener</span>(<span class="string">&quot;click&quot;</span>, <span class="keyword">function</span>(<span class="params">event</span>) &#123;</span><br><span class="line">    <span class="title function_">alert</span>(<span class="variable language_">this</span> === btn);                  <span class="comment">// true</span></span><br><span class="line">    <span class="title function_">alert</span>(<span class="variable language_">this</span>.<span class="property">id</span>);                       <span class="comment">// myButton</span></span><br><span class="line">    <span class="title function_">alert</span>(<span class="variable language_">this</span> === event.<span class="property">currentTarget</span>);  <span class="comment">// true</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>最后祝大家新年快乐~</p>
+<p>感谢您的阅读，有不足之处请为我指出。</p>
+<p><strong>参考</strong></p>
+<p><a target="_blank" rel="noopener" href="http://book.douban.com/subject/10546125/">JavaScript高级程序设计(第3版)</a></p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/学习笔记/">学习笔记</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/兼容性/">兼容性</a><a href="/tags/JavaScript/">JavaScript</a><a href="/tags/事件/">事件</a><a href="/tags/事件对象/">事件对象</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2014/12/21/css3-middle-translate-and-relative/"><span>从一个居中方法说起 —— 谈 translate 与 相对、绝对定位</span></a></h3>
     
   
@@ -498,154 +599,6 @@
     <span class="post-tags">
       <i class="icon-tags"></i>
         <a href="/tags/前端模块化/">前端模块化</a><a href="/tags/seajs/">seajs</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2014/11/08/drag-and-drop/"><span>不在HTML5标准中的特性 —— 浅谈原生拖放</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2014/11/08/drag-and-drop/" rel="bookmark">
-        <time class="entry-date published" datetime="2014-11-08T06:54:36.000Z">
-          2014-11-08
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="久等的HTML5标准"><a href="#久等的HTML5标准" class="headerlink" title="久等的HTML5标准"></a>久等的HTML5标准</h2><p>2014年10月28日，W3C正式公布了耗时8年时间制订的 HTML5 标准。尽管标准在最近才正式公布，但 HTML5 激动人心的特性一早就被开发者热议了。在这份标准当中有一个我们熟悉的身影并没有出现，那就是原生拖放 —— Drag and Drop。</p>
-<blockquote>
-<p>10月28日发布的<a target="_blank" rel="noopener" href="http://www.w3.org/TR/html5/">HTML5版本</a>当中没有原生拖放。</p>
-</blockquote>
-<blockquote>
-<p>而制订当中的<a target="_blank" rel="noopener" href="http://www.w3.org/html/wg/drafts/html/master/editing.html#dnd">HTML5.1版本</a>当中则可以看到。</p>
-</blockquote>
-<p>没有人知道HTML5标准为什么没有了原生拖放特性，我想可能与其设计上的缺陷有关，在谈这个问题之前，先简单介绍一下原生拖放的特性。</p>
-<h2 id="Drag-and-Drop-简介"><a href="#Drag-and-Drop-简介" class="headerlink" title="Drag and Drop 简介"></a>Drag and Drop 简介</h2><h3 id="可拖动属性"><a href="#可拖动属性" class="headerlink" title="可拖动属性"></a>可拖动属性</h3><p>图像、链接和文本是浏览器默认可以被拖动的，HTML5 为所有的HTML元素都提供了一个<strong>draggable</strong>属性，当这个属性的值为<strong>true</strong>的时候，元素被视为可以拖动。</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 禁止元素被拖动 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&quot;#&quot;</span> <span class="attr">alt</span>=<span class="string">&quot;不能拖动我&quot;</span> <span class="attr">draggable</span>=<span class="string">&quot;true&quot;</span>&gt;</span>不能拖动我<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 让元素可以被拖动 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">draggable</span>=<span class="string">&quot;false&quot;</span>&gt;</span>可以被拖动<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="拖放事件"><a href="#拖放事件" class="headerlink" title="拖放事件"></a>拖放事件</h3><p>利用拖放事件，我们可以控制拖放过程中的各个阶段。</p>
-<p>对于被拖放的元素包括下列事件：</p>
-<ul>
-<li>dragstart <em>鼠标点击被拖动元素开始拖动时在该元素触发</em>       </li>
-<li>drag <em>拖动元素时频繁在被拖动元素触发</em></li>
-<li>dragend <em>拖动停止并放置之后触发</em></li>
-</ul>
-<p>对于目标放置元素包括下列事件</p>
-<ul>
-<li>dragenter <em>元素被拖动时鼠标进入目标放置元素时触发</em></li>
-<li>dragover <em>元素被拖动时鼠标在目标放置元素时频繁触发</em></li>
-<li>dragleave <em>元素被拖动时鼠标离开目标放置元素时触发</em></li>
-<li>drop <em>元素被拖动到目标放置元素并放开鼠标进行放置时触发</em></li>
-</ul>
-<p>可以看出，拖放特性的核心就是拖动一个元素放置到一个目标元素当中。</p>
-<h3 id="dataTransfer"><a href="#dataTransfer" class="headerlink" title="dataTransfer"></a>dataTransfer</h3><p>我认为原生拖放当中最令人兴奋的特性就是可以利用拖放事件传递数据，这样使浏览器原生就可以支持类似于桌面应用的拖放交互功能。</p>
-<p>要使用数据传输功能就需要一个名为 dataTransfer 的接口。</p>
-<p>dataTransfer 主要包括 getData() 和 setData() 方法。 setData() 用于保存值，getData() 用于获得 setData() 保存的值。</p>
-<blockquote>
-<p>dataTransfer.setData(format, data)</p>
-</blockquote>
-<blockquote>
-<p>dataTransfer.getData(format)</p>
-</blockquote>
-<p>format 参数支持MIME数据类型。</p>
-<p>一个小例子 <a target="_blank" rel="noopener" href="http://jsfiddle.net/acwong/00p1mppp/2/embedded/result/">传送门</a>。</p>
-<h3 id="dropEffect-和-effectAllowed"><a href="#dropEffect-和-effectAllowed" class="headerlink" title="dropEffect 和 effectAllowed"></a>dropEffect 和 effectAllowed</h3><p>dataTransfer 接口还有两个有趣的属性。</p>
-<p><strong>dropEffect</strong> 浏览器会根据不同的值显示不同类型的光标，提升用户放置后的行为。 dropEffect 包括以下几个值:</p>
-<ul>
-<li>none <em>不能把拖动的元素放置在这里</em></li>
-<li>move <em>把元素移动到这里</em></li>
-<li>copy <em>把元素复制到这里</em></li>
-<li>link <em>放置到这里后打开链接</em></li>
-</ul>
-<p>浏览器仅仅会帮你改变光标的类型，但是要实现怎样的效果都是要开发者自己去实现。</p>
-<p><strong>effectAllowed</strong> 搭配 dropEffect 使用，表示允许dropEffect的哪种行为，它的值有以下几种：</p>
-<ul>
-<li>none <em>被拖动元素不能有任何行为</em></li>
-<li>copy <em>允许值为 “copy” 的放置行为</em></li>
-<li>link <em>允许值为 “link” 的放置行为</em></li>
-<li>move <em>允许值为 “move” 的放置行为</em></li>
-<li>copyLink <em>允许值为 “copy” 和 “link” 的放置行为</em></li>
-<li>copyMove <em>允许值为 “copy” 和 “move” 的放置行为</em></li>
-<li>linkMove <em>允许值为 “link” 和 “move” 的放置行为</em></li>
-<li>all <em>允许所有放置行为</em></li>
-</ul>
-<p>便于理解请看例子 <a target="_blank" rel="noopener" href="http://help.dottoro.com/external/examples/ljffjemc/dropEffect_1.htm">传送门</a></p>
-<h2 id="Drag-and-Drop-的坑"><a href="#Drag-and-Drop-的坑" class="headerlink" title="Drag and Drop 的坑"></a>Drag and Drop 的坑</h2><h3 id="Drag-and-Drop-的历史"><a href="#Drag-and-Drop-的历史" class="headerlink" title="Drag and Drop 的历史"></a>Drag and Drop 的历史</h3><p>与其他的 HTML5 特性不同，Drag and Drop 的<a target="_blank" rel="noopener" href="http://fmbip.com/litmus#html5-web-applications">浏览器兼容性</a>可以说鹤立鸡群。</p>
-<p><a target="_blank" rel="noopener" href="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/dnd-compatibility.PNG"><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/dnd-compatibility.PNG" alt="addEventListener"></a></p>
-<p>拖放功能最早在IE4时候就被引入，而在目前的拖放模型则是基于IE5.5的模型建立的。由于这个原因导致了原生拖放当中出现了各种不同的坑。</p>
-<h3 id="我开发中遇到的问题"><a href="#我开发中遇到的问题" class="headerlink" title="我开发中遇到的问题"></a>我开发中遇到的问题</h3><p>前阵子做了一个360度全景效果的demo，一开始想到用drag事件来做。</p>
-<p>首先准备图片:</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;container&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;panorama&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;images/0.jpg&quot;</span> <span class="attr">alt</span>=<span class="string">&quot;&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;images/1.jpg&quot;</span> <span class="attr">alt</span>=<span class="string">&quot;&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;images/2.jpg&quot;</span> <span class="attr">alt</span>=<span class="string">&quot;&quot;</span>&gt;</span></span><br><span class="line">        .......</span><br><span class="line">        <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;images/74.jpg&quot;</span> <span class="attr">alt</span>=<span class="string">&quot;&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;images/75.jpg&quot;</span> <span class="attr">alt</span>=<span class="string">&quot;&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;images/76.jpg&quot;</span> <span class="attr">alt</span>=<span class="string">&quot;&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>然后利用 drag 事件频繁发生，在 drag 事件触发时，判断鼠标位移，然后显示下一张图片，利用人的视觉残留，做出360度全景图片的效果。(使用了 jQuery 库)</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> panorama = $(<span class="string">&#x27;#panorama&#x27;</span>);</span><br><span class="line"><span class="keyword">var</span> images = panorama.<span class="title function_">find</span>(<span class="string">&#x27;img&#x27;</span>);</span><br><span class="line"><span class="keyword">var</span> len = images.<span class="property">length</span>;</span><br><span class="line"><span class="keyword">var</span> start_X = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">var</span> start_Y = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">panorama.<span class="title function_">on</span>(<span class="string">&#x27;dragstart&#x27;</span>, <span class="keyword">function</span>(<span class="params">event</span>) &#123;</span><br><span class="line">	start_X = event.<span class="property">originalEvent</span>.<span class="property">x</span>;</span><br><span class="line">	start_Y = event.<span class="property">originalEvent</span>.<span class="property">y</span>;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">panorama.<span class="title function_">on</span>(<span class="string">&#x27;drag&#x27;</span>, <span class="keyword">function</span>(<span class="params">event</span>) &#123;</span><br><span class="line">	<span class="keyword">var</span> mouse_X = event.<span class="property">originalEvent</span>.<span class="property">x</span>;</span><br><span class="line">	<span class="keyword">var</span> mouse_Y = event.<span class="property">originalEvent</span>.<span class="property">y</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (mouse_X - start_X &gt; <span class="number">0</span>) &#123;</span><br><span class="line">		<span class="title function_">moveImg</span>(<span class="string">&#x27;right&#x27;</span>);</span><br><span class="line">		start_X = mouse_X;</span><br><span class="line">	&#125; <span class="keyword">else</span> <span class="keyword">if</span> (start_X - mouse_X &gt; <span class="number">0</span>) &#123;</span><br><span class="line">		<span class="title function_">moveImg</span>(<span class="string">&#x27;left&#x27;</span>);</span><br><span class="line">		start_X = mouse_X;</span><br><span class="line">	&#125;		</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">moveImg</span>(<span class="params">dir</span>) &#123;</span><br><span class="line">	<span class="keyword">var</span> current_img = panorama.<span class="title function_">find</span>(<span class="string">&#x27;img:visible&#x27;</span>);</span><br><span class="line">	<span class="keyword">var</span> index = current_img.<span class="title function_">index</span>();</span><br><span class="line">	<span class="keyword">if</span> (dir === <span class="string">&#x27;right&#x27;</span>) &#123;</span><br><span class="line">		<span class="keyword">if</span> (index + <span class="number">1</span> === len) &#123;</span><br><span class="line">			images.<span class="title function_">eq</span>(<span class="number">0</span>).<span class="title function_">show</span>().<span class="title function_">siblings</span>().<span class="title function_">hide</span>();</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			images.<span class="title function_">eq</span>(index + <span class="number">1</span>).<span class="title function_">show</span>().<span class="title function_">siblings</span>().<span class="title function_">hide</span>();</span><br><span class="line">		&#125;</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		<span class="keyword">if</span> (index - <span class="number">1</span> === <span class="number">0</span>) &#123;</span><br><span class="line">			images.<span class="title function_">eq</span>(len - <span class="number">1</span>).<span class="title function_">show</span>().<span class="title function_">siblings</span>().<span class="title function_">hide</span>();</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			images.<span class="title function_">eq</span>(index - <span class="number">1</span>).<span class="title function_">show</span>().<span class="title function_">siblings</span>().<span class="title function_">hide</span>();</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong><a target="_blank" rel="noopener" href="http://jsfiddle.net/acwong/xpk5932b/">demo</a></strong></p>
-<p>完成demo之后发现，浏览器对图片有默认的拖动效果。</p>
-<p><a target="_blank" rel="noopener" href="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/drag360.PNG"><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/drag360.PNG" alt="图片默认拖动效果"></a></p>
-<p>要去掉这个效果可以在 dragstart 或 mousedown 事件中调用 event.preventDefault() 方法。但是无论使用上述哪一种方法都会导致 drag 事件失效。找了很多资料也没有找到很好的解决方法。所以最后我还是老老实实地用了 mouse 事件的方法重写了一遍。</p>
-<p><strong><a target="_blank" rel="noopener" href="http://jsfiddle.net/acwong/xpk5932b/1/">demo</a></strong></p>
-<h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><p>除了图片默认拖动效果的小问题之外，在网络上也有许多使用 drag and drop 的吐槽，像<a target="_blank" rel="noopener" href="https://ghsky.com/2012/09/talk-about-html5-drag-and-drop.html">这一篇</a>说出了很多拖放特性相关事件在使用上的很多坑。</p>
-<p>当然还有PPK对拖放特性的<a target="_blank" rel="noopener" href="http://www.quirksmode.org/blog/archives/2009/09/the_html5_drag.html">吐槽</a>。09年的时候PPK就说应该把拖放特性在 HTML5 里面删除。</p>
-<blockquote>
-<p>The module should be removed from the HTML5 specification straight away, and conforming browsers should disable it at their earliest opportunity pending a complete rewrite from the ground up.</p>
-</blockquote>
-<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>原生拖放的设计的确是极大地提高了浏览器与用户的交互性，但是基于 IE5.5 设计的 HTML5 原生拖放却并不是十分好用，使用过程中总会遇到一些麻烦，而且我认为 dropEffect 和 effectAllowed 略显鸡肋并且难以理解。我想这些都是 HTML5 暂时没有这个特性的原因。</p>
-<p>希望后续的版本原生拖放成为一个让人眼前一亮的功能。</p>
-<p>感谢您的阅读，有不足之处请在评论为我指出。</p>
-<p><strong>参考</strong></p>
-<ol>
-<li><a target="_blank" rel="noopener" href="http://help.dottoro.com/ljffjemc.php">dropEffect property (dataTransfer)</a></li>
-<li><a target="_blank" rel="noopener" href="http://book.douban.com/subject/10546125/">JavaScript高级程序设计(第3版)</a></li>
-<li><a target="_blank" rel="noopener" href="https://ghsky.com/2012/09/talk-about-html5-drag-and-drop.html">浅谈 HTML5 的 Drag and Drop</a></li>
-<li><a target="_blank" rel="noopener" href="http://www.quirksmode.org/blog/archives/2009/09/the_html5_drag.html">The HTML5 drag and drop disaster</a></li>
-<li><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/19036977/why-is-event-preventdefault-in-dragstart-interrupting-furthur-drag-events-from?nsukey=nAJoypRJ/Y1BrOvXfa1fWU2dcz2tJ4S0mv0B4f5G0a+6zdcX0XO6q9QGbfadlJ1eeYaogaKSDjRa4xL4wzNLIQ==">Why is event.preventDefault() in dragstart interrupting furthur drag events from executing? – stackoverflow</a></li>
-</ol>
-
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/技术研究/">技术研究</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/事件/">事件</a><a href="/tags/HTML5/">HTML5</a><a href="/tags/原生拖放/">原生拖放</a><a href="/tags/Drag-and-Drop/">Drag and Drop</a>
     </span>
     
 

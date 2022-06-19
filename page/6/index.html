@@ -69,6 +69,95 @@
 
   
     
+    <h3 class="article-title"><a href="/2016/07/23/notes-of-javascript-patterns-singleton/"><span>JavaScript 设计模式笔记（一）—— 单例模式</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2016/07/23/notes-of-javascript-patterns-singleton/" rel="bookmark">
+        <time class="entry-date published" datetime="2016-07-23T01:42:44.000Z">
+          2016-07-23
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>单例模式（Singleton）是一种常用的设计模式，它被定义为：</p>
+<blockquote>
+<p>保证一个类<strong>仅有一个实例</strong>，并提供一个访问它的<strong>全局访问</strong>点。</p>
+</blockquote>
+<p>实现单例模式的核心思想就是判断当前要创建的对象是否存在，若果存在则直接返回，反之则创建再返回。</p>
+<h2 id="单例模式实现方式"><a href="#单例模式实现方式" class="headerlink" title="单例模式实现方式"></a>单例模式实现方式</h2><h3 id="全局变量"><a href="#全局变量" class="headerlink" title="全局变量"></a>全局变量</h3><p>由于 JavaScript 并不是一种严格的面向对象语言，所以并不一定需要为了创建一个唯一的对象而去定义一个类。因此得到一个唯一对象最简单的方法就是在全局声明一个对象。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a = &#123;&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>在全局声明的变量是独一无二的，而且在任何位置都可以访问，所以满足了单例的两个条件。</p>
+<p>但是使用全局变量会带来命名空间污染，同时为变量管理带来困难。</p>
+<h3 id="函数方式创建"><a href="#函数方式创建" class="headerlink" title="函数方式创建"></a>函数方式创建</h3><p>避免使用全局变量，利用一个函数来创建对象。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> <span class="title class_">Singleton</span> = (<span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> instance;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">init</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="comment">/* 单例 */</span></span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">      <span class="attr">createTime</span>: <span class="keyword">new</span> <span class="title class_">Date</span>()</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    <span class="attr">getInstance</span>: <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">      <span class="keyword">if</span> (!instance) &#123;</span><br><span class="line">        instance = <span class="title function_">init</span>();</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">return</span> instance;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;)();</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> a = <span class="title class_">Singleton</span>.<span class="title function_">getInstance</span>();</span><br><span class="line"><span class="keyword">var</span> b = <span class="title class_">Singleton</span>.<span class="title function_">getInstance</span>();</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(a === b);    <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<p>利用一个闭包来保存单例是否已经创建避免使用全局变量，同时通过上述方式可以在调用 <code>getInstance</code> 方法时才创建单例对象，而非在页面加载好的时候创建，可以提高部分性能。</p>
+<h3 id="透明的单例模式"><a href="#透明的单例模式" class="headerlink" title="透明的单例模式"></a>透明的单例模式</h3><p>然而通常我们习惯像直接使用一个普通的类一样创建单例，所以可以将上面的方式进行修改。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> <span class="title class_">Singleton</span> = (<span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> instance;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">var</span> <span class="title class_">Singleton</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (!instance) &#123;</span><br><span class="line">      instance = <span class="variable language_">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> instance;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> <span class="title class_">Singleton</span>;</span><br><span class="line">&#125;)();</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> a = <span class="keyword">new</span> <span class="title class_">Singleton</span>();</span><br><span class="line"><span class="keyword">var</span> b = <span class="keyword">new</span> <span class="title class_">Singleton</span>();</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(a === b);    <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="通用惰性单例"><a href="#通用惰性单例" class="headerlink" title="通用惰性单例"></a>通用惰性单例</h3><p>想像一个场景，我们需要在页面创建一个唯一的登录弹窗，可以这样去写：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> createLoginLayer = (<span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> div;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (!div) &#123;</span><br><span class="line">      div = <span class="variable language_">document</span>.<span class="title function_">createElement</span>(<span class="string">&#x27;div&#x27;</span>);</span><br><span class="line">      div.<span class="property">innerHTML</span> = <span class="string">&#x27;我是登录弹窗&#x27;</span>;</span><br><span class="line">      div.<span class="property">style</span>.<span class="property">display</span> = <span class="string">&#x27;none&#x27;</span>;</span><br><span class="line">      <span class="variable language_">document</span>.<span class="property">body</span>.<span class="title function_">appendChild</span>(<span class="string">&#x27;div&#x27;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> div;</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure>
+
+<p>这样写已经不错了，可以在需要用到弹窗的时候才创建，但是这段代码有一个缺点，如果下次在页面想创建一个唯一的 iframe 时，几乎就要将函数照炒一遍。</p>
+<p>所以需要将不变的部分分离出来。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> getSingle = <span class="keyword">function</span>(<span class="params">fn</span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> result;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> result || (result = fn.<span class="title function_">apply</span>(<span class="variable language_">this</span>, <span class="variable language_">arguments</span>));</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> createLoginLayer = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> div = <span class="variable language_">document</span>.<span class="title function_">createElement</span>(<span class="string">&#x27;div&#x27;</span>);</span><br><span class="line">  div.<span class="property">innerHTML</span> = <span class="string">&#x27;我是登录浮窗&#x27;</span>;</span><br><span class="line">  div.<span class="property">style</span>.<span class="property">display</span> = <span class="string">&#x27;none&#x27;</span>;</span><br><span class="line">  <span class="variable language_">document</span>.<span class="property">body</span>.<span class="title function_">appendChild</span>(div);</span><br><span class="line">  <span class="keyword">return</span> div;</span><br><span class="line">￼￼&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> createIframe = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> iframe = <span class="variable language_">document</span>.<span class="title function_">createElement</span>(<span class="string">&#x27;iframe&#x27;</span>);</span><br><span class="line">  <span class="variable language_">document</span>.<span class="property">body</span>.<span class="title function_">appendChild</span>(iframe);</span><br><span class="line">  <span class="keyword">return</span> iframe;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> createSingleLoginLayer = <span class="title function_">getSingle</span>(createLoginLayer);</span><br><span class="line"><span class="keyword">var</span> createSingleIframe = <span class="title function_">getSingle</span>(createIframe);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> loginLayer = <span class="title function_">createSingleLoginLayer</span>();</span><br><span class="line"><span class="keyword">var</span> iframe = <span class="title function_">createSingleIframe</span>();</span><br></pre></td></tr></table></figure>
+
+<p>感谢您的阅读，有不足之处请在评论为我指出。</p>
+<p><strong>参考</strong></p>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://book.douban.com/subject/26382780/">JavaScript设计模式与开发实践</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.cnblogs.com/TomXu/archive/2012/02/20/2352817.html">深入理解JavaScript系列（25）：设计模式之单例模式</a></li>
+</ol>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/学习笔记/">学习笔记</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/JavaScript/">JavaScript</a><a href="/tags/设计模式/">设计模式</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2016/03/20/auto-deploy-hexo-with-travis-CI/"><span>用 Travis CI 自动部署 hexo</span></a></h3>
     
   
@@ -467,80 +556,6 @@
     <span class="post-tags">
       <i class="icon-tags"></i>
         <a href="/tags/Chrome/">Chrome</a><a href="/tags/调试/">调试</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2015/05/20/clean-torrents-update/"><span>清洗种子脚本更新</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2015/05/20/clean-torrents-update/" rel="bookmark">
-        <time class="entry-date published" datetime="2015-05-20T08:27:19.000Z">
-          2015-05-20
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <p><a target="_blank" rel="noopener" href="http://blog.acwong.org/2015/03/25/clean-your-torrent-with-node/">之前的文章</a>当中探讨了使用 Node.js 和 parse-torrent 库来清洗 BT 种子文件。发布了源码之后有些朋友给了我一些反馈意见，有些种子在清洗之后会导致种子失效。</p>
-<h2 id="种子失效的问题"><a href="#种子失效的问题" class="headerlink" title="种子失效的问题"></a>种子失效的问题</h2><p>在研究一番之后发现原来的脚本有两个问题。</p>
-<p>首先，没有分清楚单文件种子和多文件种子的区别。先看看种子文件的典型结构。</p>
-<p><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2015-03_torrent-structure.PNG"></p>
-<p>对于单文件种子，文件名的信息会直接存在 info 的 name 字段当中，而没有 files 字段。而多文件种子则会把所有文件名的信息存在 files 的 path当中。</p>
-<p>第二个问题，对于某些种子文件使用 parse-torrent 库解析之后会出现不同的解析结构，而且仅仅使用当中 info 对象来生成新的清洗后的种子也会导致未知的错误。</p>
-<h2 id="nt-库"><a href="#nt-库" class="headerlink" title="nt 库"></a>nt 库</h2><p>为了解决这两个问题，新的脚本采用了一个新的 BT 种子解析库—— <a target="_blank" rel="noopener" href="https://github.com/fent/node-torrent">node-torrent</a>。</p>
-<p>使用这个库的好处在于，它在解析各个种子文件时候返回的对象结构比较统一，使用一个 metadata 的对象处理整个种子文件。而且 node-torrent 集成了生产种子文件的 API，不需要再像之前使用 node 的文件系统去生成新的种子文件。</p>
-<h2 id="新的特性"><a href="#新的特性" class="headerlink" title="新的特性"></a>新的特性</h2><ul>
-<li>支持批量清洗整个文件夹的种子。</li>
-<li>支持批量转换整个文件夹的种子为磁力链接。</li>
-<li>添加了对 comment 和 publisher 的清洗。</li>
-</ul>
-<p><a target="_blank" rel="noopener" href="https://github.com/acwong00/Clean-Torrents">新版本传送门</a>。大家继续支持哦！</p>
-<p>感谢你的阅读，有不足之处请为我指出。</p>
-
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/技术实践/">技术实践</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/Node-js/">Node.js</a><a href="/tags/bt种子/">bt种子</a>
     </span>
     
 
