@@ -1,0 +1,629 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Page 8 | ac黄的博客 | acwong&#39;s blog</title>
+
+  
+  <meta name="author" content="acwong">
+  
+
+  
+  <meta name="description" content="ac黄的博客">
+  
+
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  
+
+  <meta property="og:site_name" content="ac黄的博客"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="ac黄的博客" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">ac黄的博客</a>
+    </h1>
+    <p class="site-description">acwong&#39;s blog</p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">Home</a></li>
+        
+      
+        <li><a href="/archives">Archives</a></li>
+        
+      
+        <li><a href="/tags">Tags</a></li>
+        
+      
+        
+        <li><a href="mailto:acwong@yeah.net">Email</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2015/03/05/json-notes/"><span>JSON 笔记</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2015/03/05/json-notes/" rel="bookmark">
+        <time class="entry-date published" datetime="2015-03-05T06:27:31.000Z">
+          2015-03-05
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>JSON 全称为 JavaScript Object Notation(JavaScript对象表示法)，它利用与 JavaScript 对象相似的表示方法来表示数据。虽然 JSON 脱胎于 JavaScript，但是 JSON 并不属于 JavaScript 的一部分，很多的语言都可以解析和序列化 JSON。</p>
+<h2 id="JSON-语法"><a href="#JSON-语法" class="headerlink" title="JSON 语法"></a>JSON 语法</h2><p>JSON 可以表示以下三种类型的值：</p>
+<ul>
+<li>简单值</li>
+<li>对象</li>
+<li>数组</li>
+</ul>
+<p><strong>简单值</strong>包括字符串、数值、布尔值和 null。<strong>但是要注意的是 JSON 不能表示 JavaScript 当中的一种特殊值 undefinde</strong>。</p>
+<p><strong>对象</strong>，与 JavaScript对象相似，表示无序的键值对。键值对中的值可以是简单值，也可以是对象或数组。</p>
+<p><strong>数组</strong>，与 JavaScript数组相似，表示一组有序的值，数组的值可以是简单值，也可以是对象或数组。</p>
+<p>举个例子：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;name&quot;: &quot;acwong&quot;,</span><br><span class="line">    &quot;age&quot;: 23,</span><br><span class="line">    &quot;address&quot;: &#123;</span><br><span class="line">        &quot;province&quot;: &quot;GuangDong&quot;,</span><br><span class="line">        &quot;city&quot;: &quot;GuangZhou&quot;</span><br><span class="line">    &#125;,</span><br><span class="line">    &quot;friends&quot;: [&quot;bc&quot;, &quot;cc&quot;, &quot;dc&quot;],</span><br><span class="line">    &quot;blog&quot;: &quot;http://acwong.org&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>需要注意的是，也是与 JavaScript对象表示方法的不同之处，JSON 字符串当中对象的属性必须加上<strong>双引号</strong>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">// 正确示范</span><br><span class="line">&#123;</span><br><span class="line">    &quot;name&quot;: &quot;acwong&quot;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 错误示范</span><br><span class="line">&#123;</span><br><span class="line">    name: &quot;acwong&quot;</span><br><span class="line">&#125;</span><br><span class="line">// 单引号也是错误的</span><br><span class="line">&#123;</span><br><span class="line">    &#x27;name&#x27;: &#x27;acwong&#x27;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="JavaScript-与-JSON"><a href="#JavaScript-与-JSON" class="headerlink" title="JavaScript 与 JSON"></a>JavaScript 与 JSON</h2><h3 id="JSON-对象"><a href="#JSON-对象" class="headerlink" title="JSON 对象"></a>JSON 对象</h3><p>在 JSON 诞生之初 JavaScript 处理 JSON 的方式基本就靠 <code>eval()</code> 函数。</p>
+<p><code>eval()</code> 函数可以解析 JSON 然后返回 JavaScript 数组。但是由于 <code>eval()</code> 存在安全的风险，因此在 EMCAScript 5 开始有了一个新的全局对象 <strong>JSON对象</strong>用来处理 JSON。</p>
+<h3 id="序列化-JSON"><a href="#序列化-JSON" class="headerlink" title="序列化 JSON"></a>序列化 JSON</h3><p>JavaScript 使用 JSON对象的 <code>stringify()</code> 方法来序列化 JSON。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> person = &#123;</span><br><span class="line">    <span class="attr">name</span>: <span class="string">&quot;acwong&quot;</span>,</span><br><span class="line">    <span class="attr">age</span>: <span class="number">23</span>,</span><br><span class="line">    <span class="attr">address</span>: &#123;</span><br><span class="line">        <span class="attr">province</span>: <span class="string">&quot;GuangDong&quot;</span>,</span><br><span class="line">        <span class="attr">city</span>: <span class="string">&quot;GuangZhou&quot;</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">friends</span>: [<span class="string">&quot;bc&quot;</span>, <span class="string">&quot;cc&quot;</span>, <span class="string">&quot;dc&quot;</span>],</span><br><span class="line">    <span class="attr">blog</span>: <span class="string">&quot;http://acwong.org&quot;</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> jsonText = <span class="title class_">JSON</span>.<span class="title function_">stringify</span>(person);</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(jsonText);</span><br><span class="line"><span class="comment">// &#123;&quot;name&quot;:&quot;acwong&quot;,&quot;age&quot;:23,&quot;address&quot;:&#123;&quot;province&quot;:&quot;GuangDong&quot;,&quot;city&quot;:&quot;GuangZhou&quot;&#125;,&quot;friends&quot;:[&quot;bc&quot;,&quot;cc&quot;,&quot;dc&quot;],&quot;blog&quot;:&quot;http://acwong.org&quot;&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><code>JSON.stringify()</code> 方法在默认情况下输出的 JSON字符串不包含空格字符和缩进。</p>
+<p>如果 JavaScript对象当中包含不被 JSON 支持的类型（如：undefined，函数）会自动被 <code>stringigy()</code> 方法忽略。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> person = &#123;</span><br><span class="line">    <span class="attr">name</span>: <span class="string">&quot;acwong&quot;</span>,</span><br><span class="line">    <span class="attr">blog</span>: <span class="literal">undefined</span>,</span><br><span class="line">    <span class="attr">todo</span>: <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;sleep&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> jsonText = <span class="title class_">JSON</span>.<span class="title function_">stringify</span>(person);</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(jsonText);</span><br><span class="line"><span class="comment">// &#123;&quot;name&quot;:&quot;acwong&quot;&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><code>JSON.stringify()</code> 方法包含三个参数，第一个参数就是要序列化的 JavaScript对象。第二个参数完成<strong>过滤</strong>输出结果功能。第三个参数控制输出字符串的<strong>缩进</strong>。</p>
+<h4 id="过滤输出结果"><a href="#过滤输出结果" class="headerlink" title="过滤输出结果"></a>过滤输出结果</h4><p>第二个参数完成过滤输出结果功能。</p>
+<p>当传入的第二个参数为<strong>数组</strong>时，输出的 JSON字符串只会保留包含在该数组里面的属性值。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">var person = &#123;</span><br><span class="line">    name: &quot;acwong&quot;,</span><br><span class="line">    age: 23,</span><br><span class="line">    address: &#123;</span><br><span class="line">        province: &quot;GuangDong&quot;,</span><br><span class="line">        city: &quot;GuangZhou&quot;</span><br><span class="line">    &#125;,</span><br><span class="line">    friends: [&quot;bc&quot;, &quot;cc&quot;, &quot;dc&quot;],</span><br><span class="line">    blog: &quot;http://acwong.org&quot;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">var jsonText = JSON.stringify(person, [&quot;name&quot;,&quot;blog&quot;]);</span><br><span class="line"></span><br><span class="line">console.log(jsonText);</span><br><span class="line">// &#123;&quot;name&quot;:&quot;acwong&quot;,&quot;blog&quot;:&quot;http://acwong.org&quot;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当传入的第二个参数为<strong>函数</strong>，该函数包含两个参数，分别是 JavaScript对象的属性名和属性值。输出的 JSON字符串会受到该函数的返回值影响。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 省略 person对象</span></span><br><span class="line"><span class="keyword">var</span> jsonText = <span class="title class_">JSON</span>.<span class="title function_">stringify</span>(person, <span class="keyword">function</span>(<span class="params">key, value</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (key === <span class="string">&quot;name&quot;</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;ac&quot;</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (key === <span class="string">&quot;age&quot;</span>) &#123;</span><br><span class="line">        value++;</span><br><span class="line">        <span class="keyword">return</span> value;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> value;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(jsonText);</span><br><span class="line"><span class="comment">// &#123;&quot;name&quot;:&quot;ac&quot;,&quot;age&quot;:24,&quot;address&quot;:&#123;&quot;province&quot;:&quot;GuangDong&quot;,&quot;city&quot;:&quot;GuangZhou&quot;&#125;,&quot;friends&quot;:[&quot;bc&quot;,&quot;cc&quot;,&quot;dc&quot;],&quot;blog&quot;:&quot;http://acwong.org&quot;&#125;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="控制缩进"><a href="#控制缩进" class="headerlink" title="控制缩进"></a>控制缩进</h4><p>第三个参数控制输出字符串的<strong>缩进</strong>。</p>
+<p>当第三个参数传入一个<strong>数值</strong>的时候，表示输出字符串缩进的空格数。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 省略 person对象</span></span><br><span class="line"><span class="keyword">var</span> jsonText = <span class="title class_">JSON</span>.<span class="title function_">stringify</span>(person, <span class="literal">null</span>, <span class="number">2</span>);</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(jsonText);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 输出</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">&quot;name&quot;</span>: <span class="string">&quot;acwong&quot;</span>,</span><br><span class="line">  <span class="string">&quot;age&quot;</span>: <span class="number">23</span>,</span><br><span class="line">  <span class="string">&quot;address&quot;</span>: &#123;</span><br><span class="line">    <span class="string">&quot;province&quot;</span>: <span class="string">&quot;GuangDong&quot;</span>,</span><br><span class="line">    <span class="string">&quot;city&quot;</span>: <span class="string">&quot;GuangZhou&quot;</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="string">&quot;friends&quot;</span>: [</span><br><span class="line">    <span class="string">&quot;bc&quot;</span>,</span><br><span class="line">    <span class="string">&quot;cc&quot;</span>,</span><br><span class="line">    <span class="string">&quot;dc&quot;</span></span><br><span class="line">  ],</span><br><span class="line">  <span class="string">&quot;blog&quot;</span>: <span class="string">&quot;http://acwong.org&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当第三个参数传入一个<strong>字符串</strong>时，输出结果会以该字符串作为缩进符号。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 省略 person对象</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用 * 号缩进</span></span><br><span class="line"><span class="keyword">var</span> jsonText = <span class="title class_">JSON</span>.<span class="title function_">stringify</span>(person, <span class="literal">null</span>, <span class="string">&quot;*&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(jsonText);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 输出</span></span><br><span class="line"> &#123;</span><br><span class="line">*<span class="string">&quot;name&quot;</span>: <span class="string">&quot;acwong&quot;</span>,</span><br><span class="line">*<span class="string">&quot;age&quot;</span>: <span class="number">23</span>,</span><br><span class="line">*<span class="string">&quot;address&quot;</span>: &#123;</span><br><span class="line">**<span class="string">&quot;province&quot;</span>: <span class="string">&quot;GuangDong&quot;</span>,</span><br><span class="line">**<span class="string">&quot;city&quot;</span>: <span class="string">&quot;GuangZhou&quot;</span></span><br><span class="line">*&#125;,</span><br><span class="line">*<span class="string">&quot;friends&quot;</span>: [</span><br><span class="line">**<span class="string">&quot;bc&quot;</span>,</span><br><span class="line">**<span class="string">&quot;cc&quot;</span>,</span><br><span class="line">**<span class="string">&quot;dc&quot;</span></span><br><span class="line">*],</span><br><span class="line">*<span class="string">&quot;blog&quot;</span>: <span class="string">&quot;http://acwong.org&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 省略 person对象</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用制表符(Tab)缩进</span></span><br><span class="line"><span class="keyword">var</span> jsonText = <span class="title class_">JSON</span>.<span class="title function_">stringify</span>(person, <span class="literal">null</span>, <span class="string">&quot;\t&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(jsonText);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 输出</span></span><br><span class="line"> &#123;</span><br><span class="line">	<span class="string">&quot;name&quot;</span>: <span class="string">&quot;acwong&quot;</span>,</span><br><span class="line">	<span class="string">&quot;age&quot;</span>: <span class="number">23</span>,</span><br><span class="line">	<span class="string">&quot;address&quot;</span>: &#123;</span><br><span class="line">		<span class="string">&quot;province&quot;</span>: <span class="string">&quot;GuangDong&quot;</span>,</span><br><span class="line">		<span class="string">&quot;city&quot;</span>: <span class="string">&quot;GuangZhou&quot;</span></span><br><span class="line">	&#125;,</span><br><span class="line">	<span class="string">&quot;friends&quot;</span>: [</span><br><span class="line">		<span class="string">&quot;bc&quot;</span>,</span><br><span class="line">		<span class="string">&quot;cc&quot;</span>,</span><br><span class="line">		<span class="string">&quot;dc&quot;</span></span><br><span class="line">	],</span><br><span class="line">	<span class="string">&quot;blog&quot;</span>: <span class="string">&quot;http://acwong.org&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="自定义序列化"><a href="#自定义序列化" class="headerlink" title="自定义序列化"></a>自定义序列化</h4><p>如果上述的方法都不能满足要求，还可以在要序列化的 JavaScript对象当中加入 <code>toJSON()</code> 函数，可以返回任何想返回的值。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> person = &#123;</span><br><span class="line">    <span class="attr">name</span>: <span class="string">&quot;acwong&quot;</span>,</span><br><span class="line">    <span class="attr">age</span>: <span class="number">23</span>,</span><br><span class="line">    <span class="attr">address</span>: &#123;</span><br><span class="line">        <span class="attr">province</span>: <span class="string">&quot;GuangDong&quot;</span>,</span><br><span class="line">        <span class="attr">city</span>: <span class="string">&quot;GuangZhou&quot;</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">friends</span>: [<span class="string">&quot;bc&quot;</span>, <span class="string">&quot;cc&quot;</span>, <span class="string">&quot;dc&quot;</span>],</span><br><span class="line">    <span class="attr">blog</span>: <span class="string">&quot;http://acwong.org&quot;</span>,</span><br><span class="line">    <span class="attr">toJSON</span>: <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">name</span> = <span class="string">&quot;ac&quot;</span>;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;yoyo &quot;</span> + <span class="variable language_">this</span>.<span class="property">name</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> jsonText = <span class="title class_">JSON</span>.<span class="title function_">stringify</span>(person);</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(jsonText);</span><br><span class="line"><span class="comment">//  &quot;yoyo ac&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="解析-JSON"><a href="#解析-JSON" class="headerlink" title="解析 JSON"></a>解析 JSON</h3><p>JavaScript 使用 JSON对象的 <code>parse()</code> 方法来解析 JSON。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">var jsonText = &#x27;&#123;&quot;name&quot;:&quot;acwong&quot;,&quot;age&quot;:23,&quot;address&quot;:&#123;&quot;province&quot;:&quot;GuangDong&quot;,&quot;city&quot;:&quot;GuangZhou&quot;&#125;,&quot;friends&quot;:[&quot;bc&quot;,&quot;cc&quot;,&quot;dc&quot;],&quot;blog&quot;:&quot;http://acwong.org&quot;&#125;&#x27;;</span><br><span class="line"></span><br><span class="line">var person = JSON.parse(jsonText);</span><br><span class="line"></span><br><span class="line">console.log(person);</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2015-03_parse-json.PNG" alt="parse-json"></p>
+<p><code>JSON.parse()</code> 同样可以传入一个函数作为参数，对键值对进行操作。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">var jsonText = &#x27;&#123;&quot;name&quot;:&quot;acwong&quot;,&quot;age&quot;:23,&quot;blog&quot;:&quot;http://acwong.org&quot;&#125;&#x27;;</span><br><span class="line"></span><br><span class="line">var person = JSON.parse(jsonText);</span><br><span class="line"></span><br><span class="line">console.log(person);</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2015-03_parse-json-with-fun.PNG" alt="parse-json-with-fun"></p>
+<h2 id="JSON-的好处"><a href="#JSON-的好处" class="headerlink" title="JSON 的好处"></a>JSON 的好处</h2><ol>
+<li>与 XML 一样可以表示复杂的数据结构。</li>
+<li>比 XML 轻量得多。</li>
+<li>语法简单易懂。</li>
+<li>由于其轻量级，在传输的时候占用的资源相对较少。</li>
+</ol>
+<p>感谢您的阅读，有不足之处请为我指出。</p>
+<p><strong>参考</strong></p>
+<p><a target="_blank" rel="noopener" href="http://book.douban.com/subject/10546125/">JavaScript高级程序设计(第3版)</a></p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/学习笔记/">学习笔记</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/JavaScript/">JavaScript</a><a href="/tags/JSON/">JSON</a><a href="/tags/JavaScript对象/">JavaScript对象</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2015/03/03/node-test-of-mysql-and-redis/"><span>Node.js 练习 —— 操作 MySQL 和 Redis</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2015/03/03/node-test-of-mysql-and-redis/" rel="bookmark">
+        <time class="entry-date published" datetime="2015-03-03T07:28:04.000Z">
+          2015-03-03
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>新年新气象，博客换了一个新主题，继续 Node.js 小练习。</p>
+<p>这次小联系的内容是生成随机激活码并把生成的激活码分别保存到 MySQL 和 Redis 当中。</p>
+<p>题目来源 <a target="_blank" rel="noopener" href="https://github.com/Show-Me-the-Code/show-me-the-code">Python 练习册</a>。</p>
+<h2 id="题目0001"><a href="#题目0001" class="headerlink" title="题目0001"></a>题目0001</h2><blockquote>
+<p>第 0001 题：做为 Apple Store App 独立开发者，你要搞限时促销，为你的应用生成激活码（或者优惠券），使用 Python 如何生成 200 个激活码（或者优惠券）？</p>
+</blockquote>
+<p>这个题目需要我们生成 200个激活码。生成激活码有许多不同的方式，为了简单起见这里直接用 UUID 来代替。</p>
+<p><strong>UUID(Universally Unique Identifier)</strong> 可以帮助我们简单地创建随机而且不重复的字符串。</p>
+<h3 id="node-uuid"><a href="#node-uuid" class="headerlink" title="node-uuid"></a>node-uuid</h3><p>在 Node.js 中使用 <a target="_blank" rel="noopener" href="https://github.com/broofa/node-uuid">node-uuid</a> 库来生成 UUID。该库可以简单地生成符合 RFC4122 标准的版本1 和版本4的UUID。版本1和版本4之间的区别是版本1根据时间戳来生成，而版本4是随机生成。</p>
+<p>安装 node-uuid</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install node-uuid</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// code.js</span></span><br><span class="line"><span class="keyword">var</span> uuid = <span class="built_in">require</span>(<span class="string">&#x27;node-uuid&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">getCode</span>(<span class="params">number</span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> codes = [];</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> i=<span class="number">0</span>; i &lt; number; i++) &#123;</span><br><span class="line">        codes.<span class="title function_">push</span>(uuid.<span class="title function_">v4</span>());</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> codes</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">getCode</span>(<span class="number">200</span>));</span><br></pre></td></tr></table></figure>
+
+<p>运行 <em>code.js</em></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">node code</span><br></pre></td></tr></table></figure>
+
+<p>结果</p>
+<p><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2015-03_node-uuid.PNG" alt="Node.js 生成 UUID"></p>
+<h2 id="题目0002"><a href="#题目0002" class="headerlink" title="题目0002"></a>题目0002</h2><blockquote>
+<p>第 0002 题：将 0001 题生成的 200 个激活码（或者优惠券）保存到 MySQL 关系型数据库中。</p>
+</blockquote>
+<p>首先，我们使用 <code>exports</code> 将上一题当中 <code>getCode</code> 可以被调用：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// code.js</span></span><br><span class="line"><span class="built_in">exports</span>.<span class="property">getCode</span> = getCode;</span><br></pre></td></tr></table></figure>
+
+<h3 id="node-mysql"><a href="#node-mysql" class="headerlink" title="node-mysql"></a>node-mysql</h3><p>要使用 Node.js 操作 MySQL 数据库，这里使用 <a target="_blank" rel="noopener" href="https://github.com/felixge/node-mysql/">node-mysql</a> 库。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install mysql</span><br></pre></td></tr></table></figure>
+
+<p>直接上代码：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// code_insert_mysql.js</span></span><br><span class="line"><span class="keyword">var</span> mysql = <span class="built_in">require</span>(<span class="string">&#x27;mysql&#x27;</span>);</span><br><span class="line"><span class="keyword">var</span> code = <span class="built_in">require</span>(<span class="string">&#x27;./code.js&#x27;</span>); <span class="comment">// 引入上一题的 code.js</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> codes = code.<span class="title function_">getCode</span>(<span class="number">200</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建连接</span></span><br><span class="line"><span class="keyword">var</span> conn = mysql.<span class="title function_">createConnection</span>(&#123;</span><br><span class="line">    <span class="attr">host</span>: <span class="string">&#x27;localhost&#x27;</span>,</span><br><span class="line">    <span class="attr">user</span>: <span class="string">&#x27;test0002&#x27;</span>,</span><br><span class="line">    <span class="attr">password</span>: <span class="string">&#x27;test0002&#x27;</span>,</span><br><span class="line">    <span class="attr">database</span>: <span class="string">&#x27;test0002&#x27;</span></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">conn.<span class="title function_">connect</span>(<span class="keyword">function</span>(<span class="params">err</span>)&#123;</span><br><span class="line">    <span class="keyword">if</span> (err) &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">error</span>(err);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> sql_create_table = <span class="string">&#x27;CREATE TABLE IF NOT EXISTS code( &#x27;</span> +</span><br><span class="line">                       <span class="string">&#x27;id SMALLINT AUTO_INCREMENT,&#x27;</span> +</span><br><span class="line">                       <span class="string">&#x27;code CHAR(20),&#x27;</span> +</span><br><span class="line">                       <span class="string">&#x27;PRIMARY KEY(id)&#x27;</span> +</span><br><span class="line">                       <span class="string">&#x27;)&#x27;</span>;</span><br><span class="line">conn.<span class="title function_">query</span>(sql_create_table, <span class="keyword">function</span>(<span class="params">err, res</span>)&#123;</span><br><span class="line">    <span class="keyword">if</span> (err) &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(err);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> i=<span class="number">0</span>; i &lt; codes.<span class="property">length</span>; i++) &#123;</span><br><span class="line">        <span class="keyword">var</span> sql_insert_code = <span class="string">&quot;INSERT code VALUES(&#x27;code&#x27;,&#x27;&quot;</span> + codes[i] + <span class="string">&quot;&#x27;)&quot;</span>;</span><br><span class="line">        conn.<span class="title function_">query</span>(sql_insert_code, <span class="keyword">function</span>(<span class="params">err, res</span>)&#123;</span><br><span class="line">            <span class="keyword">if</span> (err) &#123;</span><br><span class="line">                <span class="variable language_">console</span>.<span class="title function_">error</span>(err);</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="variable language_">console</span>.<span class="title function_">log</span>(res);</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">    conn.<span class="title function_">end</span>(); <span class="comment">// 关闭连接</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>运行：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">node code_insert_mysql</span><br></pre></td></tr></table></figure>
+
+<p>进入 MySQL 查询一下就可以看到数据了。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT * FROM code;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2015-03_node-mysql.PNG" alt="node-mysql"></p>
+<h2 id="题目0003"><a href="#题目0003" class="headerlink" title="题目0003"></a>题目0003</h2><blockquote>
+<p>第 0003 题：将 0001 题生成的 200 个激活码（或者优惠券）保存到 Redis 非关系型数据库中。</p>
+</blockquote>
+<h3 id="node-redis"><a href="#node-redis" class="headerlink" title="node_redis"></a>node_redis</h3><p>使用 Node.js 操作 Redis，这里使用 <a target="_blank" rel="noopener" href="https://github.com/mranney/node_redis">node_redis</a> 库。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install redis</span><br></pre></td></tr></table></figure>
+
+<p>直接上代码：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// code_insert_redis.js</span></span><br><span class="line"><span class="keyword">var</span> redis = <span class="built_in">require</span>(<span class="string">&#x27;redis&#x27;</span>);</span><br><span class="line"><span class="keyword">var</span> code = <span class="built_in">require</span>(<span class="string">&#x27;./code.js&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> client = redis.<span class="title function_">createClient</span>();</span><br><span class="line"><span class="keyword">var</span> codes = code.<span class="title function_">getCode</span>(<span class="number">200</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 用 LIST 形式存储，KEY 为 codes</span></span><br><span class="line">client.<span class="title function_">rpush</span>(<span class="string">&#x27;codes&#x27;</span>, codes, <span class="keyword">function</span>(<span class="params">err, res</span>)&#123;</span><br><span class="line">    <span class="keyword">if</span> (err) &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(err);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(res); <span class="comment">// 输出 1</span></span><br><span class="line">    client.<span class="title function_">quit</span>();</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>运行：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">node code_insert_redis</span><br></pre></td></tr></table></figure>
+
+<p>查看结果</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lrange codes 0 -1</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2015-03_node-redis.PNG" alt="node-redis"></p>
+<p>感谢您的阅读，有不足之处请为我指出。</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/技术实践/">技术实践</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Node-js/">Node.js</a><a href="/tags/MySQL/">MySQL</a><a href="/tags/Redis/">Redis</a><a href="/tags/关系型数据库/">关系型数据库</a><a href="/tags/NoSQL数据库/">NoSQL数据库</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2015/01/29/node-draw-number-on-head-image/"><span>Node.js 练习 —— 逼死强迫症头像</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2015/01/29/node-draw-number-on-head-image/" rel="bookmark">
+        <time class="entry-date published" datetime="2015-01-29T03:35:27.000Z">
+          2015-01-29
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>最近在 GitHub 上看到了一个名为 <a target="_blank" rel="noopener" href="https://github.com/Show-Me-the-Code/show-me-the-code">Python 练习册</a>的项目。这个项目让大家用 Python 来完成一些简单的小练习，题目也同样适用于其他的语言，这里就 Node.js 来写完成一些小练习。</p>
+<h2 id="题目0000"><a href="#题目0000" class="headerlink" title="题目0000"></a>题目0000</h2><blockquote>
+<p>将你的 QQ 头像（或者微博头像）右上角加上红色的数字，类似于微信未读信息数量那种提示效果。 类似于图中效果</p>
+</blockquote>
+<blockquote>
+<p> <img src="https://camo.githubusercontent.com/d518d3929e4054ce2f9183b23e52908da7e5632d/687474703a2f2f692e696d6775722e636f6d2f736732646b75592e706e673f31" alt="题目0000图片"></p>
+</blockquote>
+<h2 id="图片库选择"><a href="#图片库选择" class="headerlink" title="图片库选择"></a>图片库选择</h2><p>这个题目要求的是在图片上添加一个数字，然后完成前阵子很流行的模拟提示数字逼死强迫症的效果。在 Python 当中要作图通常会使用 Pillow 库。而在 Node.js 当中我选择了较为全面的 <a target="_blank" rel="noopener" href="http://aheckmann.github.io/gm/">gm</a> 库。当然，还有其他的选择，可以参考 <a target="_blank" rel="noopener" href="http://stackoverflow.com/questions/10692075/which-library-should-i-use-for-server-side-image-manipulation-on-node-js">StackOverflow 的答案</a>。</p>
+<h2 id="安装-gm"><a href="#安装-gm" class="headerlink" title="安装 gm"></a>安装 gm</h2><p>要使用 gm 首先要在系统安装 <a target="_blank" rel="noopener" href="http://www.graphicsmagick.org/">GraphicsMagick</a> 或者 <a target="_blank" rel="noopener" href="http://www.imagemagick.org/">ImageMagick</a>。这里我选择了 ImageMagick。在 Ubuntu 系统里面非常简单：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install imagemagick</span><br></pre></td></tr></table></figure>
+
+<p>然后用 <em>npm</em> 安装 gm 库：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install gm</span><br></pre></td></tr></table></figure>
+
+<h2 id="开始作图"><a href="#开始作图" class="headerlink" title="开始作图"></a>开始作图</h2><p>先来看看最终的效果：</p>
+<p><img src="https://raw.githubusercontent.com/acwong00/node_exercise/master/0000/acwong2.jpg" alt="acwong_afeter"></p>
+<p>因此，现在就要在原图的右上角画上一个红色的圆和白色的数字。</p>
+<p>这里我主要用到 gm 的 <code>drawCircle</code> 和 <code>drawCircle</code> 的方法分别用来画圆和数字。</p>
+<p>直接上代码：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> fs = <span class="built_in">require</span>(<span class="string">&#x27;fs&#x27;</span>)</span><br><span class="line">  , gm = <span class="built_in">require</span>(<span class="string">&#x27;gm&#x27;</span>)  <span class="comment">// 加载 gm 模块</span></span><br><span class="line">  , readStream = fs.<span class="title function_">createReadStream</span>(<span class="string">&quot;acwong.jpg&quot;</span>);  <span class="comment">// 创建流</span></span><br><span class="line"><span class="title function_">gm</span>(readStream,<span class="string">&#x27;acwong.jpg&#x27;</span>)</span><br><span class="line">    .<span class="title function_">options</span>(&#123;<span class="attr">imageMagick</span>: <span class="literal">true</span>&#125;)  <span class="comment">// 使用 ImageMagick </span></span><br><span class="line">    .<span class="title function_">size</span>(&#123;<span class="attr">bufferStream</span>: <span class="literal">true</span>&#125;, <span class="keyword">function</span>(<span class="params">err, size</span>)&#123;</span><br><span class="line">        <span class="comment">// 使用 size 方法获取图像的尺寸</span></span><br><span class="line">        <span class="keyword">if</span> (err) &#123;</span><br><span class="line">            <span class="keyword">throw</span> err;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">var</span> width = <span class="built_in">parseInt</span>(size.<span class="property">width</span>);</span><br><span class="line">            <span class="keyword">var</span> height = <span class="built_in">parseInt</span>(size.<span class="property">width</span>);</span><br><span class="line">            <span class="variable language_">this</span>.<span class="title function_">fill</span>(<span class="string">&quot;#ff0000&quot;</span>);</span><br><span class="line">            <span class="comment">// 画圆</span></span><br><span class="line">            <span class="variable language_">this</span>.<span class="title function_">drawCircle</span>(width-<span class="number">30</span>, <span class="number">30</span>, width-<span class="number">30</span>, <span class="number">0</span>);</span><br><span class="line">            <span class="variable language_">this</span>.<span class="title function_">fill</span>(<span class="string">&quot;#ffffff&quot;</span>);</span><br><span class="line">            <span class="variable language_">this</span>.<span class="title function_">fontSize</span>(<span class="string">&quot;50&quot;</span>);</span><br><span class="line">            <span class="comment">// 画数字</span></span><br><span class="line">            <span class="variable language_">this</span>.<span class="title function_">drawText</span>(width-<span class="number">45</span>, <span class="number">50</span>, <span class="string">&quot;7&quot;</span>);</span><br><span class="line">            <span class="variable language_">this</span>.<span class="title function_">write</span>(<span class="string">&quot;acwong2.jpg&quot;</span>, <span class="keyword">function</span>(<span class="params">err</span>)&#123;</span><br><span class="line">                <span class="keyword">if</span> (err) &#123;</span><br><span class="line">                    <span class="keyword">throw</span> err;</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;done&quot;</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br></pre></td></tr></table></figure>
+
+<p>运行程序：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">node test</span><br></pre></td></tr></table></figure>
+
+<p>命令行中出现 <strong>done</strong> 打开新的图片 <em>acwong2.jpg</em> 就可以看到效果了。</p>
+<p>感谢您的阅读，有不足之处请为我指出。</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/技术实践/">技术实践</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Node-js/">Node.js</a><a href="/tags/图像处理/">图像处理</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2015/01/19/different-of-mouse-event/"><span>JavaScript 笔记 —— 鼠标事件的浏览器差异</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2015/01/19/different-of-mouse-event/" rel="bookmark">
+        <time class="entry-date published" datetime="2015-01-19T06:17:40.000Z">
+          2015-01-19
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>鼠标是我们在 PC 端浏览网页时候最重要的交互工具，因此鼠标事件也是 Web 开发当中最常用的一类事件。然而，由于各种原因，不同厂商或者不同版本的浏览器之间对于鼠标事件的实现也有所不同。本文总结一下，鼠标事件在不同浏览器实现的差异。</p>
+<h2 id="mouseover-和-mouseout-相关元素差异"><a href="#mouseover-和-mouseout-相关元素差异" class="headerlink" title="mouseover 和 mouseout 相关元素差异"></a>mouseover 和 mouseout 相关元素差异</h2><p><em>mouseover</em> 和 <em>mouseout</em> 是 DOM3 级事件当中的其中两个事件。</p>
+<p><em>mouseover</em> 是当鼠标指针在该目标元素外部，然后用户将鼠标首次移入目标元素的边界时触发的事件。</p>
+<p><em>mouseout</em> 是当鼠标指针在当前元素上方，然后用户将鼠标移入另一个元素时触发的事件。另一个元素可以位于当前元素的外部，也可以是当前元素的子元素。</p>
+<p>可以看出上述两个事件都是在描述从一个元素移动到另一个元素的情况，因此参与事件有两个元素，这个时候我们就需要了解除了目标元素之外还有哪一个元素参加了事件。</p>
+<p><strong>标准事件对象</strong> <code>event</code> 包含了名为 <code>relatedTarget</code> 的属性，提供相关元素的信息，只有在 <em>mouseover</em> 和 <em>mouseout</em> 当中该属性才包含元素的信息，在其他事件当中它的值为 <code>null</code>。</p>
+<p>有如下 HTMl：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">&quot;en&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>demo<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">style</span>&gt;</span><span class="language-css"></span></span><br><span class="line"><span class="language-css">        <span class="selector-id">#myDiv</span> &#123;</span></span><br><span class="line"><span class="language-css">        	<span class="attribute">width</span>: <span class="number">200px</span>;</span></span><br><span class="line"><span class="language-css">        	<span class="attribute">height</span>: <span class="number">200px</span>;</span></span><br><span class="line"><span class="language-css">        	<span class="attribute">background-color</span>: red;</span></span><br><span class="line"><span class="language-css">        &#125;</span></span><br><span class="line"><span class="language-css">    </span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;myDiv&quot;</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;demo.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>为 <em>myDiv</em> 分别绑定 <em>mouseover</em> 和 <em>mouseout</em> 事件。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> div = <span class="variable language_">document</span>.<span class="title function_">getElmentById</span>(<span class="string">&quot;myDiv&quot;</span>);</span><br><span class="line">div.<span class="title function_">addEventListener</span>(<span class="string">&quot;mouseover&quot;</span>, <span class="keyword">function</span>(<span class="params">event</span>) &#123;</span><br><span class="line">	<span class="title function_">alert</span>(<span class="string">&quot;Mouse comes from &quot;</span> + event.<span class="property">relatedTarget</span>.<span class="property">tagName</span>);</span><br><span class="line">    <span class="comment">// 触发事件，弹出 &quot;Mouse comes from BODY&quot;</span></span><br><span class="line">&#125;, <span class="literal">false</span>);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> div = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;myDiv&quot;</span>);</span><br><span class="line">div.<span class="title function_">addEventListener</span>(<span class="string">&quot;mouseout&quot;</span>, <span class="keyword">function</span>(<span class="params">event</span>) &#123;</span><br><span class="line">	<span class="title function_">alert</span>(<span class="string">&quot;Mouse moves to &quot;</span> + event.<span class="property">relatedTarget</span>.<span class="property">tagName</span>);</span><br><span class="line">    <span class="comment">// 触发事件，弹出 &quot;Mouse moves to BODY&quot;</span></span><br><span class="line">&#125;, <span class="literal">false</span>);</span><br></pre></td></tr></table></figure>
+
+<p><strong>IE8 或之前的版本</strong>不支持 <code>relatedTarget</code> 属性，我们需要使用另一个属性访问相关元素。当 <em>mouseover</em> 事件触发时，IE 事件对象当中 <code>fromElement</code> 保存相关元素；当 <em>mouseout</em> 事件触发时，IE 事件对象当中 <code>toElement</code> 保存相关元素。</p>
+<p>延续上面的例子，为 <em>myDiv</em> 分别绑定 <em>mouseover</em> 和 <em>mouseout</em> 事件。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> div = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;myDiv&quot;</span>);</span><br><span class="line">div.<span class="title function_">attachEvent</span>(<span class="string">&quot;onmouseover&quot;</span>, <span class="keyword">function</span>(<span class="params">event</span>) &#123;</span><br><span class="line">	<span class="title function_">alert</span>(<span class="string">&quot;Mouse comes from &quot;</span> + event.<span class="property">fromElement</span>.<span class="property">tagName</span>);</span><br><span class="line">    <span class="comment">// IE 浏览器中触发事件，弹出 &quot;Mouse comes from BODY&quot;</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> div = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;myDiv&quot;</span>);</span><br><span class="line">div.<span class="title function_">attachEvent</span>(<span class="string">&quot;onmouseout&quot;</span>, <span class="keyword">function</span>(<span class="params">event</span>) &#123;</span><br><span class="line">	<span class="title function_">alert</span>(<span class="string">&quot;Mouse moves to &quot;</span> + event.<span class="property">toElement</span>.<span class="property">tagName</span>);</span><br><span class="line">    <span class="comment">// IE 浏览器中触发事件，弹出 &quot;Mouse moves to BODY&quot;</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h2 id="鼠标按键信息差异"><a href="#鼠标按键信息差异" class="headerlink" title="鼠标按键信息差异"></a>鼠标按键信息差异</h2><p>现在的鼠标通常包含3个按键，左键、右键和中间的键，在开发过程当中我们可能会需要知道用户按下的是鼠标的哪一个键。</p>
+<p><strong>标准事件对象</strong>使用 <code>button</code> 属性来识别鼠标按键。0 表示主鼠标按钮（一般为左键），1 表示中间的按钮，2 表示次鼠标按钮（一般为右键）。</p>
+<p>延续上面的例子，为 <em>myDiv</em> 绑定 <em>mousedown</em> 事件。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> div = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;myDiv&quot;</span>);</span><br><span class="line">div.<span class="title function_">addEventListener</span>(<span class="string">&quot;mousedown&quot;</span>, <span class="keyword">function</span> (<span class="params">event</span>) &#123;</span><br><span class="line">	<span class="title function_">alert</span>(event.<span class="property">button</span>);    <span class="comment">// 根据按键不同分别出现值 0，1，2</span></span><br><span class="line">&#125;, <span class="literal">false</span>);</span><br></pre></td></tr></table></figure>
+
+<p><strong>IE8 或之前的版本</strong>中的事件对象同样提供了 <code>button</code> 属性，但是该属性的值与标准事件对象有所不同。</p>
+<ul>
+<li>0 表示没有按下按钮。</li>
+<li>1 表示按下主鼠标按钮（一般为左键）。</li>
+<li>2 表示按下次鼠标按钮（一般为右键）。</li>
+<li>3 表示同时按下主、次鼠标按钮。</li>
+<li>4 表示按下中间按钮。</li>
+<li>5 表示同时按下主鼠标按钮和中间按钮。</li>
+<li>6 表示同时按下次鼠标按钮和中间按钮。</li>
+<li>7 表示同时按下了三个按钮</li>
+</ul>
+<p>IE事件对象中 <code>button</code> 同时考虑到了两个或多个按钮同时按下的情形，虽然这样的操作并不常见。</p>
+<h2 id="鼠标滚轮事件差异"><a href="#鼠标滚轮事件差异" class="headerlink" title="鼠标滚轮事件差异"></a>鼠标滚轮事件差异</h2><p><em>mousewheel</em> 事件是用户使用鼠标滚轮滚动的时候触发的事件，该事件的兼容性比较好，IE6.0 就已经实现。</p>
+<p>在鼠标滚轮的事件当中，我们通常会希望知道用户是向前还是向后滚动滚轮，<em>mousewheel</em> 事件对象当中包含一个 <code>wheelDelta</code> 属性，当用户向前滚动滚轮时，<code>wheelDelta</code> 的值为 120 的倍数；当用户向后滚动滚轮时，<code>wheelDelta</code> 的值为 -120 的倍数。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> div = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;myDiv&quot;</span>);</span><br><span class="line">div.<span class="title function_">addEventListener</span>(<span class="string">&quot;mousewheel&quot;</span>, <span class="keyword">function</span> (<span class="params">event</span>) &#123;</span><br><span class="line">	<span class="title function_">alert</span>(event.<span class="property">wheelDelta</span>);   <span class="comment">// 120 或 -120</span></span><br><span class="line">&#125;, <span class="literal">false</span>);</span><br></pre></td></tr></table></figure>
+
+<p>有一个需要注意的点，在 Opera 9.5 之前的版本，<code>wheelDelta</code> 的值与标准的值<strong>符号相反</strong>。</p>
+<p>在 FireFox 浏览器当中，除了 <code>mousewheel</code> 事件以外还有一个表示鼠标滚动的事件 <code>DOMMouseScroll</code>。该事件当中 <code>detail</code> 的值与 <code>mousewheel</code> 事件对象当中的 <code>wheelDelta</code> 作用相同。</p>
+<p>不同的是鼠标向前滚动时 <code>detail</code> 值为 -3，向后滚动时 <code>detail</code> 值为 3。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// FireFox 浏览器当中</span></span><br><span class="line"><span class="keyword">var</span> div = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;myDiv&quot;</span>);</span><br><span class="line">div.<span class="title function_">addEventListener</span>(<span class="string">&quot;DOMMouseScroll&quot;</span>, <span class="keyword">function</span> (<span class="params">event</span>) &#123;</span><br><span class="line">	<span class="title function_">alert</span>(event.<span class="property">detail</span>); <span class="comment">// -3 或 3</span></span><br><span class="line">&#125;, <span class="literal">false</span>);</span><br></pre></td></tr></table></figure>
+
+<p>感谢您的阅读，有不足之处请为我指出。</p>
+<p><strong>参考</strong></p>
+<p><a target="_blank" rel="noopener" href="http://book.douban.com/subject/10546125/">JavaScript高级程序设计(第3版)</a></p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/学习笔记/">学习笔记</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/兼容性/">兼容性</a><a href="/tags/JavaScript/">JavaScript</a><a href="/tags/事件/">事件</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2014/12/30/standard-event-object-and-IE-event-object/"><span>JavaScript 笔记 —— 标准事件对象与 IE 事件对象</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2014/12/30/standard-event-object-and-IE-event-object/" rel="bookmark">
+        <time class="entry-date published" datetime="2014-12-30T13:26:22.000Z">
+          2014-12-30
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>标准的事件绑定函数是 <code>addEventListener</code> 函数，而 IE 浏览器（IE9 以下）则是用 <code>attachEvent</code>。 这两个函数中的事件处理函数都可以传入一个 <code>event</code> 参数，就是我们所说的事件对象，本文就来总结一下两者的区别。</p>
+<h2 id="获取事件的目标"><a href="#获取事件的目标" class="headerlink" title="获取事件的目标"></a>获取事件的目标</h2><p>事件的目标就是指当前触发事件的元素。</p>
+<p>有如下的 HTML：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">body</span> <span class="attr">id</span>=<span class="string">&quot;myBody&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">button</span> <span class="attr">id</span>=<span class="string">&quot;myButton&quot;</span>&gt;</span>click<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>标准事件对象使用 <code>event</code> 的 <code>target</code> 属性获取事件目标。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> btn = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;myButton&#x27;</span>);</span><br><span class="line">btn.<span class="title function_">addEventListener</span>(<span class="string">&quot;click&quot;</span>, <span class="keyword">function</span>(<span class="params">event</span>) &#123;</span><br><span class="line">    <span class="title function_">alert</span>(event.<span class="property">target</span>.<span class="property">id</span>);    <span class="comment">// myButton</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>IE 事件对象使用 <code>event</code> 的 <code>srcElement</code> 属性获取事件目标。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> btn = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;myButton&quot;</span>);</span><br><span class="line">btn.<span class="title function_">attachEvent</span>(<span class="string">&quot;onclick&quot;</span>, <span class="keyword">function</span>(<span class="params">event</span>) &#123;</span><br><span class="line">    <span class="title function_">alert</span>(event.<span class="property">srcElement</span>.<span class="property">id</span>);    <span class="comment">// myButton</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p><strong>另外</strong>，标准事件对象还有一个 <code>currentTarget</code> 属性，该属性在事件处理函数当中始终与 <code>this</code> 相等，而 <code>target</code> 属性则是指向事件触发的具体目标。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">document</span>.<span class="property">body</span>.<span class="title function_">addEventListener</span>(<span class="string">&quot;click&quot;</span>, <span class="keyword">function</span> (<span class="params">event</span>) &#123;</span><br><span class="line">    <span class="title function_">alert</span>(event.<span class="property">currentTarget</span>.<span class="property">id</span>);    <span class="comment">// myBody</span></span><br><span class="line">    <span class="title function_">alert</span>(event.<span class="property">target</span>.<span class="property">id</span>);           <span class="comment">// myButton</span></span><br><span class="line">    <span class="title function_">alert</span>(<span class="variable language_">this</span>.<span class="property">id</span>);                   <span class="comment">// myBody</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h2 id="取消事件默认行为"><a href="#取消事件默认行为" class="headerlink" title="取消事件默认行为"></a>取消事件默认行为</h2><p>有如下的 HTML：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">a</span> <span class="attr">id</span>=<span class="string">&quot;myLink&quot;</span> <span class="attr">href</span>=<span class="string">&quot;http://blog.acwong.org&quot;</span>&gt;</span>acwong blog<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>标准事件对象使用 <code>event</code> 的 <code>preventDefault()</code> 方法取消事件默认行为。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> myLink = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;myLink&#x27;</span>);</span><br><span class="line">myLink.<span class="title function_">addEventListener</span>(<span class="string">&quot;click&quot;</span>,<span class="keyword">function</span>(<span class="params">event</span>) &#123;</span><br><span class="line">    <span class="title function_">alert</span>(<span class="string">&quot;haha&quot;</span>);          <span class="comment">// haha</span></span><br><span class="line">    event.<span class="title function_">preventDefault</span>(); <span class="comment">// 浏览器不会跳转</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>IE 事件对象使用 <code>event</code> 的 <code>returnValue</code> 属性取消事件默认行为，该属性默认值为 <code>true</code> 设置为 <code>false</code> 就可以取消事件默认行为。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> myLink = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;myLink&#x27;</span>);</span><br><span class="line">myLink.<span class="title function_">attaxchEvent</span>(<span class="string">&quot;onclick&quot;</span>,<span class="keyword">function</span>(<span class="params">event</span>) &#123;</span><br><span class="line">    <span class="title function_">alert</span>(<span class="string">&quot;haha&quot;</span>);                  <span class="comment">// haha</span></span><br><span class="line">    event.<span class="property">returnValue</span> = <span class="literal">false</span>;      <span class="comment">// 浏览器不会跳转</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h2 id="禁止事件冒泡"><a href="#禁止事件冒泡" class="headerlink" title="禁止事件冒泡"></a>禁止事件冒泡</h2><p>有如下的 HTML:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">body</span> <span class="attr">id</span>=<span class="string">&quot;myBody&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">button</span> <span class="attr">id</span>=<span class="string">&quot;myButton&quot;</span>&gt;</span>click<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>标准事件对象使用 <code>event</code> 的 <code>stopPropagation()</code> 方法禁止事件冒泡。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> btn = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;myButton&quot;</span>);</span><br><span class="line">btn.<span class="title function_">addEventListener</span>(<span class="string">&quot;click&quot;</span>, <span class="keyword">function</span>(<span class="params">event</span>) &#123;</span><br><span class="line">    <span class="title function_">alert</span>(<span class="variable language_">this</span>.<span class="property">id</span>);            <span class="comment">// myButton</span></span><br><span class="line">    event.<span class="title function_">stopPropagation</span>();   <span class="comment">// 禁止事件冒泡</span></span><br><span class="line">&#125;);</span><br><span class="line"><span class="variable language_">document</span>.<span class="property">body</span>.<span class="title function_">addEventListener</span>(<span class="string">&quot;click&quot;</span>,<span class="keyword">function</span>(<span class="params">event</span>) &#123;</span><br><span class="line">    <span class="title function_">alert</span>(<span class="variable language_">this</span>.<span class="property">id</span>);           <span class="comment">// 不会出现</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>IE 事件对象使用 <code>event</code> 的 <code>cancelBubble</code> 属性禁止事件冒泡，该属性值默认为 <code>false</code>，设置为 <code>true</code> 就可以禁止事件冒泡。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> btn = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;myButton&quot;</span>);</span><br><span class="line">btn.<span class="title function_">attachEvent</span>(<span class="string">&quot;onclick&quot;</span>, <span class="keyword">function</span>(<span class="params">event</span>) &#123;</span><br><span class="line">    <span class="title function_">alert</span>(<span class="string">&quot;haha&quot;</span>);              <span class="comment">// haha</span></span><br><span class="line">    event.<span class="property">cancelBubble</span> = <span class="literal">true</span>;  <span class="comment">// 禁止事件冒泡</span></span><br><span class="line">&#125;);</span><br><span class="line"><span class="variable language_">document</span>.<span class="property">body</span>.<span class="title function_">attachEvent</span>(<span class="string">&quot;onclick&quot;</span>,<span class="keyword">function</span>(<span class="params">event</span>) &#123;</span><br><span class="line">    <span class="title function_">alert</span>(<span class="string">&quot;hehe&quot;</span>);             <span class="comment">// 不会出现</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h2 id="IE-事件处理函数中的-this"><a href="#IE-事件处理函数中的-this" class="headerlink" title="IE 事件处理函数中的 this"></a>IE 事件处理函数中的 <code>this</code></h2><p>最后，还要一个与事件对象无关的小点，在 IE 事件处理函数当中 <code>this</code> 的值并不等于被绑定元素，而是等于 <code>window</code> 对象。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> btn = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;myButton&quot;</span>);</span><br><span class="line">btn.<span class="title function_">attachEvent</span>(<span class="string">&quot;onclick&quot;</span>, <span class="keyword">function</span>(<span class="params">event</span>) &#123;</span><br><span class="line">    <span class="title function_">alert</span>(<span class="variable language_">this</span> === <span class="variable language_">window</span>);              <span class="comment">// true</span></span><br><span class="line">    <span class="title function_">alert</span>(<span class="variable language_">this</span>.<span class="property">id</span>)                       <span class="comment">// undefined</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>而在标准事件绑定当中，<code>this</code> 的值等于被绑定的元素。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> btn = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;myButton&quot;</span>);</span><br><span class="line">btn.<span class="title function_">addEventListener</span>(<span class="string">&quot;click&quot;</span>, <span class="keyword">function</span>(<span class="params">event</span>) &#123;</span><br><span class="line">    <span class="title function_">alert</span>(<span class="variable language_">this</span> === btn);                  <span class="comment">// true</span></span><br><span class="line">    <span class="title function_">alert</span>(<span class="variable language_">this</span>.<span class="property">id</span>);                       <span class="comment">// myButton</span></span><br><span class="line">    <span class="title function_">alert</span>(<span class="variable language_">this</span> === event.<span class="property">currentTarget</span>);  <span class="comment">// true</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>最后祝大家新年快乐~</p>
+<p>感谢您的阅读，有不足之处请为我指出。</p>
+<p><strong>参考</strong></p>
+<p><a target="_blank" rel="noopener" href="http://book.douban.com/subject/10546125/">JavaScript高级程序设计(第3版)</a></p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/学习笔记/">学习笔记</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/兼容性/">兼容性</a><a href="/tags/JavaScript/">JavaScript</a><a href="/tags/事件/">事件</a><a href="/tags/事件对象/">事件对象</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+
+<nav class="pagination">
+  
+  <a href="/page/7/" class="pagination-prev">Prev</a>
+  
+  
+  <a href="/page/9/" class="pagination-next">Next</a>
+  
+</nav>
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2022 acwong
+    
+  </p>
+</footer>
+    
+    
+  </div>
+</div>
+</body>
+</html>

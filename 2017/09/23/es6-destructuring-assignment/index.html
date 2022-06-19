@@ -1,0 +1,180 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>ES6/ES7 三点式 —— 扩展运算符与剩余操作符 | ac黄的博客 | acwong&#39;s blog</title>
+
+  
+  <meta name="author" content="acwong">
+  
+
+  
+  <meta name="description" content="介绍 ES6(EMCAScript 2015) 的扩展语句语法及应用">
+  
+
+  
+  
+  <meta name="keywords" content="JavaScript,ECMAScript6,ECMAScript7">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="ES6/ES7 三点式 —— 扩展运算符与剩余操作符"/>
+
+  <meta property="og:site_name" content="ac黄的博客"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="ac黄的博客" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">ac黄的博客</a>
+    </h1>
+    <p class="site-description">acwong&#39;s blog</p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">Home</a></li>
+        
+      
+        <li><a href="/archives">Archives</a></li>
+        
+      
+        <li><a href="/tags">Tags</a></li>
+        
+      
+        
+        <li><a href="mailto:acwong@yeah.net">Email</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>ES6/ES7 三点式 —— 扩展运算符与剩余操作符</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/09/23/es6-destructuring-assignment/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-09-23T08:56:42.000Z">
+          2017-09-23
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>ES6 标准提供给 JavaScript 开发者许多简化代码的新特性，今天要介绍的扩展运算符就是非常常用的一种。可以使你的代码更加简洁优雅。</p>
+<h2 id="扩展运算符"><a href="#扩展运算符" class="headerlink" title="扩展运算符"></a>扩展运算符</h2><p>扩展运算符以三个点的形式出现 <code>...</code> 可以将数组或者对象里面的值展开。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> a = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(a) <span class="comment">// 1 2 3</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> b = &#123;<span class="attr">a</span>: <span class="number">1</span>, <span class="attr">b</span>: <span class="number">2</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(&#123;<span class="attr">c</span>: <span class="number">3</span>, ...b&#125;) <span class="comment">// &#123;a: 1, b: 2, c: 3&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="扩展运算符的应用"><a href="#扩展运算符的应用" class="headerlink" title="扩展运算符的应用"></a>扩展运算符的应用</h3><p>接下来看看扩展运算符的常见应用。</p>
+<p><strong>1.复制数组和复制对象</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> a = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]</span><br><span class="line"><span class="keyword">const</span> b = [...a]</span><br><span class="line"></span><br><span class="line"><span class="comment">// 相当于 b = a.slice()</span></span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(a) <span class="comment">// [1, 2, 3]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(b) <span class="comment">// [1, 2, 3]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(a === b) <span class="comment">// false</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> a = &#123;<span class="attr">a</span>: <span class="number">1</span>, <span class="attr">b</span>: <span class="number">2</span>&#125;</span><br><span class="line"><span class="keyword">const</span> b = &#123;...a&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(a) <span class="comment">// &#123;a: 1, b: 2&#125;</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(b) <span class="comment">// &#123;a: 1, b: 2&#125;</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(a === b) <span class="comment">// false</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 相当于 const b = Object.assign(&#123;&#125;, a)</span></span><br></pre></td></tr></table></figure>
+
+<p>要注意复制时候只会进行浅复制。</p>
+<p><strong>2.合并数组和合并对象</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> a = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]</span><br><span class="line"><span class="keyword">const</span> b = [<span class="number">4</span>, <span class="number">5</span>]</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>([...a, ...b]) <span class="comment">// [1, 2, 3, 4, 5]</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 相当于 a.concat(b)</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> a = &#123;<span class="attr">a</span>: <span class="number">1</span>, <span class="attr">b</span>: <span class="number">2</span>&#125;</span><br><span class="line"><span class="keyword">const</span> b = &#123;<span class="attr">b</span>: <span class="number">3</span>, <span class="attr">c</span>: <span class="number">4</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(&#123;...a, ...b, <span class="attr">c</span>: <span class="number">5</span>&#125;) <span class="comment">// &#123;a: 1, b: 3, c: 5&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 相当于 Object.assign(a, b, &#123;c: 5&#125;)</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>3.类数组对象数组化</strong></p>
+<p>前端开发当中经常会遇到一些类数组对象，如：function 的 arguments，document.querySelectorAll 等，通常会将这些类数组对象转换为数组的形式使其可以利用数组原型对象的方法。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> divs = <span class="variable language_">document</span>.<span class="title function_">querySelectorAll</span>(<span class="string">&#x27;divs&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// divs.push 会报错</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// slice 方式</span></span><br><span class="line"></span><br><span class="line">divs = [].<span class="property">slice</span>.<span class="title function_">call</span>(divs)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用扩展运算符</span></span><br><span class="line"></span><br><span class="line">divs = [...divs]</span><br></pre></td></tr></table></figure>
+
+<p><strong>4.代替 apply 方法</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">sum</span>(<span class="params">x, y, z</span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(x + y + z)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> args = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]</span><br><span class="line"><span class="comment">// apply 方式</span></span><br><span class="line"></span><br><span class="line">fn.<span class="title function_">apply</span>(<span class="literal">null</span>, args)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 扩展运算符方式</span></span><br><span class="line"></span><br><span class="line"><span class="title function_">fn</span>(...args)</span><br></pre></td></tr></table></figure>
+
+<h2 id="剩余操作符"><a href="#剩余操作符" class="headerlink" title="剩余操作符"></a>剩余操作符</h2><p>另外一种以三个点 <code>...</code> 形式出现的是剩余操作符，与扩展操作符相反，剩余操作符将多个值收集为一个变量，而扩展操作符是将一个数组扩展成多个值。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 配合 ES6 解构的新特性</span></span><br><span class="line"><span class="keyword">const</span> [a, ...b] = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(a) <span class="comment">// 1</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(b) <span class="comment">// [2, 3]</span></span><br></pre></td></tr></table></figure>
+
+<p>最后再看一个例子，在日常开发当中非常常见，而且同时利用到扩展操作符和剩余操作符，在 React 开发当中常常会利用一些组件库，为了业务需要我们会将一些组件库提供的组件封装成业务组件方便开发。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">import &#123; Button &#125; from &#x27;antd&#x27;  // 组件库提供的组件</span><br><span class="line"></span><br><span class="line">function MyButton(&#123; isDanger, children, ...others &#125;) &#123;</span><br><span class="line">  return (</span><br><span class="line">    &lt;div&gt;</span><br><span class="line">      &#123;isDanger ? </span><br><span class="line">        &lt;Button &#123;...others&#125; size=&quot;large&quot; type=&quot;danger&quot;&gt;&#123;children&#125;&lt;/Button&gt; :</span><br><span class="line">        &lt;Button &#123;...others&#125; size=&quot;small&quot; type=&quot;primary&quot;&gt;&#123;children&#125;&lt;/Button&gt;</span><br><span class="line">      &#125;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">  )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/学习笔记/">学习笔记</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/JavaScript/">JavaScript</a><a href="/tags/ECMAScript6/">ECMAScript6</a><a href="/tags/ECMAScript7/">ECMAScript7</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2022 acwong
+    
+  </p>
+</footer>
+    
+    
+  </div>
+</div>
+</body>
+</html>

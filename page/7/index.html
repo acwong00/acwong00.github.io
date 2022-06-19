@@ -1,0 +1,631 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Page 7 | ac黄的博客 | acwong&#39;s blog</title>
+
+  
+  <meta name="author" content="acwong">
+  
+
+  
+  <meta name="description" content="ac黄的博客">
+  
+
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  
+
+  <meta property="og:site_name" content="ac黄的博客"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="ac黄的博客" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">ac黄的博客</a>
+    </h1>
+    <p class="site-description">acwong&#39;s blog</p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">Home</a></li>
+        
+      
+        <li><a href="/archives">Archives</a></li>
+        
+      
+        <li><a href="/tags">Tags</a></li>
+        
+      
+        
+        <li><a href="mailto:acwong@yeah.net">Email</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2015/04/22/backbone-command-line-with-webpack-and-gulp/"><span>Webpack 和 Gulp 构建伪命令行项目</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2015/04/22/backbone-command-line-with-webpack-and-gulp/" rel="bookmark">
+        <time class="entry-date published" datetime="2015-04-22T06:26:30.000Z">
+          2015-04-22
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p><a target="_blank" rel="noopener" href="http://blog.acwong.org/2015/04/13/backbone-command-line/">上一篇文章</a>分享了我的一个 Backbone 小项目的实践过程。在项目上线之前先看看 <em>index.html</em>。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;./js/command-model.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;./js/command-collection.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;./js/command-view.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;./js/message-view.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;./js/app-view.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span>     </span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;test.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>显然这样的写法是不符合 Web 性能优化原则的。我们应该把多个文件尽量构建成一个单独的文件，减少客户端请求资源的次数。</p>
+<p>本文就通过 Webpack 和 Gulp 两个工具介绍将这个 Backbone 伪命令行项目模块化和构建上线的实践过程。</p>
+<h2 id="Webpack"><a href="#Webpack" class="headerlink" title="Webpack"></a>Webpack</h2><p>Webpack 是德国开发者 Tobias Koppers 开发的模块加载器，是前端模块化开发的有力竞争者。</p>
+<p>Webpack 特点之一是把所有资源都当成模块，css，js，图片，模版文件等等。另外，Webpack 除了作为一个模版加载器之外还具有 Gulp 和 Grunt 一部分的构建功能。</p>
+<h2 id="伪命令行模块化"><a href="#伪命令行模块化" class="headerlink" title="伪命令行模块化"></a>伪命令行模块化</h2><h3 id="以-CommonJS-改写伪命令行项目"><a href="#以-CommonJS-改写伪命令行项目" class="headerlink" title="以 CommonJS 改写伪命令行项目"></a>以 CommonJS 改写伪命令行项目</h3><p>Webpack 支持 CommonJS 和 AMD 的语法，这里选用了 CommonJS 方式对原来的代码进行改写。</p>
+<p>在原来的代码当中我们创建了一个名为 <code>app</code> 的全局变量，我们就通过这个全局的变量来引用项目各个部分的方法。</p>
+<p>因此改写的方法也相当简单，就是把 <code>app</code> 变量去掉，然后把各个文件写成独立的模块。</p>
+<p>例如:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// command-model.js</span></span><br><span class="line"><span class="keyword">var</span> <span class="title class_">CommandModel</span> = <span class="title class_">Backbone</span>.<span class="property">Model</span>.<span class="title function_">extend</span>(&#123;</span><br><span class="line">    <span class="attr">default</span>: &#123;</span><br><span class="line">        <span class="attr">name</span>: <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">        <span class="attr">messages</span>: []</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = <span class="title class_">CommandModel</span>;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// command-collection.js</span></span><br><span class="line"><span class="keyword">var</span> <span class="title class_">CommandModel</span> = <span class="built_in">require</span>(<span class="string">&quot;./command-model.js&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> <span class="title class_">CommandCollection</span> = <span class="title class_">Backbone</span>.<span class="property">Collection</span>.<span class="title function_">extend</span>(&#123;</span><br><span class="line">    <span class="attr">model</span>: <span class="title class_">CommandModel</span></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = <span class="title class_">CommandCollection</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="将模版文件分离"><a href="#将模版文件分离" class="headerlink" title="将模版文件分离"></a>将模版文件分离</h3><p>改写完 js 模块之后，还有一些东西很应该被分类开来。 <em>command-view.js</em> 和 <em>message-view.js</em> 分别对应着两个模版。通常的做法会把 模版文件写在 <em>index.html</em> 当中，用 <code>&lt;script&gt;</code> 标签包裹起来。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">id</span>=<span class="string">&quot;commandTemplate&quot;</span> <span class="attr">type</span>=<span class="string">&quot;text/template&quot;</span>&gt;</span><span class="language-handlebars"><span class="language-xml"></span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars">    <span class="tag">&lt;<span class="name">label</span>&gt;</span>&lt;%- prompt %&gt;<span class="tag">&lt;/<span class="name">label</span>&gt;</span></span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars"></span></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">id</span>=<span class="string">&quot;messageTemplate&quot;</span> <span class="attr">type</span>=<span class="string">&quot;text/template&quot;</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">    &lt;div &lt;%= color ? (<span class="string">&#x27;style=&quot;color:&#x27;</span> + color + <span class="string">&#x27;&quot;&#x27;</span>) : <span class="string">&#x27;&#x27;</span> %&gt;&gt;</span></span><br><span class="line"><span class="language-javascript">        &lt;%= link ? (<span class="string">&#x27;&lt;a href=&quot;&#x27;</span> + link + <span class="string">&#x27;&quot;&gt;&#x27;</span>) : <span class="string">&#x27;&#x27;</span> %&gt;</span></span><br><span class="line"><span class="language-javascript">            &lt;%= message %&gt;</span></span><br><span class="line"><span class="language-javascript">        &lt;%= link ? (<span class="string">&#x27;&lt;/a&gt;&#x27;</span>) : <span class="string">&#x27;&#x27;</span> %&gt;</span></span><br><span class="line"><span class="language-javascript">    &lt;/div&gt;</span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>把模版文件分离开来会使我们的维护更加方便。</p>
+<p>首先，把这两个模版分离开来，写成两个 html 文件。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- commandTemplate.html --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">label</span>&gt;</span>&lt;%- prompt %&gt;<span class="tag">&lt;/<span class="name">label</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- messageTemplate.html --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> &lt;%= <span class="string">color</span> ? (&#x27;<span class="attr">style</span>=<span class="string">&quot;color:&#x27; + color + &#x27;&quot;</span>&#x27;) <span class="attr">:</span> &#x27;&#x27; %&gt;</span>&gt;</span><br><span class="line">    &lt;%= link ? (&#x27;<span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&quot;&#x27; + link + &#x27;&quot;</span>&gt;</span>&#x27;) : &#x27;&#x27; %&gt;</span><br><span class="line">        &lt;%= message %&gt;</span><br><span class="line">    &lt;%= link ? (&#x27;<span class="tag">&lt;/<span class="name">a</span>&gt;</span>&#x27;) : &#x27;&#x27; %&gt;</span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>Webpack 把除了 js 之外的资源作为模块加载的时候，需要用到不同的加载<br>器，对于 html 文件这里使用 <a target="_blank" rel="noopener" href="https://github.com/webpack/html-loader">html-loader</a>。它会将 html 文件加载成 String 形式。</p>
+<p>然后就可以在 js 文件当中引用模版了。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 要添加 html! 前缀才会用 html-loader 加载</span></span><br><span class="line"><span class="keyword">var</span> commandTemplate = <span class="built_in">require</span>(<span class="string">&#x27;html!../templates/commandTemplate.html&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<h3 id="webpack-config-js"><a href="#webpack-config-js" class="headerlink" title="webpack.config.js"></a>webpack.config.js</h3><p>在运行 <code>webpack</code> 命令之前要先安装 Webpack。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install webpack -g</span><br></pre></td></tr></table></figure>
+
+<p>先全局安装以便可以使用 <code>webpack</code> 命令。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install webpack html-loader --save-dev</span><br></pre></td></tr></table></figure>
+
+<p>然后在项目中安装 Webpack 和 html-loader。</p>
+<p>Webpack 运行根据一个名为 webpack.config.js 的文件配置。这里简单写一下。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = &#123;</span><br><span class="line">    <span class="attr">entry</span>: <span class="string">&#x27;./test.js&#x27;</span>,</span><br><span class="line">    <span class="attr">output</span>: &#123;</span><br><span class="line">        <span class="attr">filename</span>: <span class="string">&#x27;./dist/all.js&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>在命令行模式下运行 <code>webpack</code> 命令，打包就可以完成了。</p>
+<h3 id="压缩代码"><a href="#压缩代码" class="headerlink" title="压缩代码"></a>压缩代码</h3><p>在上线之前，我们还应该将代码进行压缩尽量把文件的体积减到最少。然而，我们可以看到 Webpack 打包后的 <em>all.js</em> 文件不仅没有压缩，而且代码当中的注释也没有去掉。</p>
+<p>Webpack 同样提供了 UglifyJsPlugin 的插件来进行压缩代码操作。但是在我尝试的过程中，这个插件和 html-loader 配合使用的时候会出现错误，因此在这里我使用了 Gulp 来进行代码压缩的工作。</p>
+<p>Webpack 与 Gulp 配合使用也相当简单，只需要安装 <a target="_blank" rel="noopener" href="https://github.com/shama/gulp-webpack">gulp-webpack</a>。</p>
+<p>安装 Gulp 和其他所需的工具。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install gulp gulp-jshint gulp-rename gulp-uglify gulp-webpack --save-dev</span><br></pre></td></tr></table></figure>
+
+<p>写 <em>gulpfile.js</em>。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> gulp = <span class="built_in">require</span>(<span class="string">&#x27;gulp&#x27;</span>),</span><br><span class="line">    jshint = <span class="built_in">require</span>(<span class="string">&#x27;gulp-jshint&#x27;</span>),</span><br><span class="line">    webpack = <span class="built_in">require</span>(<span class="string">&#x27;gulp-webpack&#x27;</span>),</span><br><span class="line">    uglify = <span class="built_in">require</span>(<span class="string">&#x27;gulp-uglify&#x27;</span>),</span><br><span class="line">    rename = <span class="built_in">require</span>(<span class="string">&#x27;gulp-rename&#x27;</span>);</span><br><span class="line"></span><br><span class="line">gulp.<span class="title function_">task</span>(<span class="string">&#x27;lint&#x27;</span>, <span class="keyword">function</span>  (<span class="params"></span>) &#123;</span><br><span class="line">    gulp.<span class="title function_">src</span>(<span class="string">&#x27;./js/*.js&#x27;</span>)</span><br><span class="line">        .<span class="title function_">pipe</span>(<span class="title function_">jshint</span>())</span><br><span class="line">        .<span class="title function_">pipe</span>(jshint.<span class="title function_">reporter</span>(<span class="string">&#x27;default&#x27;</span>));</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">gulp.<span class="title function_">task</span>(<span class="string">&#x27;webpack&#x27;</span>, <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">    gulp.<span class="title function_">src</span>(<span class="string">&#x27;./test.js&#x27;</span>)</span><br><span class="line">        .<span class="title function_">pipe</span>(<span class="title function_">webpack</span>())</span><br><span class="line">        .<span class="title function_">pipe</span>(gulp.<span class="title function_">dest</span>(<span class="string">&#x27;dist/&#x27;</span>))</span><br><span class="line">        .<span class="title function_">pipe</span>(<span class="title function_">rename</span>(<span class="string">&#x27;all.min.js&#x27;</span>))</span><br><span class="line">        .<span class="title function_">pipe</span>(<span class="title function_">uglify</span>())</span><br><span class="line">        .<span class="title function_">pipe</span>(gulp.<span class="title function_">dest</span>(<span class="string">&#x27;./dist&#x27;</span>));</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">gulp.<span class="title function_">task</span>(<span class="string">&#x27;default&#x27;</span>, <span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">    gulp.<span class="title function_">run</span>(<span class="string">&#x27;lint&#x27;</span>, <span class="string">&#x27;webpack&#x27;</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>运行 <code>gulp</code> 命令，构建完成。</p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>完整的 demo 可以看我的博客 <a target="_blank" rel="noopener" href="http://blog.acwong.org/#"><del>about 页面</del></a>。</p>
+<p>源代码请点<a target="_blank" rel="noopener" href="https://github.com/acwong00/blog-demo-code/tree/master/backbone-command-line">这里</a>。</p>
+<p>感谢您的阅读，有不足之处请为我指出。</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/技术实践/">技术实践</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/前端模块化/">前端模块化</a><a href="/tags/Backbone/">Backbone</a><a href="/tags/webpack/">webpack</a><a href="/tags/gulp/">gulp</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2015/04/13/backbone-command-line/"><span>Backbone实践 —— 伪命令行制作</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2015/04/13/backbone-command-line/" rel="bookmark">
+        <time class="entry-date published" datetime="2015-04-13T09:10:56.000Z">
+          2015-04-13
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>最近学习了一下 Backbone 这个库，对于想学习制作单页应用的朋友来说，Backbone 确实是一个不错的选择。为了让自己更加熟悉 Backbone，最近用它制作了一个伪命令行应用来装修了本人博客的 <a target="_blank" rel="noopener" href="http://blog.acwong.org/#">about 页面</a>。</p>
+<h2 id="构思"><a href="#构思" class="headerlink" title="构思"></a>构思</h2><p>说是“伪”命令行，当然没有真命令行那么多复杂的功能(⊙ˍ⊙)，它主要的功能就是，当输入一个命令的时候在伪命令行界面打印出相应的信息。</p>
+<h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><h3 id="文件结构"><a href="#文件结构" class="headerlink" title="文件结构"></a>文件结构</h3><p><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2015-04_commandline-files-structure.PNG" alt="文件结构"></p>
+<p>文件结构非常简单，<em>index.html</em> 是应用的页面，<em>main.css</em> 样式文件，<em>test.js</em> 是测试的数据，js文件夹中存放了应用的 JavaScript 代码。</p>
+<h3 id="index-html-和-main-css"><a href="#index-html-和-main-css" class="headerlink" title="index.html 和 main.css"></a>index.html 和 main.css</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;container&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;terminal&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;terminalPrint&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;command&quot;</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">id</span>=<span class="string">&quot;commandInput&quot;</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><em>index.html</em> 结构也非常简单，<em>terminal</em> 下包含两个 <code>div</code>, <em>terminalPrint</em> 用于显示打印的信息，<em>command</em> 用于输入命令。</p>
+<p><em>main.css</em> 文件就不多说了，就是把页面做到很像命令行的样子。</p>
+<p><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2015-04_command-line-view.PNG" alt="命令行的样子"></p>
+<h2 id="JavaScript-部分"><a href="#JavaScript-部分" class="headerlink" title="JavaScript 部分"></a>JavaScript 部分</h2><p>首先在 <em>index.html</em> 文件当中引入 Backbone 和它依赖的库，除了 Backbone 强依赖的 underscore.js 之外这里还引入了 jQuery。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- &lt;/body&gt; 前引入 --&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 这里使用了百度静态资源公共库 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;http://apps.bdimg.com/libs/jquery/1.9.1/jquery.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;http://apps.bdimg.com/libs/underscore.js/1.7.0/underscore-min.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;http://apps.bdimg.com/libs/backbone.js/1.1.2/backbone-min.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Model-amp-Collection"><a href="#Model-amp-Collection" class="headerlink" title="Model &amp; Collection"></a>Model &amp; Collection</h3><p>这里定义了一个 Model 用来表示命令的属性。包含两部分，<code>name</code> 代表命令的名称。<code>messages</code> 表示该命令要打印的信息，这里我用了数组来表示信息，每一项代表一行的信息。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// command-model.js</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> app = app || &#123;&#125;; <span class="comment">// 全局变量</span></span><br><span class="line"></span><br><span class="line">app.<span class="property">CommandModel</span> = <span class="title class_">Backbone</span>.<span class="property">Model</span>.<span class="title function_">extend</span>(&#123;</span><br><span class="line">    <span class="attr">default</span>: &#123;</span><br><span class="line">        <span class="attr">name</span>: <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">        <span class="attr">messages</span>: []</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>建立一个 Collection 用于保存命令的集合。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// command-collection.js</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> app = app || &#123;&#125;;</span><br><span class="line"></span><br><span class="line">app.<span class="property">CommandCollection</span> = <span class="title class_">Backbone</span>.<span class="property">Collection</span>.<span class="title function_">extend</span>(&#123;</span><br><span class="line">    <span class="attr">model</span>: app.<span class="property">CommandModel</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h3 id="View"><a href="#View" class="headerlink" title="View"></a>View</h3><p>View 我认为是 Backbone 较为重要的一个部分，我理解 View 的工作是根据应用发生的事件去重新渲染页面。在这里我为应用定义了3个 View，分别是对于整个应用的 <code>AppView</code>，用于显示命令输入行的 <code>CommandView</code> 和为了让打印信息具有更强大功能的 <code>MessageView</code>。</p>
+<h4 id="MessageView"><a href="#MessageView" class="headerlink" title="MessageView"></a>MessageView</h4><p>首先介绍 MessageView，上文提到过 <code>CommandModel</code> 是用来定义命令和命令打印的信息，其中打印的信息是一个数组。我的设想是数组当中每一项包含一个对象，分别含有3个属性：</p>
+<ul>
+<li><code>messages</code> 保存打印到命令行的信息</li>
+<li><code>color</code>    打印信息的颜色</li>
+<li><code>link</code>     打印信息的链接</li>
+</ul>
+<p>因此，在 <code>MessageView</code> 初始化的函数当中就为它定义了一个默认的对象。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// message-view.js</span></span><br><span class="line"></span><br><span class="line">app.<span class="property">MessageView</span> = <span class="title class_">Backbone</span>.<span class="property">View</span>.<span class="title function_">extend</span>(&#123;</span><br><span class="line">    <span class="comment">// 省略其他代码</span></span><br><span class="line"></span><br><span class="line">    <span class="attr">initialize</span>: <span class="keyword">function</span> (<span class="params">model</span>) &#123;</span><br><span class="line">        <span class="keyword">var</span> defaults = &#123;</span><br><span class="line">            <span class="attr">messages</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">            <span class="attr">color</span>: <span class="string">&quot;rgb(57, 219, 31)&quot;</span>,</span><br><span class="line">            <span class="attr">link</span>: <span class="string">&quot;&quot;</span></span><br><span class="line">        &#125;;</span><br><span class="line"></span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">model</span> = $.<span class="title function_">extend</span>(defaults, model);</span><br><span class="line">    &#125;,</span><br><span class="line"></span><br><span class="line">    <span class="attr">render</span>: <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">$el</span>.<span class="title function_">html</span>(<span class="variable language_">this</span>.<span class="title function_">template</span>(<span class="variable language_">this</span>.<span class="property">model</span>));</span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>当创建 <code>MessageView</code> 的时候需要为它传入对象(就是存储在 <code>CommandModel</code> <code>messages</code> 数组当中的每一项)。</p>
+<p><code>MessageView</code> 对应的模版如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;script id=&quot;messageTemplate&quot; type=&quot;text/template&quot;&gt;</span><br><span class="line">    &lt;div &lt;%= color ? (&#x27;style=&quot;color:&#x27; + color + &#x27;&quot;&#x27;) : &#x27;&#x27; %&gt;&gt;</span><br><span class="line">        &lt;%= link ? (&#x27;&lt;a href=&quot;&#x27; + link + &#x27;&quot;&gt;&#x27;) : &#x27;&#x27; %&gt;</span><br><span class="line">            &lt;%= message %&gt;</span><br><span class="line">        &lt;%= link ? (&#x27;&lt;/a&gt;&#x27;) : &#x27;&#x27; %&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<p>根据 <code>color</code> 为信息添加相应的颜色样式，根据 <code>link</code> 的值为打印内容添加链接。</p>
+<h4 id="CommandView"><a href="#CommandView" class="headerlink" title="CommandView"></a>CommandView</h4><p><code>CommandView</code> 比较简单，只是用来显示输入命令的那一行，主要任务就算显示提示信息也就是 prompt。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//command-view.js</span></span><br><span class="line"></span><br><span class="line">app.<span class="property">CommandView</span> = <span class="title class_">Backbone</span>.<span class="property">View</span>.<span class="title function_">extend</span>(&#123;</span><br><span class="line">    <span class="comment">// 省略其他代码</span></span><br><span class="line"></span><br><span class="line">    <span class="attr">initialize</span>: <span class="keyword">function</span> (<span class="params">prompt</span>) &#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">prompt</span> = prompt;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="title function_">render</span>();</span><br><span class="line">    &#125;,</span><br><span class="line"></span><br><span class="line">    <span class="attr">render</span>: <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">$el</span>.<span class="title function_">html</span>(<span class="variable language_">this</span>.<span class="title function_">template</span>(&#123;<span class="attr">prompt</span>: <span class="variable language_">this</span>.<span class="property">prompt</span>&#125;));</span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p><code>CommandView</code> 对应的模版如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;script id=&quot;commandTemplate&quot; type=&quot;text/template&quot;&gt;</span><br><span class="line">    &lt;label&gt;&lt;%- prompt %&gt;&lt;/label&gt;</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<p><strong>一个小点</strong></p>
+<p>可以看到上面两个 View 的 <code>render</code> 函数都返回了 <code>this</code>，这是一种推荐的做法，可以方便链式调用。</p>
+<h4 id="AppView"><a href="#AppView" class="headerlink" title="AppView"></a>AppView</h4><p><code>AppView</code> 比较复杂，主要工作是完成整个应用的初始化和监听各种事件发生。</p>
+<p>首先是应用的初始化。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// app-view.js</span></span><br><span class="line"></span><br><span class="line">app.<span class="property">AppView</span> = <span class="title class_">Backbone</span>.<span class="property">View</span>.<span class="title function_">extend</span>(&#123;</span><br><span class="line">    <span class="attr">initialize</span>: <span class="keyword">function</span>(<span class="params">commands, prompt, greeting</span>) &#123;</span><br><span class="line">		</span><br><span class="line">        <span class="comment">// 获得 DOM 对象</span></span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">$printEl</span> = <span class="variable language_">this</span>.$(<span class="string">&#x27;#terminalPrint&#x27;</span>);</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">$input</span> = <span class="variable language_">this</span>.$(<span class="string">&#x27;#commandInput&#x27;</span>);</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">$command</span> = <span class="variable language_">this</span>.$(<span class="string">&#x27;#command&#x27;</span>);</span><br><span class="line">		</span><br><span class="line">        <span class="comment">// 初始化命令输入行</span></span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">commandView</span> = <span class="keyword">new</span> app.<span class="title class_">CommandView</span>(prompt);</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">$command</span>.<span class="title function_">prepend</span>(<span class="variable language_">this</span>.<span class="property">commandView</span>.<span class="title function_">render</span>().<span class="property">el</span>);</span><br><span class="line">		</span><br><span class="line">        <span class="comment">// 打印欢迎信息</span></span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">messages</span> = greeting;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="title function_">renderMessage</span>();</span><br><span class="line">		</span><br><span class="line">        <span class="comment">// 保存命令的集合</span></span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">collection</span> = <span class="keyword">new</span> app.<span class="title class_">CommandCollection</span>(commands);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 省略其他代码</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>由于这里的应用没有后台系统，所以所有的数据都是通过参赛在创建应用的时候传进去。<code>commands</code> 保存着命令的集合、<code>prompt</code> 提示信息、<code>greeting</code> 欢迎信息。</p>
+<p>打印到命令行的信息这里一律用 <code>renderMessage</code> 函数来处理。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">renderMessage</span>: <span class="keyword">function</span>(<span class="params">value</span>) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="variable language_">this</span>.<span class="property">messages</span>.<span class="property">length</span>; i++) &#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">messageView</span> = <span class="keyword">new</span> app.<span class="title class_">MessageView</span>(<span class="variable language_">this</span>.<span class="property">messages</span>[i]);</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">$printEl</span>.<span class="title function_">append</span>(<span class="variable language_">this</span>.<span class="property">messageView</span>.<span class="title function_">render</span>().<span class="property">el</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>传入一个数组为需要打印的信息，然后为每一条信息创建一个 <code>MessageView</code> 来显示。</p>
+<p>然后定义应用发生的事件。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">events</span>: &#123;</span><br><span class="line">    <span class="string">&#x27;click&#x27;</span>: <span class="string">&#x27;inputFocus&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;keypress #commandInput&#x27;</span>: <span class="string">&#x27;runCommand&#x27;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其中 <code>inputFocus</code> 是用于点击应用的时候将焦点聚集在命令输入框，不作详细介绍，这里主要介绍一下输入命令时发生的 <code>runCommand</code>。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">runCommand</span>: <span class="keyword">function</span>(<span class="params">e</span>) &#123;</span><br><span class="line">    <span class="comment">// 输出信息超过30行自动删除</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="variable language_">this</span>.<span class="property">$printEl</span>.<span class="title function_">children</span>(<span class="string">&#x27;div&#x27;</span>).<span class="property">length</span> &gt; <span class="number">30</span>) &#123;</span><br><span class="line">        <span class="keyword">var</span> len = <span class="variable language_">this</span>.<span class="property">$printEl</span>.<span class="title function_">children</span>(<span class="string">&#x27;div&#x27;</span>).<span class="property">length</span> - <span class="number">30</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; len; i++) &#123;</span><br><span class="line">            <span class="variable language_">this</span>.<span class="property">$printEl</span>.<span class="title function_">children</span>(<span class="string">&#x27;div&#x27;</span>).<span class="title function_">eq</span>(i).<span class="title function_">remove</span>();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (e.<span class="property">which</span> === <span class="number">13</span>) &#123;</span><br><span class="line">		<span class="comment">// 打印输入的命令</span></span><br><span class="line">        <span class="keyword">var</span> value = <span class="variable language_">this</span>.<span class="property">$input</span>.<span class="title function_">val</span>().<span class="title function_">trim</span>();</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">$printEl</span>.<span class="title function_">append</span>(<span class="string">&quot;&lt;div&gt;&quot;</span> + <span class="variable language_">this</span>.<span class="property">commandView</span>.<span class="property">prompt</span> + <span class="string">&quot; &quot;</span> + value + <span class="string">&quot;&lt;/div&gt;&quot;</span>);</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">$input</span>.<span class="title function_">val</span>(<span class="string">&#x27;&#x27;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (value === <span class="string">&#x27;&#x27;</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (<span class="variable language_">this</span>.<span class="property">collection</span>.<span class="title function_">findWhere</span>(&#123;<span class="attr">command</span>: value&#125;)) &#123;</span><br><span class="line">            <span class="comment">// 获得相应命令对应的信息</span></span><br><span class="line">            <span class="variable language_">this</span>.<span class="property">model</span> = <span class="variable language_">this</span>.<span class="property">collection</span>.<span class="title function_">findWhere</span>(&#123;</span><br><span class="line">                <span class="attr">command</span>: value</span><br><span class="line">            &#125;);</span><br><span class="line">            <span class="variable language_">this</span>.<span class="property">messages</span> = <span class="variable language_">this</span>.<span class="property">model</span>.<span class="title function_">get</span>(<span class="string">&quot;messages&quot;</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="variable language_">this</span>.<span class="property">messages</span> = <span class="variable language_">this</span>.<span class="property">errorMessage</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="title function_">renderMessage</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>该函数传入事件对象，当用户点击回车的时候，首先在命令行界面打印用户输入的命令，然后如果找到该命令就打印相应的 <code>messages</code> 信息，否则打印错误信息。</p>
+<h2 id="运行应用"><a href="#运行应用" class="headerlink" title="运行应用"></a>运行应用</h2><p>将 <code>AppView</code> 的参数定义好并且传入就可以启动应用了。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="keyword">var</span> commands = [&#123;</span><br><span class="line">        <span class="attr">command</span>: <span class="string">&quot;Hello&quot;</span>,</span><br><span class="line">        <span class="attr">messages</span>: [&#123;</span><br><span class="line">            <span class="attr">message</span>: <span class="string">&quot;Good morning!&quot;</span>,</span><br><span class="line">            <span class="attr">color</span>: <span class="string">&quot;yellow&quot;</span></span><br><span class="line">        &#125;]</span><br><span class="line">    &#125;],</span><br><span class="line">        prompt = <span class="string">&quot;js &gt;&quot;</span>,</span><br><span class="line">        greeting = [&#123;</span><br><span class="line">            <span class="attr">message</span>: <span class="string">&quot;Wellcome!&quot;</span></span><br><span class="line">        &#125;];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">new</span> app.<span class="title class_">AppView</span>(commands, prompt, greeting);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2015-04_command-line-demo-view.PNG" alt="demo截图"></p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>完整的 demo 可以看我的博客 <a target="_blank" rel="noopener" href="http://blog.acwong.org/about/"><del>about 页面</del></a>。</p>
+<p>源代码请点<a target="_blank" rel="noopener" href="https://github.com/acwong00/blog-demo-code/tree/master/backbone-command-line/old_demo">这里</a>。</p>
+<p>我只是一个 Backbone 初学者，有些实现方法可能不够合理，希望看到这篇文章的您多多与我交流。</p>
+<p><a target="_blank" rel="noopener" href="http://blog.acwong.org/2015/04/22/backbone-command-line-with-webpack-and-gulp/">下一篇文章</a>会说一下如何构建这个小项目。</p>
+<p>感谢您的阅读，有不足之处请为我指出。</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/技术实践/">技术实践</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Backbone/">Backbone</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2015/03/25/clean-your-torrent-with-node/"><span>Node.js 清洗万恶的种子</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2015/03/25/clean-your-torrent-with-node/" rel="bookmark">
+        <time class="entry-date published" datetime="2015-03-25T05:48:45.000Z">
+          2015-03-25
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="万恶的种子"><a href="#万恶的种子" class="headerlink" title="万恶的种子"></a>万恶的种子</h2><p>torrent文件，又被称为种子，原来只是用于记录 bt下载当中所需信息的一种文件。但是随着互联网的极大发展，一些人士将一些邪恶的信息注入到了小小的 torrent文件当中，种子从此变成了邪恶的代名词。</p>
+<p>2012 年，一部名为 ABS-130 的日本影片引起了网络的震动，网络上纷纷出现了 “当初求种像条狗，如今*完嫌人丑”的现象，成为了 2012 年互联网的一件大事件。</p>
+<p>2014年，净网行动如火如荼地进行，各大互联网公司都作出了表率，一时之间XX云、X雷都把万恶的种子拒之门外。净网行动万岁！！（还我苍老师！！）</p>
+<p>各大网盘、下载应用都从种子当中提取关键信息，将种子拒之门外。这些关键信息究竟藏在哪里？让我们一探究竟。</p>
+<h2 id="种子文件结构"><a href="#种子文件结构" class="headerlink" title="种子文件结构"></a>种子文件结构</h2><p>以下内容来自维基百科</p>
+<blockquote>
+<p>.torrent种子文件本质上是文本文件，包含Tracker信息和文件信息两部分。Tracker信息主要是BT下载中需要用到的Tracker服务器的地址和针对Tracker服务器的设置，文件信息是根据对目标文件的计算生成的，计算结果根据BitTorrent协议内的Bencode规则进行编码。它的主要原理是需要把提供下载的文件虚拟分成大小相等的块，块大小必须为2k的整数次方（由于是虚拟分块，硬盘上并不产生各个块文件），并把每个块的索引信息和Hash验证码写入种子文件中；<strong>所以，种子文件就是被下载文件的“索引”</strong>。</p>
+</blockquote>
+<p><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2015-03_torrent-structure.PNG" alt="种子结构"></p>
+<p>上图是一个典型种子的结构，那些被识别出来的<strong>邪恶关键字</strong>就藏在 name 和 file 当中。name 包含了该种子的名字，如：<em>abcd-123 性感XXXX</em>。而 file 当中的 path 则包含了要下载的所有文件的信息，如：<em>草X社区最新地址.txt</em>等等。</p>
+<h2 id="Node-js-和-parse-torrent-库"><a href="#Node-js-和-parse-torrent-库" class="headerlink" title="Node.js 和 parse-torrent 库"></a>Node.js 和 parse-torrent 库</h2><p>为了寻找出种子当中的邪恶信息我们请出了 Node.js 和 parse-torrent库 作为助手。</p>
+<p>实验准备：</p>
+<ul>
+<li>种子一枚</li>
+<li>安装 Node.js 电脑一台</li>
+</ul>
+<p>首先我们利用 npm 安装 parse-torrent 库，它帮助我们快速找到种子内的信息。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install parse-torrent</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> fs = <span class="built_in">require</span>(<span class="string">&quot;fs&quot;</span>);</span><br><span class="line"><span class="keyword">var</span> parseTorrent = <span class="built_in">require</span>(<span class="string">&#x27;parse-torrent&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> info = <span class="title function_">parseTorrent</span>(fs.<span class="title function_">readFileSync</span>(<span class="string">&#x27;my.torrent&#x27;</span>));</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(info);</span><br></pre></td></tr></table></figure>
+
+<p>这个库会将种子的信息解析出来，以对象的形式返回给我们。</p>
+<p>查看结果：</p>
+<p>name:</p>
+<p><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2015-03_torrent-info-name.PNG" alt="种子信息文件名"></p>
+<p>files:</p>
+<p><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2015-03_torrent-info-files.PNG" alt="种子信息文件名"></p>
+<p>可以看到用 parse-torrent 库解析出来的 name 和 files 的信息都是以 Buffer 形式存储。</p>
+<h2 id="清洗种子"><a href="#清洗种子" class="headerlink" title="清洗种子"></a>清洗种子</h2><p>如何将种子里的邪恶信息清洗掉，把万恶的种子扼杀在摇篮之中，最重要的就算要清除调 name 和 files 里面 path 的信息。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">cleanInfo</span> (info) &#123;</span><br><span class="line">    <span class="comment">// 将种子名用 md5 加密</span></span><br><span class="line">    info.<span class="property">name</span> = <span class="title function_">md5</span>(info.<span class="property">name</span>);</span><br><span class="line">    info[<span class="string">&#x27;name.utf-8&#x27;</span>] = <span class="title function_">md5</span>(info[<span class="string">&#x27;name.utf-8&#x27;</span>]);</span><br><span class="line">    <span class="keyword">var</span> files = info.<span class="property">files</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; files.<span class="property">length</span>; i++) &#123;</span><br><span class="line">        <span class="keyword">var</span> file = files[i];</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">var</span> key <span class="keyword">in</span> file) &#123;</span><br><span class="line">            <span class="keyword">if</span> (key == <span class="string">&quot;path&quot;</span> || key == <span class="string">&quot;path.utf-8&quot;</span>) &#123;</span><br><span class="line">                <span class="keyword">for</span> (<span class="keyword">var</span> j = <span class="number">0</span>; j &lt; file[key].<span class="property">length</span>; j++) &#123;</span><br><span class="line">                    <span class="keyword">var</span> text = file[key][j].<span class="title function_">toString</span>();</span><br><span class="line">                    <span class="keyword">var</span> dotIndex = text.<span class="title function_">lastIndexOf</span>(<span class="string">&quot;.&quot;</span>);</span><br><span class="line">                    <span class="comment">// 将种子名用 md5 加密</span></span><br><span class="line">                    file[key][j] = <span class="title function_">md5</span>(text.<span class="title function_">slice</span>(<span class="number">0</span>,dotIndex)) + text.<span class="title function_">slice</span>(dotIndex,text.<span class="property">length</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> info;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 将清洗干净后的 info 对象重新生成一个 torrent 文件</span></span><br><span class="line"><span class="keyword">var</span> buf = parseTorrent.<span class="title function_">toTorrentFile</span>(&#123;</span><br><span class="line">    <span class="attr">info</span>: cleanInfos[i]</span><br><span class="line">&#125;);</span><br><span class="line">fs.<span class="title function_">writeFile</span>(dir + <span class="string">&quot;/&quot;</span> + cleanInfos[i].<span class="property">name</span> + <span class="string">&quot;.torrent&quot;</span>, buf);</span><br></pre></td></tr></table></figure>
+
+<p>经过这样之后，我们的邪恶种子文件就变成这样了：</p>
+<p><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2015-03_clean-torren-info.PNG" alt="清洗后种子信息"></p>
+<h2 id="实战阶段"><a href="#实战阶段" class="headerlink" title="实战阶段"></a>实战阶段</h2><p>首先准备一个种子，进行XX云的离线下载。</p>
+<p><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2015-03_torrent.PNG" alt="种子"></p>
+<p>一开始它是被拒绝的。</p>
+<p><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2015-03_36000.PNG" alt="拒绝"></p>
+<p>然后运行脚本进行清洗。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">node cleanTorrent IPTD-XXX.torrent</span><br></pre></td></tr></table></figure>
+
+<p>下载成功了！</p>
+<p><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2015-03_download-success.PNG" alt="下载成功"></p>
+<p>脚本源码放在<a target="_blank" rel="noopener" href="https://github.com/acwong00/Clean-Torrents">这里</a>了，要去看一下我的下载内容了！！！</p>
+<p><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2015-03_tips.PNG" alt="温馨提示"></p>
+<p><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2015-03_baoman.jpg" alt="oh no"></p>
+<p>（**都脱了你给我看这个！！！）</p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>本文纯属技术讨论，感谢你的阅读，有不足之处请为我指出。</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/技术实践/">技术实践</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Node-js/">Node.js</a><a href="/tags/bt种子/">bt种子</a><a href="/tags/磁力链接/">磁力链接</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2015/03/23/make-animation-with-steps-and-css-sprite/"><span>利用 CSS animation 和 CSS sprite 制作动画</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2015/03/23/make-animation-with-steps-and-css-sprite/" rel="bookmark">
+        <time class="entry-date published" datetime="2015-03-23T13:40:32.000Z">
+          2015-03-23
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>CSS3 大大强化了制作动画的能力，但是如果要做出图案比较复杂的动画，选择 GIF 依然是一个不错的选择。今天给大家介绍一个使用 CSS animation 配合雪碧图(CSS sprite)来制作动画的方法，可以做出类似于 GIF 动画的效果。</p>
+<h2 id="CSS3-Animation-steps函数"><a href="#CSS3-Animation-steps函数" class="headerlink" title="CSS3 Animation steps函数"></a>CSS3 Animation steps函数</h2><p>首先看看，CSS3 animation的<a target="_blank" rel="noopener" href="http://caniuse.com/#feat=css-animation">兼容性</a>。可以看到基本上主流浏览器都支持了 animation 属性，chrome、safari、opera和移动端的浏览器带上前缀就可以支持。</p>
+<p>利用雪碧图来制作动画使用了 CSS3 Animation 里面的一个重要的函数 <code>steps</code>。</p>
+<p>animation 本身是一个复合的属性，它包含了 <em>animation-name</em>，<em>animation-timing-function</em>，<em>animation-iteration-count</em>，<em>animation-direction</em>，<em>animation-play-state</em>，<em>animation-fill-mode</em> 六个属性。</p>
+<p><code>steps</code> 就是属于 <em>animation-timing-function</em> 中的一个函数。</p>
+<p><em>animation-timing-function</em> 平时我们用的比较多的是默认的一些动画曲线值 <code>ease</code>、<code>ease-in</code> 等等。而 <code>steps</code> 则可以由我们控制动画被分成多少个部分进行。</p>
+<p><code>steps(n,[start|end])</code> 传入一到两个参数，第一个参数意思是把动画分成 n 等分，然后动画就会平均地运行。第二个参数 start 表示从动画的开头开始运行，相反，end 就表示从动画的结尾开始运行，默认值为 end。</p>
+<p>因此，我们利用雪碧图和 <code>steps</code> 函数制作动画的原理就是，雪碧图包含了动画图片的每一帧，然后利用 <code>steps</code> 函数确定固定时间内动画运行的部分等于动画的帧数，从而实现动画效果。</p>
+<h2 id="动画实例"><a href="#动画实例" class="headerlink" title="动画实例"></a>动画实例</h2><p>用猥琐的兔斯基做例子╮(￣▽￣”)╭</p>
+<p><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2015-03_tuski-gif.gif" alt="兔斯基gif"></p>
+<p>首先我们要切图，把动画的每一帧切成这样的图:</p>
+<p><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2015-03_tuski-sprite.png" alt="兔斯基雪碧图"></p>
+<p>切图如果大家不想折腾，推荐<a target="_blank" rel="noopener" href="http://alloyteam.github.io/gopng/">在线合并雪碧图的工具</a>。</p>
+<p>然后写 keyframes</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@-webkit-keyframes</span> tuski &#123;</span><br><span class="line">    <span class="number">0%</span> &#123;</span><br><span class="line">        <span class="attribute">background-position</span>:<span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="number">100%</span> &#123;</span><br><span class="line">        <span class="attribute">background-position</span>: -<span class="number">576px</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@-moz-keyframes</span> tuski &#123;</span><br><span class="line">    <span class="number">0%</span> &#123;</span><br><span class="line">        <span class="attribute">background-position</span>:<span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="number">100%</span> &#123;</span><br><span class="line">        <span class="attribute">background-position</span>: -<span class="number">576px</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@keyframes</span> tuski &#123;</span><br><span class="line">    <span class="number">0%</span> &#123;</span><br><span class="line">        <span class="attribute">background-position</span>:<span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="number">100%</span> &#123;</span><br><span class="line">        <span class="attribute">background-position</span>: -<span class="number">576px</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>调用动画</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-id">#tuski</span> &#123;</span><br><span class="line">    -webkit-<span class="attribute">animation</span>: tuski .<span class="number">5s</span> <span class="built_in">steps</span>(<span class="number">12</span>) infinite;</span><br><span class="line">    -moz-<span class="attribute">animation</span>: tuski .<span class="number">5s</span> <span class="built_in">steps</span>(<span class="number">12</span>) infinite;</span><br><span class="line">    <span class="attribute">animation</span>: tuski .<span class="number">5s</span> <span class="built_in">steps</span>(<span class="number">12</span>) infinite;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>与 GIF 相比，这种动画可以让我们手动调整动画运行的速度。</p>
+<p>点<a target="_blank" rel="noopener" href="http://jsfiddle.net/acwong/7hoz365p/2/">这里</a>看完整的代码。</p>
+<p>大功告成。</p>
+<p>感谢您的阅读，有不足之处请为我指出。</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/技术研究/">技术研究</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/CSS/">CSS</a><a href="/tags/CSS3/">CSS3</a><a href="/tags/CSS3动画/">CSS3动画</a><a href="/tags/雪碧图/">雪碧图</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2015/03/17/common-picture-hover-effects/"><span>一些常见的图片 hover 效果</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2015/03/17/common-picture-hover-effects/" rel="bookmark">
+        <time class="entry-date published" datetime="2015-03-17T04:08:31.000Z">
+          2015-03-17
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>图片 hover 效果是指鼠标移上图片时候产生的一些交互效果，在各大网站上都非常常见，这里介绍一下一些常见的图片 hover 效果以及它们的实现方式。</p>
+<h2 id="图片透明度改变效果"><a href="#图片透明度改变效果" class="headerlink" title="图片透明度改变效果"></a>图片透明度改变效果</h2><p>改变透明度是我们最常见的图片 hover 效果，实现方式也非常简单，只要鼠标移动到图片上的时候改变它的透明度就可以了。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 减少透明度 */</span></span><br><span class="line"><span class="selector-id">#pic1</span> &#123;</span><br><span class="line">    <span class="attribute">opacity</span>: <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-id">#pic1</span><span class="selector-pseudo">:hover</span> &#123;</span><br><span class="line">    <span class="attribute">opacity</span>: <span class="number">0.5</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 增加透明度 */</span></span><br><span class="line"><span class="selector-id">#pic2</span> &#123;</span><br><span class="line">    <span class="attribute">opacity</span>: <span class="number">0.5</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-id">#pic1</span><span class="selector-pseudo">:hover</span> &#123;</span><br><span class="line">    <span class="attribute">opacity</span>: <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>还可以加上一些过渡效果。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-id">#pic1</span>, <span class="selector-id">#pic2</span> &#123;</span><br><span class="line">    <span class="attribute">transition</span>: <span class="number">1s</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://jsfiddle.net/acwong/nrwkfq91/">看例子</a></p>
+<p>网站实例：<a target="_blank" rel="noopener" href="http://huaban.com/">花瓣网</a></p>
+<h2 id="遮罩层效果"><a href="#遮罩层效果" class="headerlink" title="遮罩层效果"></a>遮罩层效果</h2><p>第二种效果也非常常见，就是在图片上面添加一层遮罩层，鼠标移动到图片上方时实现各种效果。</p>
+<h3 id="遮罩层透明度改变效果"><a href="#遮罩层透明度改变效果" class="headerlink" title="遮罩层透明度改变效果"></a>遮罩层透明度改变效果</h3><p>与上面改变透明度的方法类似，但是这里不是直接改变图片的透明度，而是在图片外添加一个透明的遮罩层。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 加上遮罩层 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;pic&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2015-03_example-picture.jpg&quot;</span> <span class="attr">id</span>=<span class="string">&quot;pic1&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;mask&quot;</span> <span class="attr">id</span>=<span class="string">&quot;mask1&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.pic</span> &#123;</span><br><span class="line">    <span class="attribute">position</span>: relative;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.mask</span> &#123;</span><br><span class="line">    <span class="attribute">position</span>: absolute;</span><br><span class="line">    <span class="attribute">top</span>: <span class="number">0</span>;</span><br><span class="line">    <span class="attribute">left</span>: <span class="number">0</span>;</span><br><span class="line">    <span class="attribute">width</span>: <span class="number">100%</span>;</span><br><span class="line">    <span class="attribute">height</span>: <span class="number">100%</span>;</span><br><span class="line">    <span class="attribute">transition</span>: .<span class="number">5s</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后就可以添加不同的效果。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-id">#mask1</span> &#123;</span><br><span class="line">    <span class="attribute">background-color</span>: chocolate;</span><br><span class="line">    <span class="attribute">opacity</span>:<span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.pic</span><span class="selector-pseudo">:hover</span> <span class="selector-id">#mask1</span> &#123;</span><br><span class="line">    <span class="attribute">opacity</span>: <span class="number">0.3</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-id">#mask2</span> &#123;</span><br><span class="line">     <span class="attribute">background-color</span>:black;</span><br><span class="line">     <span class="attribute">opacity</span>:<span class="number">0.3</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.pic</span><span class="selector-pseudo">:hover</span> <span class="selector-id">#mask2</span> &#123;</span><br><span class="line">     <span class="attribute">opacity</span>: <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 渐变效果 */</span></span><br><span class="line"><span class="selector-id">#mask3</span> &#123;</span><br><span class="line">    <span class="attribute">background</span>:<span class="built_in">linear-gradient</span>(top,orange,chocolate);</span><br><span class="line">    <span class="attribute">background</span>:<span class="built_in">-webkit-linear-gradient</span>(top,orange,chocolate);</span><br><span class="line">    <span class="attribute">background</span>:<span class="built_in">-moz-linear-gradient</span>(top,orange,chocolate);</span><br><span class="line">    <span class="attribute">opacity</span>:<span class="number">0.5</span> </span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.pic</span><span class="selector-pseudo">:hover</span> <span class="selector-id">#mask3</span> &#123;</span><br><span class="line">     <span class="attribute">opacity</span>: <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://jsfiddle.net/acwong/nrwkfq91/1/">看例子</a></p>
+<p>网站实例：<a target="_blank" rel="noopener" href="http://www.lofter.com/">LOFTER</a>、<a target="_blank" rel="noopener" href="http://www.36kr.com/">36氪</a></p>
+<h3 id="遮罩层位移效果"><a href="#遮罩层位移效果" class="headerlink" title="遮罩层位移效果"></a>遮罩层位移效果</h3><p>第二种遮罩层显示效果是遮罩层从各个方向移动到图片上方，此时遮罩层通常会承载对图片补充文字说明的功能。常见与内容、资讯、新闻网站。</p>
+<p>首先设置外层元素 <code>overflow:hidden</code> 暂时隐藏或隐藏一部分遮罩层，当鼠标移到图片上时候才以各种形式出现。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.pic</span> &#123;</span><br><span class="line">    <span class="attribute">position</span>: relative;</span><br><span class="line">    <span class="attribute">width</span>: <span class="number">256px</span>;</span><br><span class="line">    <span class="attribute">height</span>: <span class="number">256px</span>;</span><br><span class="line">    <span class="attribute">overflow</span>: hidden;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.mask</span> &#123;</span><br><span class="line">    <span class="attribute">position</span>: absolute;</span><br><span class="line">    <span class="attribute">width</span>: <span class="number">100%</span>;</span><br><span class="line">    <span class="attribute">height</span>: <span class="number">100%</span>;</span><br><span class="line">    <span class="attribute">opacity</span>:<span class="number">0.5</span>;</span><br><span class="line">    <span class="attribute">transition</span>: .<span class="number">5s</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>添加各种效果。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-id">#mask1</span> &#123;</span><br><span class="line">    <span class="attribute">background-color</span>:chocolate;</span><br><span class="line">    <span class="attribute">left</span>:<span class="number">0</span>;<span class="attribute">top</span>:<span class="number">256px</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.pic</span><span class="selector-pseudo">:hover</span> <span class="selector-id">#mask1</span> &#123;</span><br><span class="line">    <span class="attribute">top</span>:<span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-id">#mask2</span> &#123;</span><br><span class="line">    <span class="attribute">background-color</span>:black;</span><br><span class="line">    <span class="attribute">left</span>:<span class="number">0</span>;</span><br><span class="line">    <span class="attribute">top</span>:<span class="number">200px</span>;</span><br><span class="line">    <span class="attribute">color</span>:white;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.pic</span><span class="selector-pseudo">:hover</span> <span class="selector-id">#mask2</span> &#123;</span><br><span class="line">    <span class="attribute">top</span>:<span class="number">100px</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>还可以配合 JavaScript做出更加复杂的动画效果。</p>
+<p>仿照<a target="_blank" rel="noopener" href="http://news.baidu.com/#media">百度新闻</a>做一个鼠标从不同方向进入图片显示不同效果的功能。</p>
+<p>首先将遮罩层隐藏。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.pic</span>&#123;</span><br><span class="line">    <span class="attribute">position</span>:relative;</span><br><span class="line">    <span class="attribute">width</span>:<span class="number">256px</span>;</span><br><span class="line">    <span class="attribute">height</span>:<span class="number">256px</span>;</span><br><span class="line">    <span class="attribute">overflow</span>:hidden;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.mask</span>&#123;</span><br><span class="line">    <span class="attribute">position</span>:absolute;</span><br><span class="line">    <span class="attribute">width</span>:<span class="number">100%</span>;</span><br><span class="line">    <span class="attribute">height</span>:<span class="number">100%</span>;</span><br><span class="line">    <span class="attribute">background-color</span>:chocolate;</span><br><span class="line">    <span class="attribute">opacity</span>:<span class="number">0.5</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-id">#mask1</span> &#123;</span><br><span class="line">    <span class="attribute">top</span>:<span class="number">256px</span>;</span><br><span class="line">    <span class="attribute">left</span>:<span class="number">256px</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>判断鼠标进入图片的方向（算法参考<a target="_blank" rel="noopener" href="http://stackoverflow.com/questions/3627042/jquery-animation-for-a-hover-with-mouse-direction">stackoverflow的一个回答</a>）。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">getDirection</span>(<span class="params">element, event</span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> w = element.<span class="property">offsetWidth</span>,</span><br><span class="line">        h = element.<span class="property">offsetHeight</span>,</span><br><span class="line">        x = (event.<span class="property">pageX</span> - element.<span class="property">offsetLeft</span> - (w/<span class="number">2</span>)) * (w &gt; h ? (h/w) : <span class="number">1</span>),</span><br><span class="line">        y = (event.<span class="property">pageY</span> - element.<span class="property">offsetTop</span> - (h/<span class="number">2</span>)) * (h &gt; w ? (w/h) : <span class="number">1</span>),</span><br><span class="line">        direction = <span class="title class_">Math</span>.<span class="title function_">round</span>((((<span class="title class_">Math</span>.<span class="title function_">atan2</span>(y, x) * (<span class="number">180</span>/<span class="title class_">Math</span>.<span class="property">PI</span>)) + <span class="number">180</span>) / <span class="number">90</span>) + <span class="number">3</span>) % <span class="number">4</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> direction</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个函数会返回0、1、2、3分别代表上、右、下、左四个方向。</p>
+<p>然后写动画的代码。利用 jQuery库。</p>
+<p><a target="_blank" rel="noopener" href="https://jsfiddle.net/acwong/nrwkfq91/2/">看完整代码</a></p>
+<p>网站实例：<a target="_blank" rel="noopener" href="http://news.baidu.com/">百度新闻</a></p>
+<h2 id="图片变换效果"><a href="#图片变换效果" class="headerlink" title="图片变换效果"></a>图片变换效果</h2><p>图片变换最常见于电商类网站。鼠标移动到图片上的时候通常会出现位移、大小、旋转等变换方式。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">img</span> &#123;</span><br><span class="line">    <span class="attribute">transition</span>: all <span class="number">1s</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-id">#img1</span><span class="selector-pseudo">:hover</span> &#123;</span><br><span class="line">    <span class="attribute">transform</span>: <span class="built_in">translateX</span>(<span class="number">20px</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-id">#img2</span><span class="selector-pseudo">:hover</span> &#123;</span><br><span class="line">    <span class="attribute">transform</span>: <span class="built_in">scale</span>(<span class="number">1.2</span>,<span class="number">1.2</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-id">#img3</span><span class="selector-pseudo">:hover</span> &#123;</span><br><span class="line">    <span class="attribute">transform</span>: <span class="built_in">rotate</span>(<span class="number">360deg</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>还可以做更加复杂的 3D 变换。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;pic&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2015-03_example-picture.jpg&quot;</span> <span class="attr">id</span>=<span class="string">&quot;img4&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;info&quot;</span>&gt;</span>Hello<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.pic</span> &#123;</span><br><span class="line">    <span class="attribute">position</span>:relative;</span><br><span class="line">    <span class="attribute">width</span>:<span class="number">256px</span>;</span><br><span class="line">    <span class="attribute">height</span>:<span class="number">256px</span>;</span><br><span class="line">    <span class="attribute">transform-style</span>: preserve-<span class="number">3</span>d;</span><br><span class="line">    <span class="attribute">transition</span>: transform <span class="number">1s</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.pic</span><span class="selector-pseudo">:hover</span> &#123;</span><br><span class="line">    <span class="attribute">transform</span>: <span class="built_in">translateZ</span>(-<span class="number">128px</span>) <span class="built_in">rotateX</span>(<span class="number">90deg</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.pic</span> <span class="selector-tag">img</span> &#123;</span><br><span class="line">    <span class="attribute">transform</span>: <span class="built_in">translateZ</span>(<span class="number">128px</span>);</span><br><span class="line">    <span class="attribute">transition</span>: all <span class="number">1s</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.info</span> &#123;</span><br><span class="line">    <span class="attribute">position</span>:absolute;</span><br><span class="line">    <span class="attribute">top</span>:<span class="number">0</span>;</span><br><span class="line">    <span class="attribute">left</span>:<span class="number">0</span>;</span><br><span class="line">    <span class="attribute">width</span>:<span class="number">100%</span>;</span><br><span class="line">    <span class="attribute">height</span>:<span class="number">100%</span>;</span><br><span class="line">    <span class="attribute">background-color</span>:black;</span><br><span class="line">    <span class="attribute">transform</span>: <span class="built_in">rotateX</span>(-<span class="number">90deg</span>) <span class="built_in">translateZ</span>(<span class="number">128px</span>);</span><br><span class="line">    <span class="attribute">transition</span>: all <span class="number">1s</span>;</span><br><span class="line">    <span class="attribute">color</span>: white;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://jsfiddle.net/acwong/nrwkfq91/3/">看完整代码</a></p>
+<p>网站实例：<a target="_blank" rel="noopener" href="http://www.jd.com/?utm_source=jd.com">京东</a>、<a target="_blank" rel="noopener" href="http://www.html-js.com/article">前端乱炖</a></p>
+<p>感谢您的阅读，有不足之处请为我指出。</p>
+<p><strong>参考</strong></p>
+<p><a target="_blank" rel="noopener" href="http://stackoverflow.com/questions/3627042/jquery-animation-for-a-hover-with-mouse-direction">jQuery animation for a hover with ‘mouse direction’ —— stackoverflow</a></p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/技术研究/">技术研究</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/CSS/">CSS</a><a href="/tags/CSS3/">CSS3</a><a href="/tags/CSS3动画/">CSS3动画</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+
+<nav class="pagination">
+  
+  <a href="/page/6/" class="pagination-prev">Prev</a>
+  
+  
+  <a href="/page/8/" class="pagination-next">Next</a>
+  
+</nav>
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2022 acwong
+    
+  </p>
+</footer>
+    
+    
+  </div>
+</div>
+</body>
+</html>

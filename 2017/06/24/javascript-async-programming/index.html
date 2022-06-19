@@ -1,0 +1,210 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>JavaScript 异步编程的四种方式 | ac黄的博客 | acwong&#39;s blog</title>
+
+  
+  <meta name="author" content="acwong">
+  
+
+  
+  <meta name="description" content="ac黄的博客">
+  
+
+  
+  
+  <meta name="keywords" content="JavaScript,ECMAScript6,异步编程,ECMAScript7">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="JavaScript 异步编程的四种方式"/>
+
+  <meta property="og:site_name" content="ac黄的博客"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="ac黄的博客" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">ac黄的博客</a>
+    </h1>
+    <p class="site-description">acwong&#39;s blog</p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">Home</a></li>
+        
+      
+        <li><a href="/archives">Archives</a></li>
+        
+      
+        <li><a href="/tags">Tags</a></li>
+        
+      
+        
+        <li><a href="mailto:acwong@yeah.net">Email</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>JavaScript 异步编程的四种方式</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/06/24/javascript-async-programming/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-06-24T07:52:17.000Z">
+          2017-06-24
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>异步编程是每个使用 JavaScript 编程的人都会遇到的问题，无论是前端的 ajax 请求，或是 node 的各种异步 API。本文就来总结一下常见的四种处理异步编程的方法。</p>
+<h2 id="回调函数"><a href="#回调函数" class="headerlink" title="回调函数"></a>回调函数</h2><p>使用回调函数是最常见的一种形式，下面来举几个例子：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// jQuery ajax</span></span><br><span class="line">$.<span class="title function_">get</span>(<span class="string">&#x27;test.html&#x27;</span>, <span class="function"><span class="params">data</span> =&gt;</span> &#123;</span><br><span class="line">  $(<span class="string">&#x27;#result&#x27;</span>).<span class="title function_">html</span>(data)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// node 异步读取文件</span></span><br><span class="line"><span class="keyword">const</span> fs = <span class="built_in">require</span>(<span class="string">&#x27;fs&#x27;</span>)</span><br><span class="line"></span><br><span class="line">fs.<span class="title function_">readFile</span>(<span class="string">&#x27;/etc/passwd&#x27;</span>, <span class="function">(<span class="params">err, data</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (err) &#123;</span><br><span class="line">    <span class="keyword">throw</span> err</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(data)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>回调函数非常容易理解，就是定义函数的时候将另一个函数（回调函数）作为参数传入定义的函数当中，当异步操作执行完毕后在执行该回调函数，从而可以确保接下来的操作在异步操作之后执行。</p>
+<p>回调函数的缺点在于当需要执行多个异步操作的时候会将多个回调函数嵌套在一起，组成代码结构上混乱，被称为回调地狱（callback hell）。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">func1</span>(data0, <span class="function"><span class="params">data1</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="title function_">func2</span>(data2, <span class="function"><span class="params">data3</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="title function_">func3</span>(data3, <span class="function"><span class="params">data4</span> =&gt;</span> data4)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h2 id="Promise"><a href="#Promise" class="headerlink" title="Promise"></a>Promise</h2><p>Promise 利用一种链式调用的方法来组织异步代码，可以将原来以回调函数形式调用的代码改为链式调用。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// jQuery ajax promise 方式</span></span><br><span class="line">$.<span class="title function_">get</span>(<span class="string">&#x27;test.html&#x27;</span>)</span><br><span class="line">  .<span class="title function_">then</span>(<span class="function"><span class="params">data</span> =&gt;</span> $(data))</span><br><span class="line">  .<span class="title function_">then</span>($data =&gt; $data.<span class="title function_">find</span>(<span class="string">&#x27;#link&#x27;</span>).<span class="title function_">val</span>(<span class="string">&#x27;href&#x27;</span>))</span><br><span class="line">  .<span class="title function_">then</span>(<span class="function"><span class="params">href</span> =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(href))</span><br></pre></td></tr></table></figure>
+
+<p>自己定义一个 Promise 形式的函数在 ES6 当中也非常简单：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">ready</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">      <span class="title function_">resolve</span>(<span class="string">&#x27;ready&#x27;</span>)</span><br><span class="line">    &#125;, <span class="number">3000</span>)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title function_">ready</span>().<span class="title function_">then</span>(<span class="function"><span class="params">ready</span> =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`<span class="subst">$&#123;ready&#125;</span> go!`</span>))</span><br></pre></td></tr></table></figure>
+
+<p>在 node 8.0 以上的版本还可以利用 <code>util.promisify</code> 方法将回调形式的函数变为 Promise 形式。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> util = <span class="built_in">require</span>(<span class="string">&#x27;util&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> fs = <span class="built_in">require</span>(<span class="string">&#x27;fs&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> readPromise = util.<span class="title function_">promisify</span>(fs.<span class="property">readFile</span>)</span><br><span class="line"></span><br><span class="line"><span class="title function_">readPromise</span>(<span class="string">&#x27;test.txt&#x27;</span>).<span class="title function_">then</span>(<span class="function"><span class="params">data</span> =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(data.<span class="title function_">toString</span>()))</span><br></pre></td></tr></table></figure>
+
+<p>想详细了解 Promise 可以阅读拙作<a target="_blank" rel="noopener" href="http://blog.acwong.org/2015/06/22/es6-promise/">谈谈 ES6 的 Promise 对象</a>。</p>
+<h2 id="Generators"><a href="#Generators" class="headerlink" title="Generators"></a>Generators</h2><p>node 的著名开发者 TJ 利用 ES6 新特性生成器（Generators）开发了一个异步控制工具 <a target="_blank" rel="noopener" href="https://github.com/tj/co">co</a>。</p>
+<p>如果不了解 Generators 可以看看以下的文章：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="http://www.infoq.com/cn/articles/es6-in-depth-generators">深入浅出ES6（三）：生成器 Generators</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.infoq.com/cn/articles/es6-in-depth-generators-continued">深入浅出ES6（十一）：生成器 Generators，续篇</a></li>
+</ul>
+<p>利用 co 可以将异步代码的写法写成类似同步代码的形式：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> util = <span class="built_in">require</span>(<span class="string">&#x27;util&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> fs = <span class="built_in">require</span>(<span class="string">&#x27;fs&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> co = <span class="built_in">require</span>(<span class="string">&#x27;co&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> readFile = util.<span class="title function_">promisify</span>(fs.<span class="property">readFile</span>)</span><br><span class="line"></span><br><span class="line"><span class="title function_">co</span>(<span class="keyword">function</span>* () &#123;</span><br><span class="line">  <span class="keyword">const</span> txt = <span class="keyword">yield</span> <span class="title function_">readFile</span>(<span class="string">&#x27;file1.txt&#x27;</span>, <span class="string">&#x27;utf8&#x27;</span>)</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(txt)</span><br><span class="line">  <span class="keyword">const</span> txt2 = <span class="keyword">yield</span> <span class="title function_">readFile</span>(<span class="string">&#x27;file2.txt&#x27;</span>, <span class="string">&#x27;utf8&#x27;</span>)</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(txt2)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>使用 Generators 的好似显然易见，可以使异步代码写得非常清晰，缺点就是要另外引入相关的库来利用该特性。</p>
+<h2 id="Async-Await"><a href="#Async-Await" class="headerlink" title="Async/Await"></a>Async/Await</h2><p>node7.6 以上的版本引入了一个 ES7 的新特性 Async/Await 是专门用于控制异步代码。先看一个例子：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> util = <span class="built_in">require</span>(<span class="string">&#x27;util&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> fs = <span class="built_in">require</span>(<span class="string">&#x27;fs&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> readFile = util.<span class="title function_">promisify</span>(fs.<span class="property">readFile</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">readFiles</span> () &#123;</span><br><span class="line">  <span class="keyword">const</span> txt = <span class="keyword">await</span> <span class="title function_">readFile</span>(<span class="string">&#x27;file1.txt&#x27;</span>, <span class="string">&#x27;utf8&#x27;</span>)</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(txt)</span><br><span class="line">  <span class="keyword">const</span> txt2 = <span class="keyword">await</span> <span class="title function_">readFile</span>(<span class="string">&#x27;file2.txt&#x27;</span>, <span class="string">&#x27;utf8&#x27;</span>)</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(txt2)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>首先要使用 <code>async</code> 关键字定义一个包含异步代码的函数，在 Promise 形式的异步函数前面使用 <code>await</code> 关键字就可以将异步写成同步操作的形式。</p>
+<p>看上去与 Generators 控制方式相差不大，但是 Async/Await 是原生用于控制异步，所以是比较推荐使用的。</p>
+<h2 id="错误处理"><a href="#错误处理" class="headerlink" title="错误处理"></a>错误处理</h2><p>最后来探讨下四种异步控制方法的错误处理。</p>
+<h3 id="回调函数-1"><a href="#回调函数-1" class="headerlink" title="回调函数"></a>回调函数</h3><p>回调函数错误处理非常简单，就是在回调函数中同时回传错误信息：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> fs = <span class="built_in">require</span>(<span class="string">&#x27;fs&#x27;</span>)</span><br><span class="line"></span><br><span class="line">fs.<span class="title function_">readFile</span>(<span class="string">&#x27;file.txt&#x27;</span>, <span class="function">(<span class="params">err, data</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (err) &#123;</span><br><span class="line">    <span class="keyword">throw</span> err</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(data)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h3 id="Promise-1"><a href="#Promise-1" class="headerlink" title="Promise"></a>Promise</h3><p>Promise 在 <code>then</code> 方法之后使用一个 <code>catch</code> 方案来捕捉错误信息：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> fs = <span class="built_in">require</span>(<span class="string">&#x27;fs&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> readFile = util.<span class="title function_">promisify</span>(fs.<span class="property">readFile</span>)</span><br><span class="line"></span><br><span class="line"><span class="title function_">readFile</span>(<span class="string">&#x27;file.txt&#x27;</span>)</span><br><span class="line">  .<span class="title function_">then</span>(<span class="function"><span class="params">data</span> =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(data))</span><br><span class="line">  .<span class="title function_">catch</span>(<span class="function"><span class="params">err</span> =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(err))</span><br></pre></td></tr></table></figure>
+
+<h3 id="Generators-和-Async-Await"><a href="#Generators-和-Async-Await" class="headerlink" title="Generators 和 Async/Await"></a>Generators 和 Async/Await</h3><p>Generators 和 Async/Await 比较类似，可以有两种方式，第一种使用 Promise 的 <code>catch</code> 方法，第二种用 <code>try</code> <code>catch</code> 关键字。</p>
+<p><strong>Promise catch</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> fs = <span class="built_in">require</span>(<span class="string">&#x27;fs&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> co = <span class="built_in">require</span>(<span class="string">&#x27;co&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> readFile = util.<span class="title function_">promisify</span>(fs.<span class="property">readFile</span>)</span><br><span class="line"></span><br><span class="line"><span class="title function_">co</span>(<span class="keyword">function</span>* () &#123;</span><br><span class="line">  <span class="keyword">const</span> data = <span class="keyword">yield</span> <span class="title function_">readFile</span>(<span class="string">&#x27;file.txt&#x27;</span>).<span class="title function_">catch</span>(<span class="function"><span class="params">err</span> =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(err))</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> fs = <span class="built_in">require</span>(<span class="string">&#x27;fs&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> co = <span class="built_in">require</span>(<span class="string">&#x27;co&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> readFile = util.<span class="title function_">promisify</span>(fs.<span class="property">readFile</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">testRead</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> data = <span class="keyword">await</span> <span class="title function_">readFile</span>(<span class="string">&#x27;file.txt&#x27;</span>).<span class="title function_">catch</span>(<span class="function"><span class="params">err</span> =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(err))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>try/catch</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> fs = <span class="built_in">require</span>(<span class="string">&#x27;fs&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> co = <span class="built_in">require</span>(<span class="string">&#x27;co&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> readFile = util.<span class="title function_">promisify</span>(fs.<span class="property">readFile</span>)</span><br><span class="line"></span><br><span class="line"><span class="title function_">co</span>(<span class="keyword">function</span>* () &#123;</span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> data = <span class="keyword">yield</span> <span class="title function_">readFile</span>(<span class="string">&#x27;file.txt&#x27;</span>)</span><br><span class="line">  &#125; <span class="keyword">catch</span>(err) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(err)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> fs = <span class="built_in">require</span>(<span class="string">&#x27;fs&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> readFile = util.<span class="title function_">promisify</span>(fs.<span class="property">readFile</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">testRead</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> data = <span class="keyword">await</span> <span class="title function_">readFile</span>(<span class="string">&#x27;file.txt&#x27;</span>)</span><br><span class="line">  &#125; <span class="keyword">catch</span>(err) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(data)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>感谢您的阅读，有不足之处请为我指出。</p>
+<p><strong>参考</strong></p>
+<ol>
+<li><a target="_blank" rel="noopener" href="http://blog.acwong.org/2015/06/22/es6-promise/">谈谈 ES6 的 Promise 对象</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.infoq.com/cn/articles/es6-in-depth-generators">深入浅出ES6（三）：生成器 Generators</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.infoq.com/cn/articles/es6-in-depth-generators-continued">深入浅出ES6（十一）：生成器 Generators，续篇</a></li>
+</ol>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/学习笔记/">学习笔记</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/JavaScript/">JavaScript</a><a href="/tags/ECMAScript6/">ECMAScript6</a><a href="/tags/异步编程/">异步编程</a><a href="/tags/ECMAScript7/">ECMAScript7</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2022 acwong
+    
+  </p>
+</footer>
+    
+    
+  </div>
+</div>
+</body>
+</html>

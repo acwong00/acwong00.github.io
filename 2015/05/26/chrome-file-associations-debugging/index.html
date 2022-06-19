@@ -1,0 +1,171 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Chrome 浏览器文件关联调试方法 | ac黄的博客 | acwong&#39;s blog</title>
+
+  
+  <meta name="author" content="acwong">
+  
+
+  
+  <meta name="description" content="Chrome 浏览器使用技巧，文件关联调试">
+  
+
+  
+  
+  <meta name="keywords" content="Chrome,调试">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="Chrome 浏览器文件关联调试方法"/>
+
+  <meta property="og:site_name" content="ac黄的博客"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="ac黄的博客" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">ac黄的博客</a>
+    </h1>
+    <p class="site-description">acwong&#39;s blog</p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">Home</a></li>
+        
+      
+        <li><a href="/archives">Archives</a></li>
+        
+      
+        <li><a href="/tags">Tags</a></li>
+        
+      
+        
+        <li><a href="mailto:acwong@yeah.net">Email</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>Chrome 浏览器文件关联调试方法</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2015/05/26/chrome-file-associations-debugging/" rel="bookmark">
+        <time class="entry-date published" datetime="2015-05-26T06:12:27.000Z">
+          2015-05-26
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>Chrome 浏览器和 FireFox 浏览器一直是前端工程师热爱的两款浏览器。除了因为它们对新的开发标准支持程度高以外，最大的原因莫过于它们都支持强大的调试功能。</p>
+<p>相比而言，我更加习惯于使用 Chrome 浏览器进行调试，今天就介绍一个 Chrome 浏览器的一个文件关联调试方法，使调试的时候更加高效。</p>
+<h2 id="不利用文件关联的调试方式"><a href="#不利用文件关联的调试方式" class="headerlink" title="不利用文件关联的调试方式"></a>不利用文件关联的调试方式</h2><p>通过一个例子来说明。</p>
+<p>文件结构。</p>
+<p><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2015-05_hello-folder-structure.PNG" alt="文件结构"></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- hello.html --&gt;</span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">&quot;en&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>Hello World<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">&quot;stylesheet&quot;</span> <span class="attr">type</span>=<span class="string">&quot;text/css&quot;</span> <span class="attr">href</span>=<span class="string">&quot;style/hello.css&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h1</span>&gt;</span>Hello World<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* hello.css */</span></span><br><span class="line"><span class="selector-tag">h1</span> &#123;</span><br><span class="line">    <span class="attribute">font-size</span>: <span class="number">60px</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以往的调试方式，我们会在 Chrome 调试相应的 CSS 样式，然后再回到 CSS 文件当中修改相应的语句，然后返回到浏览器查看效果。这种调试方法的缺点在于，我们需要不断切换浏览器和编辑器的界面去修改代码。</p>
+<p><a target="_blank" rel="noopener" href="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2015-05_old-debugging.gif"><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2015-05_old-debugging.gif" alt="旧的调试方式"></a></p>
+<h2 id="文件关联调试方式"><a href="#文件关联调试方式" class="headerlink" title="文件关联调试方式"></a>文件关联调试方式</h2><h3 id="建立关联"><a href="#建立关联" class="headerlink" title="建立关联"></a>建立关联</h3><p>文件关联顾名思义就是在浏览器的调试功能下绑定我们本地的文件，在浏览器当中修改属性，本地的文件就会自动被修改。</p>
+<p>首先在需要调试的页面打开调试控制台，然后点击 <em>Sources</em> 的 tab，右键点击添加开发项目的目录。</p>
+<p><a target="_blank" rel="noopener" href="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2015-05_add-folder.gif"><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2015-05_add-folder.gif" alt="添加相关目录"></a></p>
+<p>然后把相应的文件建立关联，这个时候浏览器会请求重启。</p>
+<p><a target="_blank" rel="noopener" href="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2015-05_map-network.gif"><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2015-05_map-network.gif" alt="添加文件关联"></a></p>
+<p>好了，这个时候，浏览器会根据我们关联的文件，自动把相关的其他文件也作一个关联（如本例当中的 hello.css）。当在调试界面修改语句并且保存(Ctrl + s)的时候，chrom 会同步更新本地的文件。</p>
+<p><a target="_blank" rel="noopener" href="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2015-05_update-css.gif"><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2015-05_update-css.gif" alt="更新样式"></a></p>
+<h3 id="删除关联"><a href="#删除关联" class="headerlink" title="删除关联"></a>删除关联</h3><p>删除关联的方式也非常简单，只要在已经关联的文件当中右键点击 <em>Remove network mapping</em> 即可。</p>
+<p>感谢你的阅读，有不足之处请为我指出。</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/学习笔记/">学习笔记</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Chrome/">Chrome</a><a href="/tags/调试/">调试</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2022 acwong
+    
+  </p>
+</footer>
+    
+    
+  </div>
+</div>
+</body>
+</html>

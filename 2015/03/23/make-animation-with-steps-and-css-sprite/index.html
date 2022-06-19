@@ -1,0 +1,174 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>利用 CSS animation 和 CSS sprite 制作动画 | ac黄的博客 | acwong&#39;s blog</title>
+
+  
+  <meta name="author" content="acwong">
+  
+
+  
+  <meta name="description" content="使用 CSS animation 和雪碧图制作动画">
+  
+
+  
+  
+  <meta name="keywords" content="CSS,CSS3,CSS3动画,雪碧图">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="利用 CSS animation 和 CSS sprite 制作动画"/>
+
+  <meta property="og:site_name" content="ac黄的博客"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="ac黄的博客" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">ac黄的博客</a>
+    </h1>
+    <p class="site-description">acwong&#39;s blog</p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">Home</a></li>
+        
+      
+        <li><a href="/archives">Archives</a></li>
+        
+      
+        <li><a href="/tags">Tags</a></li>
+        
+      
+        
+        <li><a href="mailto:acwong@yeah.net">Email</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>利用 CSS animation 和 CSS sprite 制作动画</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2015/03/23/make-animation-with-steps-and-css-sprite/" rel="bookmark">
+        <time class="entry-date published" datetime="2015-03-23T13:40:32.000Z">
+          2015-03-23
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>CSS3 大大强化了制作动画的能力，但是如果要做出图案比较复杂的动画，选择 GIF 依然是一个不错的选择。今天给大家介绍一个使用 CSS animation 配合雪碧图(CSS sprite)来制作动画的方法，可以做出类似于 GIF 动画的效果。</p>
+<h2 id="CSS3-Animation-steps函数"><a href="#CSS3-Animation-steps函数" class="headerlink" title="CSS3 Animation steps函数"></a>CSS3 Animation steps函数</h2><p>首先看看，CSS3 animation的<a target="_blank" rel="noopener" href="http://caniuse.com/#feat=css-animation">兼容性</a>。可以看到基本上主流浏览器都支持了 animation 属性，chrome、safari、opera和移动端的浏览器带上前缀就可以支持。</p>
+<p>利用雪碧图来制作动画使用了 CSS3 Animation 里面的一个重要的函数 <code>steps</code>。</p>
+<p>animation 本身是一个复合的属性，它包含了 <em>animation-name</em>，<em>animation-timing-function</em>，<em>animation-iteration-count</em>，<em>animation-direction</em>，<em>animation-play-state</em>，<em>animation-fill-mode</em> 六个属性。</p>
+<p><code>steps</code> 就是属于 <em>animation-timing-function</em> 中的一个函数。</p>
+<p><em>animation-timing-function</em> 平时我们用的比较多的是默认的一些动画曲线值 <code>ease</code>、<code>ease-in</code> 等等。而 <code>steps</code> 则可以由我们控制动画被分成多少个部分进行。</p>
+<p><code>steps(n,[start|end])</code> 传入一到两个参数，第一个参数意思是把动画分成 n 等分，然后动画就会平均地运行。第二个参数 start 表示从动画的开头开始运行，相反，end 就表示从动画的结尾开始运行，默认值为 end。</p>
+<p>因此，我们利用雪碧图和 <code>steps</code> 函数制作动画的原理就是，雪碧图包含了动画图片的每一帧，然后利用 <code>steps</code> 函数确定固定时间内动画运行的部分等于动画的帧数，从而实现动画效果。</p>
+<h2 id="动画实例"><a href="#动画实例" class="headerlink" title="动画实例"></a>动画实例</h2><p>用猥琐的兔斯基做例子╮(￣▽￣”)╭</p>
+<p><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2015-03_tuski-gif.gif" alt="兔斯基gif"></p>
+<p>首先我们要切图，把动画的每一帧切成这样的图:</p>
+<p><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2015-03_tuski-sprite.png" alt="兔斯基雪碧图"></p>
+<p>切图如果大家不想折腾，推荐<a target="_blank" rel="noopener" href="http://alloyteam.github.io/gopng/">在线合并雪碧图的工具</a>。</p>
+<p>然后写 keyframes</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@-webkit-keyframes</span> tuski &#123;</span><br><span class="line">    <span class="number">0%</span> &#123;</span><br><span class="line">        <span class="attribute">background-position</span>:<span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="number">100%</span> &#123;</span><br><span class="line">        <span class="attribute">background-position</span>: -<span class="number">576px</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@-moz-keyframes</span> tuski &#123;</span><br><span class="line">    <span class="number">0%</span> &#123;</span><br><span class="line">        <span class="attribute">background-position</span>:<span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="number">100%</span> &#123;</span><br><span class="line">        <span class="attribute">background-position</span>: -<span class="number">576px</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@keyframes</span> tuski &#123;</span><br><span class="line">    <span class="number">0%</span> &#123;</span><br><span class="line">        <span class="attribute">background-position</span>:<span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="number">100%</span> &#123;</span><br><span class="line">        <span class="attribute">background-position</span>: -<span class="number">576px</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>调用动画</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-id">#tuski</span> &#123;</span><br><span class="line">    -webkit-<span class="attribute">animation</span>: tuski .<span class="number">5s</span> <span class="built_in">steps</span>(<span class="number">12</span>) infinite;</span><br><span class="line">    -moz-<span class="attribute">animation</span>: tuski .<span class="number">5s</span> <span class="built_in">steps</span>(<span class="number">12</span>) infinite;</span><br><span class="line">    <span class="attribute">animation</span>: tuski .<span class="number">5s</span> <span class="built_in">steps</span>(<span class="number">12</span>) infinite;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>与 GIF 相比，这种动画可以让我们手动调整动画运行的速度。</p>
+<p>点<a target="_blank" rel="noopener" href="http://jsfiddle.net/acwong/7hoz365p/2/">这里</a>看完整的代码。</p>
+<p>大功告成。</p>
+<p>感谢您的阅读，有不足之处请为我指出。</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/技术研究/">技术研究</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/CSS/">CSS</a><a href="/tags/CSS3/">CSS3</a><a href="/tags/CSS3动画/">CSS3动画</a><a href="/tags/雪碧图/">雪碧图</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2022 acwong
+    
+  </p>
+</footer>
+    
+    
+  </div>
+</div>
+</body>
+</html>

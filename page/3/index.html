@@ -1,0 +1,473 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Page 3 | ac黄的博客 | acwong&#39;s blog</title>
+
+  
+  <meta name="author" content="acwong">
+  
+
+  
+  <meta name="description" content="ac黄的博客">
+  
+
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  
+
+  <meta property="og:site_name" content="ac黄的博客"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="ac黄的博客" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">ac黄的博客</a>
+    </h1>
+    <p class="site-description">acwong&#39;s blog</p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">Home</a></li>
+        
+      
+        <li><a href="/archives">Archives</a></li>
+        
+      
+        <li><a href="/tags">Tags</a></li>
+        
+      
+        
+        <li><a href="mailto:acwong@yeah.net">Email</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2016/12/26/notes-of-javascript-patterns-adapter/"><span>JavaScript 设计模式笔记（十四） —— 适配器模式</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2016/12/26/notes-of-javascript-patterns-adapter/" rel="bookmark">
+        <time class="entry-date published" datetime="2016-12-26T04:18:48.000Z">
+          2016-12-26
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><p>适配器模式的定义为：</p>
+<blockquote>
+<p>适配器模式（Adapter）是将一个类（对象）的接口（方法或属性）转化成客户希望的另外一个接口（方法或属性），适配器模式使得原本由于接口不兼容而不能一起工作的那些类（对象）可以一些工作。</p>
+</blockquote>
+<p>简单来说，适配器模式主要用于解决接口不兼容问题。</p>
+<h2 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h2><p>google 地图和百度地图都有渲染地图的函数，但接口命名不同。可以通过增加适配器去进行兼容。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> googleMap = &#123;</span><br><span class="line">  <span class="attr">show</span>: <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;开始渲染谷歌地图&#x27;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> baiduMap = &#123;</span><br><span class="line">  <span class="attr">display</span>: <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;开始渲染百度地图&#x27;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> renderMap = <span class="keyword">function</span>(<span class="params">map</span>) &#123;</span><br><span class="line">  <span class="keyword">if</span> (map.<span class="property">show</span> <span class="keyword">instanceof</span> <span class="title class_">Function</span>) &#123;</span><br><span class="line">    map.<span class="title function_">show</span>();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> baiduMapAdapter = &#123;</span><br><span class="line">  <span class="attr">show</span>: <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> baiduMap.<span class="title function_">display</span>();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="title function_">renderMap</span>(googleMap);</span><br><span class="line"><span class="title function_">renderMap</span>(baiduMapAdapter);</span><br></pre></td></tr></table></figure>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>一般情况下，拿到不匹配的接口，我们很难去修改原有的代码，适配器模式可以很方便的解缺接口不匹配的问题，不需要修改接口代码，只要在接口外再包装一层。客户不需了解原有的接口，只要调用适配器就可以了。</p>
+<p><strong>参考</strong></p>
+<p><a target="_blank" rel="noopener" href="https://book.douban.com/subject/26382780/">JavaScript设计模式与开发实践</a></p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/学习笔记/">学习笔记</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/JavaScript/">JavaScript</a><a href="/tags/设计模式/">设计模式</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2016/12/24/notes-of-javascript-patterns-state/"><span>JavaScript 设计模式笔记（十三） —— 状态模式</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2016/12/24/notes-of-javascript-patterns-state/" rel="bookmark">
+        <time class="entry-date published" datetime="2016-12-24T09:13:14.000Z">
+          2016-12-24
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><p>状态模式定义为：</p>
+<blockquote>
+<p>允许一个对象在其内部状态改变的时候改变它的行为，对象看起来似乎修改了它的类。</p>
+</blockquote>
+<p>这个定义的前半句是指将状态封装成独立的类，并将请求委托给当前的状态对象，使内部状态改变的时候可以有不同的行为。</p>
+<p>后半句指在客户的角度来看，使用的对象，在不同状态下有不同的行为，就像是从不同的类实例化而来的。</p>
+<p>对于不同状态有不同的行为，生活中最常见的就是灯光开关，同一个按钮，在不同的状态下可以进行开灯和关灯操作。现在看一个灯光按钮的例子。</p>
+<h2 id="传统面向对象写法"><a href="#传统面向对象写法" class="headerlink" title="传统面向对象写法"></a>传统面向对象写法</h2><h3 id="封装状态对象"><a href="#封装状态对象" class="headerlink" title="封装状态对象"></a>封装状态对象</h3><p>将各种状态封装成独立的类，并实现操作行为的函数。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> <span class="title class_">OffLightState</span> = <span class="keyword">function</span>(<span class="params">light</span>) &#123;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">light</span> = light;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="title class_">OffLightState</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">buttonWasPressed</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;弱光&#x27;</span>);</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">light</span>.<span class="title function_">setState</span>(<span class="variable language_">this</span>.<span class="property">light</span>.<span class="property">weakLightState</span>);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> <span class="title class_">WeakLightState</span> = <span class="keyword">function</span>(<span class="params">light</span>) &#123;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">light</span> = light;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="title class_">WeakLightState</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">buttonWasPressed</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;强光&#x27;</span>);</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">light</span>.<span class="title function_">setState</span>(<span class="variable language_">this</span>.<span class="property">light</span>.<span class="property">strongLightState</span>);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> <span class="title class_">StrongLightState</span> = <span class="keyword">function</span>(<span class="params">light</span>) &#123;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">light</span> = light;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="title class_">StrongLightState</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">buttonWasPressed</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;关灯&#x27;</span>);</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">light</span>.<span class="title function_">setState</span>(<span class="variable language_">this</span>.<span class="property">light</span>.<span class="property">offLightState</span>);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h3 id="setState-方法"><a href="#setState-方法" class="headerlink" title="setState 方法"></a>setState 方法</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Light</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">setState</span> = <span class="keyword">function</span>(<span class="params">newState</span>) &#123;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">currState</span> = newState;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Light-类"><a href="#Light-类" class="headerlink" title="Light 类"></a>Light 类</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 为每一种状态创建一个状态对象</span></span><br><span class="line"><span class="keyword">var</span> <span class="title class_">Light</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">offLightState</span> = <span class="keyword">new</span> <span class="title class_">OffLightState</span>(<span class="variable language_">this</span>);</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">weakLightState</span> = <span class="keyword">new</span> <span class="title class_">WeakLightState</span>(<span class="variable language_">this</span>);</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">strongLightState</span> = <span class="keyword">new</span> <span class="title class_">StrongLightState</span>(<span class="variable language_">this</span>);</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">button</span> = <span class="literal">null</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="title class_">Light</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">init</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> button = <span class="variable language_">document</span>.<span class="title function_">createElement</span>(<span class="string">&#x27;button&#x27;</span>);</span><br><span class="line">  <span class="keyword">var</span> self = <span class="variable language_">this</span>;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">button</span> = <span class="variable language_">document</span>.<span class="property">body</span>.<span class="title function_">appendChild</span>(button);</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">button</span>.<span class="property">innerHTML</span> = <span class="string">&#x27;开关&#x27;</span>;</span><br><span class="line"></span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">currState</span> = <span class="variable language_">this</span>.<span class="property">offLightState</span>;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">button</span>.<span class="property">onclick</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    self.<span class="property">currState</span>.<span class="title function_">buttonWasPressed</span>();</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 执行</span></span><br><span class="line"><span class="keyword">var</span> light = <span class="keyword">new</span> <span class="title class_">Light</span>();</span><br><span class="line">light.<span class="title function_">init</span>();</span><br></pre></td></tr></table></figure>
+
+<h2 id="非传统面向对象写法"><a href="#非传统面向对象写法" class="headerlink" title="非传统面向对象写法"></a>非传统面向对象写法</h2><p>JavaScript 并非严格的面向对象语言，所以对象并非一定要从类中创建而来。以下改写上述例子。</p>
+<h3 id="使用-call-方法委托"><a href="#使用-call-方法委托" class="headerlink" title="使用 call 方法委托"></a>使用 call 方法委托</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> <span class="title class_">Light</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">currState</span> = <span class="variable constant_">FSM</span>.<span class="property">off</span>; <span class="comment">// 当前状态</span></span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">button</span> = <span class="literal">null</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="title class_">Light</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">init</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> button = <span class="variable language_">document</span>.<span class="title function_">createElement</span>(<span class="string">&#x27;button&#x27;</span>);</span><br><span class="line">  <span class="keyword">var</span> self = <span class="variable language_">this</span>;</span><br><span class="line">  </span><br><span class="line">  button.<span class="property">innerHTML</span> = <span class="string">&#x27;开关&#x27;</span>;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">button</span> = <span class="variable language_">document</span>.<span class="property">body</span>.<span class="title function_">appendChild</span>(button);</span><br><span class="line">  </span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">button</span>.<span class="property">onclick</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    self.<span class="property">currState</span>.<span class="property">buttonWasPressed</span>.<span class="title function_">call</span>(self); <span class="comment">// 把请求委托给 FSM 状态机</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> <span class="variable constant_">FSM</span> = &#123;</span><br><span class="line">  <span class="attr">off</span>: &#123;</span><br><span class="line">    <span class="attr">buttonWasPressed</span>: <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;弱光&#x27;</span>);</span><br><span class="line">      <span class="variable language_">this</span>.<span class="property">currState</span> = <span class="variable constant_">FSM</span>.<span class="property">weak</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">weak</span>: &#123;</span><br><span class="line">    <span class="attr">buttonWasPressed</span>: <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;强光&#x27;</span>);</span><br><span class="line">      <span class="variable language_">this</span>.<span class="property">currState</span> = <span class="variable constant_">FSM</span>.<span class="property">strong</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">strong</span>: &#123;</span><br><span class="line">    <span class="attr">buttonWasPressed</span>: <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;关灯&#x27;</span>);</span><br><span class="line">      <span class="variable language_">this</span>.<span class="property">currState</span> = <span class="variable constant_">FSM</span>.<span class="property">off</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 执行</span></span><br><span class="line"><span class="keyword">var</span> light = <span class="keyword">new</span> <span class="title class_">Light</span>();</span><br><span class="line">light.<span class="title function_">init</span>();</span><br></pre></td></tr></table></figure>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>状态模式的优点：将状态行为封装到一个类里面，可以方便地添加新状态；允许状态转换逻辑与状态对象合成一体，而不是某一个巨大的条件语句块；将转换状态规则封装到类当中。</p>
+<p>状态模式的缺点：增加了对象数量；对“开闭原则”支持不佳，添加状态的时候同时要修改其他状态里面的转换规则。</p>
+<p><strong>参考</strong></p>
+<p><a target="_blank" rel="noopener" href="https://book.douban.com/subject/26382780/">JavaScript设计模式与开发实践</a></p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/学习笔记/">学习笔记</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/JavaScript/">JavaScript</a><a href="/tags/设计模式/">设计模式</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2016/12/22/notes-of-javascript-patterns-decorator/"><span>JavaScript 设计模式笔记（十二） —— 装饰者模式</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2016/12/22/notes-of-javascript-patterns-decorator/" rel="bookmark">
+        <time class="entry-date published" datetime="2016-12-22T07:12:05.000Z">
+          2016-12-22
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><p>装饰者模式(Decorator)动态地给某个对象添加额外的职责，而不会影响这个类中派生的其他对象。</p>
+<p>装饰者模式又称为包装器(Wrapper)，因为其结构上看是一个对象陷入另一个对象里面，就像一层包一层。</p>
+<h2 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h2><p>一个管理软件在 ajax 函数请求成功时会有可能因为权限等问题返回错误的代码，现在要在不改变原有 ajax 函数的情况下，根据返回的错误代码作出全局的提示。</p>
+<h3 id="构建装饰函数"><a href="#构建装饰函数" class="headerlink" title="构建装饰函数"></a>构建装饰函数</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> before = <span class="keyword">function</span>(<span class="params">fn, beforeFn</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    beforeFn.<span class="title function_">apply</span>(<span class="variable language_">this</span>, <span class="variable language_">arguments</span>); <span class="comment">// 执行新函数</span></span><br><span class="line">    <span class="keyword">return</span> fn.<span class="title function_">apply</span>(<span class="variable language_">this</span>, <span class="variable language_">arguments</span>); <span class="comment">// 返回原函数执行结果</span></span><br><span class="line">  &#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h3 id="定义错误处理函数"><a href="#定义错误处理函数" class="headerlink" title="定义错误处理函数"></a>定义错误处理函数</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> extendAjax = <span class="keyword">function</span>(<span class="params">param</span>) &#123;</span><br><span class="line">  param.<span class="property">success</span> = <span class="title function_">before</span>(param.<span class="property">success</span>, handleErrCode);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> handleErrCode = <span class="keyword">function</span>(<span class="params">result</span>) &#123;</span><br><span class="line">  <span class="keyword">switch</span>(result.<span class="property">errCode</span>) &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">&#x27;001&#x27;</span>:</span><br><span class="line">      <span class="title function_">alert</span>(<span class="string">&#x27;权限不足&#x27;</span>);</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">&#x27;002&#x27;</span>:</span><br><span class="line">      <span class="title function_">alert</span>(<span class="string">&#x27;非法操作&#x27;</span>);</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    <span class="attr">default</span>:</span><br><span class="line">      <span class="keyword">return</span>;</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h3 id="修改-ajax"><a href="#修改-ajax" class="headerlink" title="修改 $.ajax"></a>修改 <code>$.ajax</code></h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$.ajax = <span class="title function_">before</span>($.ajax, extendAjax);</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，这里一共用来两次 <code>before</code> 函数，一次是在请求 ajax 函数之前获取到请求的参数，另一次是用于修改请求成功的函数，作错误代码处理。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>装饰者模式的优点是相比起其他增强对象的方式（如继承）灵活得多，只要对一个对象使用不同的装饰器就可以起到不同的效果。而且，装饰器和被装饰的函数可以独立更改，互不影响，符合开闭原则。</p>
+<p>装饰者模式的缺点增加了代码的复杂度，而且有多层装饰器的函数会变得难以调试、理解。</p>
+<p><strong>参考</strong></p>
+<p><a target="_blank" rel="noopener" href="https://book.douban.com/subject/26382780/">JavaScript设计模式与开发实践</a></p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/学习笔记/">学习笔记</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/JavaScript/">JavaScript</a><a href="/tags/设计模式/">设计模式</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2016/12/21/notes-of-javascript-patterns-mediator/"><span>JavaScript 设计模式笔记（十一） —— 中介者模式</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2016/12/21/notes-of-javascript-patterns-mediator/" rel="bookmark">
+        <time class="entry-date published" datetime="2016-12-21T07:59:13.000Z">
+          2016-12-21
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><blockquote>
+<p>中介者模式(Mediator Pattern)定义：用一个中介对象来封装一系列的对象交互，中介者使各对象不需要显式地相互引用，从而使其耦合松散，而且可以独立地改变它们之间的交互。中介者模式又称为调停者模式，它是一种对象行为型模式。</p>
+</blockquote>
+<p>中介者模式在一些管理应用里面非常常见，通常要修改一个数据会导致页面中多个位置发生变动，非常适宜用中介者模式来解决。</p>
+<h2 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h2><p>一个手机购买页面，可以选择手机颜色和内存以及输入购买数量，同时要展示选择的内存与颜色和购买数量，并根据库存切换下一步按钮的状态和文本内容。</p>
+<h3 id="页面元素"><a href="#页面元素" class="headerlink" title="页面元素"></a>页面元素</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">  选择颜色：<span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;colorSelect&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">option</span> <span class="attr">value</span>=<span class="string">&quot;&quot;</span>&gt;</span>请选择<span class="tag">&lt;/<span class="name">option</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">option</span> <span class="attr">value</span>=<span class="string">&quot;red&quot;</span>&gt;</span>红色<span class="tag">&lt;/<span class="name">option</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">option</span> <span class="attr">value</span>=<span class="string">&quot;blue&quot;</span>&gt;</span>蓝色<span class="tag">&lt;/<span class="name">option</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  选择内存：<span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;memorySelect&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">option</span> <span class="attr">value</span>=<span class="string">&quot;&quot;</span>&gt;</span>请选择<span class="tag">&lt;/<span class="name">option</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">option</span> <span class="attr">value</span>=<span class="string">&quot;32G&quot;</span>&gt;</span>32G<span class="tag">&lt;/<span class="name">option</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">option</span> <span class="attr">value</span>=<span class="string">&quot;16G&quot;</span>&gt;</span>16G<span class="tag">&lt;/<span class="name">option</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  输入购买数量：<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">id</span>=<span class="string">&quot;numberInput&quot;</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">  您选择了颜色：<span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;colorInfo&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span><span class="tag">&lt;<span class="name">br</span>&gt;</span></span><br><span class="line">  您选择了内存：<span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;memoryInfo&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span><span class="tag">&lt;<span class="name">br</span>&gt;</span></span><br><span class="line">  您输入了数量：<span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;numberInfo&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span><span class="tag">&lt;<span class="name">br</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">button</span> <span class="attr">id</span>=<span class="string">&quot;nextBtn&quot;</span> <span class="attr">disabled</span>=<span class="string">&quot;true&quot;</span>&gt;</span>请选择手机颜色和购买数量<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;test.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="库存"><a href="#库存" class="headerlink" title="库存"></a>库存</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> goods = &#123;</span><br><span class="line">  <span class="string">&quot;red|32G&quot;</span>: <span class="number">3</span>,</span><br><span class="line">  <span class="string">&quot;red|16G&quot;</span>: <span class="number">0</span>,</span><br><span class="line">  <span class="string">&quot;blue|32G&quot;</span>: <span class="number">1</span>,</span><br><span class="line">  <span class="string">&quot;blue|16G&quot;</span>: <span class="number">6</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h3 id="定义中介者"><a href="#定义中介者" class="headerlink" title="定义中介者"></a>定义中介者</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> mediator = (<span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> colorSelect = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;colorSelect&#x27;</span>);</span><br><span class="line">  <span class="keyword">var</span> memorySelect = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;memorySelect&#x27;</span>);</span><br><span class="line">  <span class="keyword">var</span> numberInput = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;numberInput&#x27;</span>);</span><br><span class="line">  <span class="keyword">var</span> colorInfo = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;colorInfo&#x27;</span>);</span><br><span class="line">  <span class="keyword">var</span> memoryInfo = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;memoryInfo&#x27;</span>);</span><br><span class="line">  <span class="keyword">var</span> numberInfo = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;numberInfo&#x27;</span>);</span><br><span class="line">  <span class="keyword">var</span> nextBtn = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;nextBtn&#x27;</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    <span class="attr">change</span>: <span class="keyword">function</span>(<span class="params">obj</span>) &#123;</span><br><span class="line">      <span class="keyword">var</span> color = colorSelect.<span class="property">value</span>;</span><br><span class="line">      <span class="keyword">var</span> memory = memorySelect .<span class="property">value</span>;</span><br><span class="line">      <span class="keyword">var</span> number = numberInput.<span class="property">value</span>;</span><br><span class="line">      <span class="keyword">var</span> stock = goods[color + <span class="string">&#x27;|&#x27;</span> + memory];</span><br><span class="line">      </span><br><span class="line">      <span class="comment">// 判断各个操作</span></span><br><span class="line">      <span class="keyword">if</span> (obj === colorSelect) &#123;</span><br><span class="line">        colorInfo.<span class="property">innerHTML</span> = color;</span><br><span class="line">      &#125; <span class="keyword">else</span> <span class="keyword">if</span> (obj === memorySelect) &#123;</span><br><span class="line">        memoryInfo.<span class="property">innerHTML</span> = memory;</span><br><span class="line">      &#125; <span class="keyword">else</span> <span class="keyword">if</span> (obj === numberInput) &#123;</span><br><span class="line">        numberInfo.<span class="property">innerHTML</span> = number;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">if</span> (!color) &#123;</span><br><span class="line">        nextBtn.<span class="property">disabled</span> = <span class="literal">true</span>;</span><br><span class="line">        nextBtn.<span class="property">innerHTML</span> = <span class="string">&#x27;请选择手机颜色&#x27;</span>;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">if</span> (!memory) &#123;</span><br><span class="line">        nextBtn.<span class="property">disabled</span> = <span class="literal">true</span>;</span><br><span class="line">        nextBtn.<span class="property">innerHTML</span> = <span class="string">&#x27;请选择内存大小&#x27;</span>;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">      &#125;</span><br><span class="line">      </span><br><span class="line">      <span class="comment">// 判断是否正整数</span></span><br><span class="line">      <span class="keyword">if</span> (((number - <span class="number">0</span>) | <span class="number">0</span>) !== number - <span class="number">0</span>) &#123;</span><br><span class="line">        nextBtn.<span class="property">disabled</span> = <span class="literal">true</span>;</span><br><span class="line">        nextBtn.<span class="property">innerHTML</span> = <span class="string">&#x27;请输入正确的购买数量&#x27;</span>;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">if</span> (number &gt; stock) &#123;</span><br><span class="line">        nextBtn.<span class="property">disabled</span> = <span class="literal">true</span>;</span><br><span class="line">        nextBtn.<span class="property">innerHTML</span> = <span class="string">&#x27;库存不足&#x27;</span>;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      nextBtn.<span class="property">disabled</span> = <span class="literal">false</span>;</span><br><span class="line">      nextBtn.<span class="property">innerHTML</span> = <span class="string">&#x27;放入购物车&#x27;</span>;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure>
+
+<h3 id="绑定事件"><a href="#绑定事件" class="headerlink" title="绑定事件"></a>绑定事件</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">colorSelect.<span class="property">onchange</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">  mediator.<span class="title function_">change</span>(<span class="variable language_">this</span>);</span><br><span class="line">&#125;;</span><br><span class="line">memorySelect.<span class="property">onchange</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">  mediator.<span class="title function_">change</span>(<span class="variable language_">this</span>);</span><br><span class="line">&#125;;</span><br><span class="line">numberInput.<span class="property">oninput</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">  mediator.<span class="title function_">change</span>(<span class="variable language_">this</span>);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，当事件触发的时候只要通知中介者，中介者就会根据发生事件的对象作出相应的页面变化。而且，这样写之后要添加一种操作，只要修改中介者模式再绑定事件即可。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>中介者模式的优点，简化对象之间的交互，将对象之间多对多的关系转变成中介者与各个对象之间一多对一的关系。</p>
+<p>而中介者模式的缺点就是中介者对象一般会变得非常复杂，令到代码更加难以维护。</p>
+<p><strong>参考</strong></p>
+<p><a target="_blank" rel="noopener" href="https://book.douban.com/subject/26382780/">JavaScript设计模式与开发实践</a></p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/学习笔记/">学习笔记</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/JavaScript/">JavaScript</a><a href="/tags/设计模式/">设计模式</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2016/12/20/notes-of-javascript-patterns-chain-of-responsibility/"><span>JavaScript 设计模式笔记（十） —— 职责链模式</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2016/12/20/notes-of-javascript-patterns-chain-of-responsibility/" rel="bookmark">
+        <time class="entry-date published" datetime="2016-12-20T05:32:27.000Z">
+          2016-12-20
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><blockquote>
+<p>职责链模式（Chain of responsibility）是使多个对象都有机会处理请求，从而避免请求的发送者和接受者之间的耦合关系。将这个对象连成一条链，并沿着这条链传递该请求，直到有一个对象处理他为止。</p>
+</blockquote>
+<p>职责链模式在前端开发中最常见的例子就是 DOM 中的事件冒泡，当触发一个元素的事件时，元素会奖事件一直往上层元素传递，直到被处理事件的函数捕捉。</p>
+<h2 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h2><p>一个手机商城网站，有预订活动，预付 500 元定金和 200 元订金的顾客可以分别获得 100 元优惠券和 50 元优惠券，而没有预付定金的顾客只能够普通购买，没有优惠券，而且库存为零的时候无法购买。定义 3 个字段。</p>
+<ul>
+<li>orderType： 订单类型 1，2，3 分别为 500元定金、200元定金、普通用户</li>
+<li>pay：是否支付定金</li>
+<li>stock：库存</li>
+</ul>
+<h3 id="定义处理函数"><a href="#定义处理函数" class="headerlink" title="定义处理函数"></a>定义处理函数</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> order500 = <span class="keyword">function</span>(<span class="params">orderType, pay, stock</span>) &#123;</span><br><span class="line">  <span class="keyword">if</span> (orderType === <span class="number">1</span> &amp;&amp; pay === <span class="literal">true</span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;500 元定金预购，得到 100 优惠券&#x27;</span>);</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;nextSuccessor&#x27;</span>; <span class="comment">// 不满足条件，往下一个节点传递</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> order200 = <span class="keyword">function</span>(<span class="params">orderType, pay, stock</span>) &#123;</span><br><span class="line">  <span class="keyword">if</span> (orderType === <span class="number">2</span> &amp;&amp; pay === <span class="literal">true</span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;200 元定金预购，得到 50 优惠券&#x27;</span>);</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;nextSuccessor&#x27;</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> orderNormal = <span class="keyword">function</span>(<span class="params">orderType, pay, stock</span>) &#123;</span><br><span class="line">  <span class="keyword">if</span> (stock &gt; <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;普通购买，无优惠券&#x27;</span>);</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;手机库存不足&#x27;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h3 id="构造职责链函数"><a href="#构造职责链函数" class="headerlink" title="构造职责链函数"></a>构造职责链函数</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Chain.prototype.setNextSuccessor 指定链中的下一个节点</span></span><br><span class="line"><span class="comment">// Chain.prototype.passRequest 传递请求给某个节点</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> <span class="title class_">Chain</span> = <span class="title function_">funcion</span>(<span class="params">fn</span>) &#123;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">fn</span> = fn;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">successor</span> = <span class="literal">null</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="title class_">Chain</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">setNextSuccessor</span> = <span class="keyword">function</span>(<span class="params">successor</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="property">successor</span> = successor;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="title class_">Chain</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">passRequest</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> ret = <span class="variable language_">this</span>.<span class="property">fn</span>.<span class="title function_">apply</span>(<span class="variable language_">this</span>, <span class="variable language_">arguments</span>);</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">if</span> (ret === <span class="string">&#x27;nextSuccessor&#x27;</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="property">successor</span> &amp;&amp; <span class="variable language_">this</span>.<span class="property">successor</span>.<span class="property">passRequest</span>.<span class="title function_">apply</span>(<span class="variable language_">this</span>.<span class="property">successor</span>, <span class="variable language_">arguments</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">return</span> ret;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h3 id="添加节点"><a href="#添加节点" class="headerlink" title="添加节点"></a>添加节点</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> chainOrder500 = <span class="keyword">new</span> <span class="title class_">Chain</span>(order500);</span><br><span class="line"><span class="keyword">var</span> chainOrder200 = <span class="keyword">new</span> <span class="title class_">Chain</span>(order200);</span><br><span class="line"><span class="keyword">var</span> chainOrderNormal = <span class="keyword">new</span> <span class="title class_">Chain</span>(orderNormal);</span><br><span class="line"></span><br><span class="line">chainOrder500.<span class="title function_">setNextSuccessor</span>(chainOrder200);</span><br><span class="line">chainOrder200.<span class="title function_">setNextSuccessor</span>(chainOrderNormal);</span><br></pre></td></tr></table></figure>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>职责链模式的优点在于解耦了请求者与多个接受者的关系，不需要知道哪一个接受者可以处理请求，只需把请求传递给第一个节点。</p>
+<p>职责链模式要注意避免职责链过长导致的性能问题。</p>
+<p><strong>参考</strong></p>
+<p><a target="_blank" rel="noopener" href="https://book.douban.com/subject/26382780/">JavaScript设计模式与开发实践</a></p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/学习笔记/">学习笔记</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/JavaScript/">JavaScript</a><a href="/tags/设计模式/">设计模式</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+
+<nav class="pagination">
+  
+  <a href="/page/2/" class="pagination-prev">Prev</a>
+  
+  
+  <a href="/page/4/" class="pagination-next">Next</a>
+  
+</nav>
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2022 acwong
+    
+  </p>
+</footer>
+    
+    
+  </div>
+</div>
+</body>
+</html>

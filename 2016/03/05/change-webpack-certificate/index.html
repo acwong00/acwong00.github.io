@@ -1,0 +1,206 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>记一次移动端开发环境调试 | ac黄的博客 | acwong&#39;s blog</title>
+
+  
+  <meta name="author" content="acwong">
+  
+
+  
+  <meta name="description" content="手机淘宝 https 环境调试经历，使用 openssl 生成证书替换 webpack 开发服务器无效证书">
+  
+
+  
+  
+  <meta name="keywords" content="webpack,开发环境,https,openssl,移动前端">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="记一次移动端开发环境调试"/>
+
+  <meta property="og:site_name" content="ac黄的博客"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="ac黄的博客" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">ac黄的博客</a>
+    </h1>
+    <p class="site-description">acwong&#39;s blog</p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">Home</a></li>
+        
+      
+        <li><a href="/archives">Archives</a></li>
+        
+      
+        <li><a href="/tags">Tags</a></li>
+        
+      
+        
+        <li><a href="mailto:acwong@yeah.net">Email</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>记一次移动端开发环境调试</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2016/03/05/change-webpack-certificate/" rel="bookmark">
+        <time class="entry-date published" datetime="2016-03-05T13:39:29.000Z">
+          2016-03-05
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>最近的一个项目要在手机淘宝客户端里面开发网页，由于淘宝目前全站https，所以在开发环境搭建时候遇到了之前没有料想到的一些问题，这里分享一下这次踩坑的经历。</p>
+<h2 id="一"><a href="#一" class="headerlink" title="一"></a>一</h2><p>在这个项目当中使用了 webpack 作为模块加载器，使用 webpack 进行前端开发一般会同时使用 webpack-dev-server 来提高开发的效率。</p>
+<p>webpack-dev-server 会利用 Express 建立一个服务器，将打包后的 js 文件 引入到页面当中，即时反映对文件的修改。</p>
+<p>在配置好 webpack 之后，运行之后发现 webpack-dev-server 加载的 js 文件并不能在页面上显示。经过一番研究之后发现这里涉及到了 https 的 Mixed Content 问题。</p>
+<h3 id="Mixed-Content"><a href="#Mixed-Content" class="headerlink" title="Mixed Content"></a>Mixed Content</h3><p>如果一个 HTTPS 网页当中有请求 HTTP 的资源，这种网页就被称为 <strong>Mixed Content Page</strong>。</p>
+<p>Mixed Content 被分为两类 <strong>Optionally-blockable Content</strong> 和 <strong>Blockable Content</strong>。</p>
+<h4 id="Optionally-blockable-Content"><a href="#Optionally-blockable-Content" class="headerlink" title="Optionally-blockable Content"></a>Optionally-blockable Content</h4><p>Optionally-blockable Content 包括一些引入风险较低的资源:</p>
+<ul>
+<li>&lt;img&gt;</li>
+<li>&lt;audio&gt;</li>
+<li>&lt;video&gt;</li>
+</ul>
+<p>在现代的浏览器当中这些资源即时不是通过 https 引用也会被加载到页面当中。</p>
+<p><a target="_blank" rel="noopener" href="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2016-03_mixed-content-2.png"><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2016-03_mixed-content-2.png"></a></p>
+<h4 id="Blockable-Content"><a href="#Blockable-Content" class="headerlink" title="Blockable Content"></a>Blockable Content</h4><p>而其他的引入风险较高的资源就被称为 Blockable Content，包括 &lt;script&gt;、&lt;link&gt;、&lt;iframe&gt; 等。这些资源如果是通过 http 协议引用的话是不会被加载到页面当中的。</p>
+<p><a target="_blank" rel="noopener" href="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2016-03_mixed-content-1.png"><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2016-03_mixed-content-1.png"></a></p>
+<h3 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h3><p>既然知道问题所在，解决的方法也就非常简单了，修改一下 webpack-dev-server 的配置，启用 https 协议。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> <span class="title class_">WebpackDevServer</span>(<span class="title function_">webpack</span>(config), &#123;</span><br><span class="line">	<span class="comment">// 省略其余代码</span></span><br><span class="line">	<span class="attr">https</span>: <span class="literal">true</span>  <span class="comment">// 启用 https </span></span><br><span class="line">&#125;).<span class="title function_">listen</span>(<span class="number">3000</span>, <span class="keyword">function</span>(<span class="params">err, res</span>) &#123;&#125;);</span><br></pre></td></tr></table></figure>
+
+<h2 id="二"><a href="#二" class="headerlink" title="二"></a>二</h2><p>启用了 https 协议之后，依然无法正常访问 webpack 打包的资源。在桌面浏览器访问一些 https 网站时候经常会看到这样的画面：</p>
+<p><a target="_blank" rel="noopener" href="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2016-03_https-wran.PNG"><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2016-03_https-wran.PNG"></a></p>
+<p>出现这个画面的原因是网站的证书不受信任，在桌面端的浏览器可以点击继续前往来访问不受信任的资源。而在移动端的浏览器除了少数的浏览器（如：uc浏览器）可以访问不受信任的资源之外，大部分的浏览器会直接禁止访问。</p>
+<h3 id="解决方法-1"><a href="#解决方法-1" class="headerlink" title="解决方法"></a>解决方法</h3><p>要在手机浏览器上访问 https 协议的 webpack-dev-server 服务器上面的资源，就要安装匹配服务器的证书。</p>
+<p>打开 node-module 找到 webpack-dev-server 会发现一个叫 ssl 的文件夹，这就是用来放置 webpack-dev-server 证书的地方。</p>
+<p><a target="_blank" rel="noopener" href="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2016-03_server-ssl.png"><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2016-03_server-ssl.png"></a></p>
+<p>现在把客户端用的 ca.crt 证书安装到手机上，搞定。</p>
+<h2 id="三"><a href="#三" class="headerlink" title="三"></a>三</h2><p>安装完证书之后再打开手机淘宝，发现静态资源依然不能访问，打开手机安装的证书发现 webpack-dev-server 的证书已经过期了T_T。</p>
+<p><a target="_blank" rel="noopener" href="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2016-03_expired.jpg"><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2016-03_expired.jpg"></a></p>
+<p>再看看 webpack-dev-server github 的项目，发现这些证书最近的更新是一年前。看来现在只能自己去生成新的自签证书了。</p>
+<p><a target="_blank" rel="noopener" href="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2016-03_webpakc-dev-server-github.png"><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2016-03_webpakc-dev-server-github.png"></a></p>
+<p>查看 webpakc-dev-server 的代码：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// using built-in self-signed certificate if no certificate was configured</span></span><br><span class="line">options.<span class="property">https</span>.<span class="property">key</span> = options.<span class="property">https</span>.<span class="property">key</span> || fs.<span class="title function_">readFileSync</span>(path.<span class="title function_">join</span>(__dirname, <span class="string">&quot;../ssl/server.key&quot;</span>));</span><br><span class="line">options.<span class="property">https</span>.<span class="property">cert</span> = options.<span class="property">https</span>.<span class="property">cert</span> || fs.<span class="title function_">readFileSync</span>(path.<span class="title function_">join</span>(__dirname, <span class="string">&quot;../ssl/server.crt&quot;</span>));</span><br><span class="line">options.<span class="property">https</span>.<span class="property">ca</span> = options.<span class="property">https</span>.<span class="property">ca</span> || fs.<span class="title function_">readFileSync</span>(path.<span class="title function_">join</span>(__dirname, <span class="string">&quot;../ssl/ca.crt&quot;</span>));</span><br></pre></td></tr></table></figure>
+
+<p>要替代原来的证书需要生成这三个文件。</p>
+<h3 id="解决方法-2"><a href="#解决方法-2" class="headerlink" title="解决方法"></a>解决方法</h3><p>生成自签的证书最常见的方法就是用 OpenSSl 工具，在 Mac OSX 上面默认已经安装了。</p>
+<p>首先要生成一个证书颁发机构(CA)根证书，利用这个根证书可以创建客户端使用的证书，还需要用根证书去对服务端使用的证书进行签名。</p>
+<p>创建CA证书首先创建私钥文件，2048指的是私钥的位数：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl genrsa -out CA.key 2048</span><br></pre></td></tr></table></figure>
+
+<p>然后创建证书：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl req -x509 -new -key CA.key -out CA.crt -days 730</span><br></pre></td></tr></table></figure>
+
+<p>创建证书的过程当中需要填写一系列的信息，其中要留意 <strong>Common Name</strong> 需要填写服务器的域名，经过个人的测试在安卓机上即使证书是被信任的，但是 <strong>Common Name</strong> 的域名并不对应的话资源同样是无法访问的。CA.crt 已经可以发送到移动设备上面使用了。</p>
+<p>然后创建服务端使用的证书。同样先创建私钥文件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl genrsa -out server.key 2048</span><br></pre></td></tr></table></figure>
+
+<p>然后创建一个证书请求，填写与CA根证书相应的信息：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl req -new -out server.req -key server.key</span><br></pre></td></tr></table></figure>
+
+<p>利用CA证书签发服务端使用的证书：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl x509 -req -<span class="keyword">in</span> server.req -out server.crt -CAkey CA.key -CA CA.crt -days 365 -CAcreateserial -CAserial serial</span><br></pre></td></tr></table></figure>
+
+<p>最后把生成的证书替换 ssl 文件夹里面的内容，大功告成，webpack-dev-server 上的资源可以成功访问了。</p>
+<p><strong>参考</strong></p>
+<p><a target="_blank" rel="noopener" href="http://beyondvincent.com/2014/03/17/2014-03-17-five-tips-for-using-self-signed-ssl-certificates-with-ios/">在iOS上使用自签名的SSL证书</a></p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/学习笔记/">学习笔记</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/webpack/">webpack</a><a href="/tags/开发环境/">开发环境</a><a href="/tags/https/">https</a><a href="/tags/openssl/">openssl</a><a href="/tags/移动前端/">移动前端</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2022 acwong
+    
+  </p>
+</footer>
+    
+    
+  </div>
+</div>
+</body>
+</html>

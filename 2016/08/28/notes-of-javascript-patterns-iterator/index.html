@@ -1,0 +1,182 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>JavaScript 设计模式笔记（四）—— 迭代器模式 | ac黄的博客 | acwong&#39;s blog</title>
+
+  
+  <meta name="author" content="acwong">
+  
+
+  
+  <meta name="description" content="JavaScript 设计模式笔记 —— 迭代器模式">
+  
+
+  
+  
+  <meta name="keywords" content="JavaScript,ECMAScript6,设计模式">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="JavaScript 设计模式笔记（四）—— 迭代器模式"/>
+
+  <meta property="og:site_name" content="ac黄的博客"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="ac黄的博客" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">ac黄的博客</a>
+    </h1>
+    <p class="site-description">acwong&#39;s blog</p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">Home</a></li>
+        
+      
+        <li><a href="/archives">Archives</a></li>
+        
+      
+        <li><a href="/tags">Tags</a></li>
+        
+      
+        
+        <li><a href="mailto:acwong@yeah.net">Email</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>JavaScript 设计模式笔记（四）—— 迭代器模式</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2016/08/28/notes-of-javascript-patterns-iterator/" rel="bookmark">
+        <time class="entry-date published" datetime="2016-08-28T06:32:57.000Z">
+          2016-08-28
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><p>迭代器模式（Iterator）的定义为：</p>
+<blockquote>
+<p>提供一种方法顺序一个聚合对象中各个元素，而又不暴露该对象内部表示。</p>
+</blockquote>
+<p>迭代器可以分为内部迭代器和外部迭代器。</p>
+<h2 id="内部迭代器"><a href="#内部迭代器" class="headerlink" title="内部迭代器"></a>内部迭代器</h2><p>内部迭代器的特点是在函数内部已经定义好迭代规则，外部只要一次初始调用。</p>
+<p>原生的 JavaScript 本身已经带有内部迭代器的实现 <code>Array.prototype.forEach</code>，而常见的内部迭代器还有 jQuery 的 <code>$.each</code> 和 lodash 的 <code>_.forEach</code>。接下来看看 jQuery 的迭代器实现。</p>
+<p><strong>jQuery</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">each</span>: <span class="keyword">function</span>(<span class="params"> obj, callback </span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> length, i = <span class="number">0</span>;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">if</span> ( <span class="title function_">isArrayLike</span>( obj ) ) &#123;</span><br><span class="line">    length = obj.<span class="property">length</span>;</span><br><span class="line">    <span class="keyword">for</span> ( ; i &lt; length; i++ ) &#123;</span><br><span class="line">      <span class="keyword">if</span> ( callback.<span class="title function_">call</span>( obj[ i ], i, obj[ i ] ) === <span class="literal">false</span> ) &#123;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">for</span> ( i <span class="keyword">in</span> obj ) &#123;</span><br><span class="line">      <span class="keyword">if</span> ( callback.<span class="title function_">call</span>( obj[ i ], i, obj[ i ] ) === <span class="literal">false</span> ) &#123;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">return</span> obj;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>迭代器不仅可以迭代数组，还可以迭代拥有 <code>length</code> 属性且可以以下标访问的类数组对象。jQuery 利用 JavaScript 的 <code>for in</code> 语句实现对对象的迭代。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> ( callback.<span class="title function_">call</span>( obj[ i ], i, obj[ i ] ) === <span class="literal">false</span> ) &#123;</span><br><span class="line">  <span class="keyword">break</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>jQuery 还通过判断回调函数返回 <code>false</code> 实现中止迭代器的方法。</p>
+<h2 id="外部迭代器"><a href="#外部迭代器" class="headerlink" title="外部迭代器"></a>外部迭代器</h2><p>外部迭代器与内部迭代器的区别在于外部迭代器必须显式请求下一个元素。</p>
+<p>这里实现一个简单的外部迭代器：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> <span class="title class_">Iterator</span> = <span class="keyword">function</span>(<span class="params">obj</span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> current = <span class="number">0</span>;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">var</span> next = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    current += <span class="number">1</span>;</span><br><span class="line">  &#125;;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">var</span> isDone = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> current &gt;= obj.<span class="property">length</span>;</span><br><span class="line">  &#125;;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">var</span> getCurrItem = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> obj[current];</span><br><span class="line">  &#125;;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    <span class="attr">next</span>: next,</span><br><span class="line">    <span class="attr">isDone</span>: isDone,</span><br><span class="line">    <span class="attr">getCurrItem</span>: getCurrItem</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> iterator = <span class="title class_">Iterator</span>([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]);</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span>(!iterator.<span class="title function_">isDone</span>()) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(iterator.<span class="title function_">getCurrItem</span>()); <span class="comment">// 顺序打印 1,2,3,4</span></span><br><span class="line">  iterator.<span class="title function_">next</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="ECMAScript6-迭代器"><a href="#ECMAScript6-迭代器" class="headerlink" title="ECMAScript6 迭代器"></a>ECMAScript6 迭代器</h3><p>ECMASCript6（下文简称 ES6）提供了 <code>for of</code> 的方法可以用于迭代实现了迭代器方法的对象，将上面的例子用 ES6 的语法改写。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Iterator</span> &#123;</span><br><span class="line">  <span class="title function_">constructor</span>(<span class="params">obj</span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">obj</span> = obj;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">current</span> = <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  [<span class="title class_">Symbol</span>.<span class="property">iterator</span>]() &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="title function_">next</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="variable language_">this</span>.<span class="property">current</span> &gt;= <span class="variable language_">this</span>.<span class="property">obj</span>.<span class="property">length</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> &#123;</span><br><span class="line">        <span class="attr">done</span>: <span class="literal">true</span>,</span><br><span class="line">        <span class="attr">value</span>: <span class="literal">undefined</span></span><br><span class="line">      &#125;;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="keyword">var</span> value = <span class="variable language_">this</span>.<span class="property">obj</span>[<span class="variable language_">this</span>.<span class="property">current</span>];</span><br><span class="line">      <span class="variable language_">this</span>.<span class="property">current</span> = <span class="variable language_">this</span>.<span class="property">current</span> + <span class="number">1</span>;</span><br><span class="line">      <span class="keyword">return</span> &#123;</span><br><span class="line">        <span class="attr">done</span>: <span class="literal">false</span>,</span><br><span class="line">        <span class="attr">value</span>: value</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> iterator = <span class="keyword">new</span> <span class="title class_">Iterator</span>([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]);</span><br><span class="line"></span><br><span class="line"><span class="comment">// console.log(iterator.next()); </span></span><br><span class="line"><span class="comment">// &#123; done: false, value: 1 &#125;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> value <span class="keyword">of</span> iterator) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(value); <span class="comment">// 顺序打印 1,2,3,4</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="ECMAScript6-生成器"><a href="#ECMAScript6-生成器" class="headerlink" title="ECMAScript6 生成器"></a>ECMAScript6 生成器</h3><p>ES6 实现迭代对象更加简单的方法是使用生成器，生成器内部已经内建有 <code>next()</code> 和 <code>[Symbol.iterator]()</code> 方法，所以可以将精力集中于循环部分。用生成器改写上面的代码：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span>* <span class="title function_">iterator</span>(<span class="params">obj</span>) &#123;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">var</span> current = <span class="number">0</span>; current &lt; obj.<span class="property">length</span>; current++) &#123;</span><br><span class="line">    <span class="keyword">yield</span> obj[current];</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> myIterator = <span class="title function_">iterator</span>([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>]);</span><br><span class="line"></span><br><span class="line"><span class="comment">// console.log(myIterator.next()); </span></span><br><span class="line"><span class="comment">// &#123; done: false, value: 1 &#125;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> value <span class="keyword">of</span> myIterator) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(value); <span class="comment">// 顺序打印 1,2,3,4</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>感谢你的阅读，有不足之处请为我指出。</p>
+<p><strong>参考</strong></p>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://book.douban.com/subject/26382780/">JavaScript设计模式与开发实践</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.infoq.com/cn/articles/es6-in-depth-iterators-and-the-for-of-loop">深入浅出ES6（二）：迭代器和for-of循环</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.infoq.com/cn/articles/es6-in-depth-generators">深入浅出ES6（三）：生成器 Generators</a></li>
+</ol>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/学习笔记/">学习笔记</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/JavaScript/">JavaScript</a><a href="/tags/ECMAScript6/">ECMAScript6</a><a href="/tags/设计模式/">设计模式</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2022 acwong
+    
+  </p>
+</footer>
+    
+    
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,201 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>谈谈 ES6 的 Promise 对象 | ac黄的博客 | acwong&#39;s blog</title>
+
+  
+  <meta name="author" content="acwong">
+  
+
+  
+  <meta name="description" content="介绍 ES6(EMCAScript 2015) 的原生 Promise">
+  
+
+  
+  
+  <meta name="keywords" content="JavaScript,ECMAScript6,Promise,异步编程">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="谈谈 ES6 的 Promise 对象"/>
+
+  <meta property="og:site_name" content="ac黄的博客"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="ac黄的博客" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">ac黄的博客</a>
+    </h1>
+    <p class="site-description">acwong&#39;s blog</p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">Home</a></li>
+        
+      
+        <li><a href="/archives">Archives</a></li>
+        
+      
+        <li><a href="/tags">Tags</a></li>
+        
+      
+        
+        <li><a href="mailto:acwong@yeah.net">Email</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>谈谈 ES6 的 Promise 对象</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2015/06/22/es6-promise/" rel="bookmark">
+        <time class="entry-date published" datetime="2015-06-22T09:43:07.000Z">
+          2015-06-22
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>开篇首先设想一个日常开发常常会遇到的需求：在多个接口异步请求数据，然后利用这些数据来进行一系列的操作。一般会这样去写：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">$.<span class="title function_">ajax</span>(&#123;</span><br><span class="line">    <span class="attr">url</span>: <span class="string">&#x27;......&#x27;</span>,</span><br><span class="line">    <span class="attr">success</span>: <span class="keyword">function</span> (<span class="params">data</span>) &#123;</span><br><span class="line">        $.<span class="title function_">ajax</span>(&#123;</span><br><span class="line">            <span class="comment">// 要在第一个请求成功后才可以执行下一步</span></span><br><span class="line">            <span class="attr">url</span>: <span class="string">&#x27;......&#x27;</span>,</span><br><span class="line">            <span class="attr">success</span>: <span class="keyword">function</span> (<span class="params">data</span>) &#123;</span><br><span class="line">                 <span class="comment">// ......</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>这样的写法的原理是，当执行一些异步操作时，我们需要知道操作是否已经完成，所有当执行完成的时候会返回一个回调函数，表示操作已经完成。</p>
+<p>使用回调函数的形式理解起来并不困难，但是实际的应用当中会有以下的缺点：</p>
+<ol>
+<li>在需要多个操作的时候，会导致多个回调函数嵌套，导致代码不够直观，就是常说的 <strong>Callback Hell</strong>。</li>
+<li>如果几个异步操作之间并没有前后顺序之分（例如不需要前一个请求的结果作为后一个请求的参数）时，同样需要等待上一个操作完成再实行下一个操作。</li>
+</ol>
+<p>为了解决上述的问题，Promise 对象应运而生，在 EMCAScript 2015 当中已经成为标准。</p>
+<h2 id="什么是-Promise"><a href="#什么是-Promise" class="headerlink" title="什么是 Promise"></a>什么是 Promise</h2><p>一个 Promise 对象可以理解为一次将要执行的操作（常常被用于异步操作），使用了 Promise 对象之后可以用一种链式调用的方式来组织代码，让代码更加直观。而且由于 <code>Promise.all</code> 这样的方法存在，可以让同时执行多个操作变得简单。接下来就来简单介绍 Promise 对象。</p>
+<h3 id="resolve-和-reject"><a href="#resolve-和-reject" class="headerlink" title="resolve 和 reject"></a>resolve 和 reject</h3><p>首先来看一段使用了 Promise 对象的代码。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">helloWorld</span> (ready) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Promise</span>(<span class="keyword">function</span> (<span class="params">resolve, reject</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (ready) &#123;</span><br><span class="line">            <span class="title function_">resolve</span>(<span class="string">&quot;Hello World!&quot;</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="title function_">reject</span>(<span class="string">&quot;Good bye!&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title function_">helloWorld</span>(<span class="literal">true</span>).<span class="title function_">then</span>(<span class="keyword">function</span> (<span class="params">message</span>) &#123;</span><br><span class="line">    <span class="title function_">alert</span>(message);</span><br><span class="line">&#125;, <span class="keyword">function</span> (<span class="params">error</span>) &#123;</span><br><span class="line">    <span class="title function_">alert</span>(error);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="http://jsfiddle.net/acwong/rpswm61r/">jsFiddle</a>(请用现代浏览器打开)</p>
+<p>上面的代码实现的功能非常简单，<code>helloWord</code> 函数接受一个参数，如果为 <code>true</code> 就打印 “Hello World!”，如果为 <code>false</code> 就打印错误的信息。<code>helloWord</code> 函数返回的是一个 Promise 对象。</p>
+<p>在 Promise 对象当中有两个重要方法————<code>resolve</code> 和 <code>reject</code>。</p>
+<p><code>resolve</code> 方法可以使 Promise 对象的状态改变成成功，同时传递一个参数用于后续成功后的操作，在这个例子当中就是 <em>Hello World!</em> 字符串。</p>
+<p><code>reject</code> 方法则是将 Promise 对象的状态改变为失败，同时将错误的信息传递到后续错误处理的操作。</p>
+<h3 id="Promise-的三种状态"><a href="#Promise-的三种状态" class="headerlink" title="Promise 的三种状态"></a>Promise 的三种状态</h3><p>上面提到了 <code>resolve</code> 和 <code>reject</code> 可以改变 Promise 对象的状态，那么它究竟有哪些状态呢？</p>
+<p>Promise 对象有三种状态：</p>
+<ul>
+<li>Fulfilled 可以理解为成功的状态</li>
+<li>Rejected 可以理解为失败的状态</li>
+<li>Pending 既不是 Fulfilld 也不是 Rejected 的状态，可以理解为 Promise 对象实例创建时候的初始状态</li>
+</ul>
+<p>helloWorld 的例子中的 <code>then</code> 方法就是根据 Promise 对象的状态来确定执行的操作，resolve 时执行第一个函数（onFulfilled），reject 时执行第二个函数（onRejected）。</p>
+<h3 id="then-和-catch"><a href="#then-和-catch" class="headerlink" title="then 和 catch"></a>then 和 catch</h3><h4 id="then"><a href="#then" class="headerlink" title="then"></a>then</h4><p>helloWorld 的例子当中利用了 <code>then(onFulfilld, onRejected)</code> 方法来执行一个任务打印 “Hello World!”，在多个任务的情况下 <code>then</code> 方法同样可以用一个清晰的方式完成。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">printHello</span> (ready) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Promise</span>(<span class="keyword">function</span> (<span class="params">resolve, reject</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (ready) &#123;</span><br><span class="line">            <span class="title function_">resolve</span>(<span class="string">&quot;Hello&quot;</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="title function_">reject</span>(<span class="string">&quot;Good bye!&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">printWorld</span> () &#123;</span><br><span class="line">    <span class="title function_">alert</span>(<span class="string">&quot;World&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">printExclamation</span> () &#123;</span><br><span class="line">    <span class="title function_">alert</span>(<span class="string">&quot;!&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title function_">printHello</span>(<span class="literal">true</span>)</span><br><span class="line">    .<span class="title function_">then</span>(<span class="keyword">function</span>(<span class="params">message</span>)&#123;</span><br><span class="line">        <span class="title function_">alert</span>(message);</span><br><span class="line">    &#125;)</span><br><span class="line">    .<span class="title function_">then</span>(printWorld)</span><br><span class="line">    .<span class="title function_">then</span>(printExclamation);</span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="http://jsfiddle.net/acwong/rpswm61r/1/">jsFiddle</a></p>
+<p>上述例子通过链式调用的方式，按顺序打印出了相应的内容。<code>then</code> 可以使用链式调用的写法原因在于，每一次执行该方法时总是会返回一个 Promise 对象。另外，在 <code>then</code> onFulfilled 的函数当中的返回值，可以作为后续操作的参数，因此上面的例子也可以写成：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">printHello</span>(<span class="literal">true</span>).<span class="title function_">then</span>(<span class="keyword">function</span> (<span class="params">message</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> message;</span><br><span class="line">&#125;).<span class="title function_">then</span>(<span class="keyword">function</span> (<span class="params">message</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> message  + <span class="string">&#x27; World&#x27;</span>;</span><br><span class="line">&#125;).<span class="title function_">then</span>(<span class="keyword">function</span> (<span class="params">message</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> message + <span class="string">&#x27;!&#x27;</span>;</span><br><span class="line">&#125;).<span class="title function_">then</span>(<span class="keyword">function</span> (<span class="params">message</span>) &#123;</span><br><span class="line">    <span class="title function_">alert</span>(message);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="http://jsfiddle.net/acwong/rpswm61r/2/">jsFiddle</a></p>
+<p>同样可以打印出正确的内容。</p>
+<h4 id="catch"><a href="#catch" class="headerlink" title="catch"></a>catch</h4><p><code>catch</code> 方法是 <code>then(onFulfilled, onRejected)</code> 方法当中 <code>onRejected</code> 函数的一个简单的写法，也就是说可以写成 <code>then(fn).catch(fn)</code>，相当于 <code>then(fn).then(null, fn)</code>。使用 <code>catch</code> 的写法比一般的写法更加清晰明确。</p>
+<h3 id="Promise-all-和-Promise-race"><a href="#Promise-all-和-Promise-race" class="headerlink" title="Promise.all 和 Promise.race"></a>Promise.all 和 Promise.race</h3><p><code>Promise.all</code> 可以接收一个元素为 Promise 对象的数组作为参数，当这个数组里面所有的 Promise 对象都变为 resolve 时，该方法才会返回。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> p1 = <span class="keyword">new</span> <span class="title class_">Promise</span>(<span class="keyword">function</span> (<span class="params">resolve</span>) &#123;</span><br><span class="line">    <span class="built_in">setTimeout</span>(<span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">        <span class="title function_">resolve</span>(<span class="string">&quot;Hello&quot;</span>);</span><br><span class="line">    &#125;, <span class="number">3000</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> p2 = <span class="keyword">new</span> <span class="title class_">Promise</span>(<span class="keyword">function</span> (<span class="params">resolve</span>) &#123;</span><br><span class="line">    <span class="built_in">setTimeout</span>(<span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">        <span class="title function_">resolve</span>(<span class="string">&quot;World&quot;</span>);</span><br><span class="line">    &#125;, <span class="number">1000</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="title class_">Promise</span>.<span class="title function_">all</span>([p1, p2]).<span class="title function_">then</span>(<span class="keyword">function</span> (<span class="params">result</span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(result); <span class="comment">// [&quot;Hello&quot;, &quot;World&quot;]</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>上面的例子模拟了传输两个数据需要不同的时长，虽然 p2 的速度比 p1 要快，但是 <code>Promise.all</code> 方法会按照数组里面的顺序将结果返回。</p>
+<p>日常开发中经常会遇到这样的需求，在不同的接口请求数据然后拼合成自己所需的数据，通常这些接口之间没有关联（例如不需要前一个接口的数据作为后一个接口的参数），这个时候 <code>Promise.all</code> 方法就可以派上用场了。</p>
+<p>还有一个和 <code>Promise.all</code> 相类似的方法 <code>Promise.race</code>，它同样接收一个数组，不同的是只要该数组中的 Promise 对象的状态发生变化（无论是 resolve 还是 reject）该方法都会返回。</p>
+<h2 id="兼容性"><a href="#兼容性" class="headerlink" title="兼容性"></a>兼容性</h2><p>最后是关于 Promise 对象的兼容性问题。</p>
+<p><a target="_blank" rel="noopener" href="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2015-06_promise-can-i-use.PNG"><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2015-06_promise-can-i-use.PNG" alt="Promise 兼容性"></a></p>
+<p>在浏览器端，一些主流的浏览器都已经可以使用 Promise 对象进行开发，在 Node.js 配合 babel 也可以很方便地使用。</p>
+<p>如果要兼容旧的浏览器，建议可以寻找一些第三方的解决方案，例如 jQuery 的 <a target="_blank" rel="noopener" href="http://api.jquery.com/category/deferred-object/">$.Deferred</a>。</p>
+<p>感谢你的阅读，有不足之处请为我指出。</p>
+<p><strong>参考</strong></p>
+<p><a target="_blank" rel="noopener" href="http://liubin.github.io/promises-book/">JavaScript Promise迷你书（中文版）</a></p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/技术研究/">技术研究</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/JavaScript/">JavaScript</a><a href="/tags/ECMAScript6/">ECMAScript6</a><a href="/tags/Promise/">Promise</a><a href="/tags/异步编程/">异步编程</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2022 acwong
+    
+  </p>
+</footer>
+    
+    
+  </div>
+</div>
+</body>
+</html>

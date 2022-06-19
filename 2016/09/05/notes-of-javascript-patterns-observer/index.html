@@ -1,0 +1,168 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>JavaScript 设计模式笔记（五）—— 观察者模式 | ac黄的博客 | acwong&#39;s blog</title>
+
+  
+  <meta name="author" content="acwong">
+  
+
+  
+  <meta name="description" content="JavaScript 设计模式笔记 —— 观察者模式">
+  
+
+  
+  
+  <meta name="keywords" content="JavaScript,设计模式">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="JavaScript 设计模式笔记（五）—— 观察者模式"/>
+
+  <meta property="og:site_name" content="ac黄的博客"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="ac黄的博客" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">ac黄的博客</a>
+    </h1>
+    <p class="site-description">acwong&#39;s blog</p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">Home</a></li>
+        
+      
+        <li><a href="/archives">Archives</a></li>
+        
+      
+        <li><a href="/tags">Tags</a></li>
+        
+      
+        
+        <li><a href="mailto:acwong@yeah.net">Email</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>JavaScript 设计模式笔记（五）—— 观察者模式</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2016/09/05/notes-of-javascript-patterns-observer/" rel="bookmark">
+        <time class="entry-date published" datetime="2016-09-05T07:56:56.000Z">
+          2016-09-05
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><p>观察者（Observer）模式定义一种一对多的依赖关系，当一个对象的状态发生改变时，所以依赖它的对象都会得到通知。在 JavaScript 当中事件模型就是一种常见的观察者模式。</p>
+<p>观察者模式有如下特点：</p>
+<ol>
+<li>使用简单的广播通信，自动通知已经订阅的对象。可以用于异步编程替代回调函数方式。</li>
+<li>观察者对象和目标对象之间耦合比较松散，两个对象能够单独扩展。</li>
+<li>有新订阅者出现的时候发布者不虽然进行修改，同时发布者进行修改时亦不会影响订阅者。</li>
+</ol>
+<h2 id="全局的观察者模式"><a href="#全局的观察者模式" class="headerlink" title="全局的观察者模式"></a>全局的观察者模式</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> <span class="title class_">Event</span> = (<span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> clientList = [];  <span class="comment">// 用于存放订阅者标识符和回调函数</span></span><br><span class="line">  <span class="keyword">var</span> listen;</span><br><span class="line">  <span class="keyword">var</span> trigger;</span><br><span class="line">  <span class="keyword">var</span> remove;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * 订阅方法</span></span><br><span class="line"><span class="comment">   * <span class="doctag">@param</span>  &#123;<span class="type">String</span>&#125;   key 标识符</span></span><br><span class="line"><span class="comment">   * <span class="doctag">@param</span>  &#123;<span class="type">Function</span>&#125; fn  订阅者回调函数</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  listen = <span class="keyword">function</span> (<span class="params">key, fn</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (!clientList[key]) &#123;</span><br><span class="line">      clientList[key] = [];</span><br><span class="line">    &#125;</span><br><span class="line">    clientList[key].<span class="title function_">push</span>(fn); <span class="comment">// 用数组保存所有订阅者的回调函数</span></span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  trigger = <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> key = <span class="title class_">Array</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">shift</span>.<span class="title function_">call</span>(<span class="variable language_">arguments</span>);</span><br><span class="line">    <span class="keyword">var</span> fns = clientList[key];</span><br><span class="line">    <span class="keyword">if</span> (!fns || fns.<span class="property">length</span> === <span class="number">0</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>, fn; fn = fns[i++];) &#123;</span><br><span class="line">      fn.<span class="title function_">apply</span>(<span class="variable language_">this</span>, <span class="variable language_">arguments</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  remove = <span class="keyword">function</span> (<span class="params">key, fn</span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> fns = clientList[key];</span><br><span class="line">    <span class="keyword">if</span> (!fns) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (!fn) &#123;</span><br><span class="line">      fns &amp;&amp; (fns.<span class="property">length</span> = <span class="number">0</span>); <span class="comment">// 如果没有传入具体的回调函数，则将对应 key 的订阅全部取消</span></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">var</span> l = fns.<span class="property">length</span> - <span class="number">1</span>; l &gt;= <span class="number">0</span>; l--) &#123;</span><br><span class="line">        <span class="keyword">var</span> _fn = fns[l];</span><br><span class="line">        <span class="keyword">if</span> (_fn === fn) &#123;</span><br><span class="line">          fns.<span class="title function_">splice</span>(l, <span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    <span class="attr">listen</span>: listen,</span><br><span class="line">    <span class="attr">trigger</span>: trigger,</span><br><span class="line">    <span class="attr">remove</span>: remove</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)();</span><br><span class="line"></span><br><span class="line"><span class="title class_">Event</span>.<span class="title function_">listen</span>(<span class="string">&#x27;hello&#x27;</span>, <span class="keyword">function</span> (<span class="params">name</span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;hello &#x27;</span> + name);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="title class_">Event</span>.<span class="title function_">trigger</span>(<span class="string">&#x27;hello&#x27;</span>, <span class="string">&#x27;acwong&#x27;</span>); <span class="comment">// hello acwong</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>观察者模式的优点在于可以完成时间和空间上的解耦，时间上可以用于异步编程当中，空间上可以通过通知完成两个对象之间的通讯。</p>
+<p>观察者模式的缺点是在通知未发生之前订阅者会一直存于内存当中，造成一定的消耗，而且如果大量使用观察者模式会使结构难已理解，造成分析和调试的困难。</p>
+<p>感谢你的阅读，有不足之处请为我指出。</p>
+<p><strong>参考</strong></p>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://book.douban.com/subject/26382780/">JavaScript设计模式与开发实践</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.cnblogs.com/TomXu/archive/2012/03/02/2355128.html">深入理解JavaScript系列（32）：设计模式之观察者模式</a></li>
+</ol>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/学习笔记/">学习笔记</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/JavaScript/">JavaScript</a><a href="/tags/设计模式/">设计模式</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2022 acwong
+    
+  </p>
+</footer>
+    
+    
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,202 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Seajs 实践(二)—— 使用 spm3 构建项目 | ac黄的博客 | acwong&#39;s blog</title>
+
+  
+  <meta name="author" content="acwong">
+  
+
+  
+  <meta name="description" content="Seajs 实践，使用 spm3 对 2048 游戏项目进行构建。">
+  
+
+  
+  
+  <meta name="keywords" content="前端模块化,seajs,spm">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="Seajs 实践(二)—— 使用 spm3 构建项目"/>
+
+  <meta property="og:site_name" content="ac黄的博客"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="ac黄的博客" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">ac黄的博客</a>
+    </h1>
+    <p class="site-description">acwong&#39;s blog</p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">Home</a></li>
+        
+      
+        <li><a href="/archives">Archives</a></li>
+        
+      
+        <li><a href="/tags">Tags</a></li>
+        
+      
+        
+        <li><a href="mailto:acwong@yeah.net">Email</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>Seajs 实践(二)—— 使用 spm3 构建项目</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2014/11/16/2048-with-seajs-and-spm3/" rel="bookmark">
+        <time class="entry-date published" datetime="2014-11-15T16:06:02.000Z">
+          2014-11-16
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="回顾"><a href="#回顾" class="headerlink" title="回顾"></a>回顾</h2><p>在<a target="_blank" rel="noopener" href="http://blog.acwong.org/2014/11/15/2048-with-seajs/">上一篇文章</a>中，利用 Seajs 对 2048 游戏进行了模块化。现在我们可以看到，在页面中使用<code>seajs.use(&quot;game/main&quot;)</code> 就能够自动加载其余的2个js文件。</p>
+<p><a target="_blank" rel="noopener" href="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2048s-network.PNG"><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2048s-network.PNG" alt="2048网络请求"></a></p>
+<h2 id="构建的意义"><a href="#构建的意义" class="headerlink" title="构建的意义"></a>构建的意义</h2><p>但是在实际的开发当中，通常会利用工具把多个 js 文件进行合并和压缩，减少服务器的请求次数，降低服务器的压力。</p>
+<p>然而，使用传统的压缩工具对 CMD 模块进行压缩并不奏效，原因在于我们在写CMD模块的时候写的都是“匿名模块”，所以在使用普通工具合并之后 seajs 并不能识别出每一个“匿名模块”。因此，在合并之前还需要多一个步骤，就是将我们手写的 CMD 模块使用构建工具转换为 Modules/Transport 格式：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">define</span>(<span class="string">&quot;id&quot;</span>, [<span class="string">&quot;dep-1&quot;</span>, <span class="string">&quot;dep-2&quot;</span>], <span class="keyword">function</span>(<span class="params"><span class="built_in">require</span>, <span class="built_in">exports</span>, <span class="variable language_">module</span></span>) &#123;</span><br><span class="line">  <span class="comment">// code</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>第一个参数id 用于识别各个模块。第二个参数指明该模块所依赖的模块，第三个就是原来写的函数。</p>
+<h2 id="构建过程"><a href="#构建过程" class="headerlink" title="构建过程"></a>构建过程</h2><h3 id="spm3-介绍"><a href="#spm3-介绍" class="headerlink" title="spm3 介绍"></a>spm3 介绍</h3><p><strong>spm</strong>(static package manager) 静态包管理工具，可以使用它来对CMD模块进行构建。spm3 是 spm 的新版本，它集成了<strong>spm-build-deps</strong> 的功能，可以直接使用它来构建。</p>
+<p>spm3 与 spm2 的差异非常大，了解更多可以看<a target="_blank" rel="noopener" href="https://github.com/spmjs/spm/issues/819">《spm3 发布通告》</a> 和 <a target="_blank" rel="noopener" href="https://github.com/spmjs/spm/issues/718">《spm@3.0 和 spmjs.org 的未来》</a> 两篇文章。</p>
+<h3 id="去掉-CMD-模块的包装"><a href="#去掉-CMD-模块的包装" class="headerlink" title="去掉 CMD 模块的包装"></a>去掉 CMD 模块的包装</h3><p>spm3 当中，支持的书写规范从 CMD 模块 转向了 CommonJS。因此在构建之前，要先把原 CMD 模块的 <code>define</code> 包装去掉。构建之后 spm3 会自动在代码外添加</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">define</span>(<span class="string">&quot;id&quot;</span>, [<span class="string">&quot;dep-1&quot;</span>, <span class="string">&quot;dep-2&quot;</span>], <span class="keyword">function</span>(<span class="params"><span class="built_in">require</span>, <span class="built_in">exports</span>, <span class="variable language_">module</span></span>)</span><br></pre></td></tr></table></figure>
+
+<p>包装(如果没有去掉，构建后会发现原 <code>define</code> 外又添加了一层 <code>define</code>，会导致代码不能执行)。</p>
+<h3 id="安装-spm3"><a href="#安装-spm3" class="headerlink" title="安装 spm3"></a>安装 spm3</h3><p>要安装 spm3 先要安装 nodejs(这个应该大家都安装了吧)。然后,打开命令行工具安装 spm</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install spm -g</span><br></pre></td></tr></table></figure>
+
+<p>输入</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">spm -v</span><br></pre></td></tr></table></figure>
+
+<p>出现版本号3.x.x安装成功。</p>
+<h3 id="创建-package-json"><a href="#创建-package-json" class="headerlink" title="创建 package.json"></a>创建 package.json</h3><p>spm 使用与 npm 同样的文件 <em>package.json</em> 来描述要构建的项目。</p>
+<p>package.json 可以手动创建，也可以用 <code>npm init</code> 等方法去创建。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2048&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;version&quot;</span><span class="punctuation">:</span> <span class="string">&quot;1.0.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;description&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2048 with seajs&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;author&quot;</span><span class="punctuation">:</span> <span class="string">&quot;acwong&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;license&quot;</span><span class="punctuation">:</span> <span class="string">&quot;MIT&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;spm&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;main&quot;</span><span class="punctuation">:</span> <span class="string">&quot;static/game/main.js&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><code>spm</code> 字段是包含与 spm 构建相关的一些属性。这里我们把入口文件定义为 <em>main.js</em> (默认为 <em>index.js</em>)。其余的属性可以参考<a target="_blank" rel="noopener" href="http://spmjs.io/documentation/package.json">spm3官网的介绍</a>。</p>
+<h3 id="build"><a href="#build" class="headerlink" title="build"></a>build</h3><p>在项目的目录打开命令行工具，输入构建命令</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">spm build</span><br></pre></td></tr></table></figure>
+
+<p>等待一段时间，构建完成。</p>
+<h3 id="构建完成"><a href="#构建完成" class="headerlink" title="构建完成"></a>构建完成</h3><p>构建完成之后,可以发现项目目录下多了一个文件夹 <em>dist</em>，这个就是存放构建后代码的地方。现在只要在页面文件中改动一下构建后的路径，就可以运行游戏了。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">seajs.<span class="title function_">config</span>(&#123;</span><br><span class="line">    <span class="attr">base</span>: <span class="string">&quot;../dist/&quot;</span>,</span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">// 构建后入口文件的id</span></span><br><span class="line">seajs.<span class="title function_">use</span>(<span class="string">&quot;2048/1.0.0/static/game/main&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>打开游戏，可以发现原来的3个 js 文件，现在只剩下 <em>main.js</em> 一个了。</p>
+<p><a target="_blank" rel="noopener" href="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2048ss-network.PNG"><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2048ss-network.PNG" alt="2048构建后网络请求"></a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/acwong00/blog-demo-code/tree/master/seajs-2048/2048-with-seajs-and-spm3">这里</a>可以查看最终的代码。</p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>由于 spm3 从 CMD 模块转向了 CommonJS 所以会导致一个问题，去掉 <code>define</code> 之后线下文件不能直接打开调试，所以 Seajs 退出了一个 seajs-wrap 的插件可以动态添加</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">define(function(require, exports, module) &#123;&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>seajs-wrap 在 <em>sea.js</em> 之后引入。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;path/to/sea.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;path/to/seajs-wrap.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>虽然有了这个插件，但是我认为还是不太便于使用，希望未来的版本可以有更好的解决方案。<a target="_blank" rel="noopener" href="https://github.com/seajs/seajs-wrap">了解更多请戳…</a></p>
+<p>这里只是简单谈谈我自己的一次实践过程，seajs还有更多强大的功能等着我们去学习。</p>
+<p>感谢您的阅读，有不足之处请为我指出。</p>
+<p><strong>参考</strong></p>
+<ol>
+<li><a target="_blank" rel="noopener" href="http://spmjs.io/documentation/develop-a-package">Develop A Package – spmjs.io</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/seajs/seajs/issues/426">为什么要有约定和构建工具</a></li>
+<li><a target="_blank" rel="noopener" href="http://chaoskeh.com/blog/why-its-hard-to-combo-seajs-modules.html">为什么 SeaJS 模块的合并这么麻烦</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/seajs/seajs-wrap/issues/1">seajs-wrap 中文文档</a></li>
+</ol>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/技术实践/">技术实践</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/前端模块化/">前端模块化</a><a href="/tags/seajs/">seajs</a><a href="/tags/spm/">spm</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2022 acwong
+    
+  </p>
+</footer>
+    
+    
+  </div>
+</div>
+</body>
+</html>

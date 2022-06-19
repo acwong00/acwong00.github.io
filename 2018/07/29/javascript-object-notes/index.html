@@ -1,0 +1,177 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>《你不知道的 JavaScript 上卷》对象笔记 | ac黄的博客 | acwong&#39;s blog</title>
+
+  
+  <meta name="author" content="acwong">
+  
+
+  
+  <meta name="description" content="ac黄的博客">
+  
+
+  
+  
+  <meta name="keywords" content="JavaScript">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="《你不知道的 JavaScript 上卷》对象笔记"/>
+
+  <meta property="og:site_name" content="ac黄的博客"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="ac黄的博客" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">ac黄的博客</a>
+    </h1>
+    <p class="site-description">acwong&#39;s blog</p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">Home</a></li>
+        
+      
+        <li><a href="/archives">Archives</a></li>
+        
+      
+        <li><a href="/tags">Tags</a></li>
+        
+      
+        
+        <li><a href="mailto:acwong@yeah.net">Email</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>《你不知道的 JavaScript 上卷》对象笔记</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/07/29/javascript-object-notes/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-07-29T04:51:29.000Z">
+          2018-07-29
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="typeof-null-为何返回-object"><a href="#typeof-null-为何返回-object" class="headerlink" title="typeof null 为何返回 object"></a>typeof null 为何返回 object</h2><p>因为不同的对象在底层到表示为二进制，在 JavaScript 中二进制前三位都为 0 的话会判断为 <code>object</code> 类型，由于 <code>null</code> 二进制表示全为 0，所以就被判断为 <code>object</code>。</p>
+<h2 id="字面量和对象"><a href="#字面量和对象" class="headerlink" title="字面量和对象"></a>字面量和对象</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> strPrimitive = <span class="string">&#x27;I am a string&#x27;</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(strPrimitive.<span class="property">length</span>) <span class="comment">// 13</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(strPrimitive.<span class="title function_">charAt</span>(<span class="number">3</span>)) <span class="comment">// m</span></span><br></pre></td></tr></table></figure>
+
+<p><code>strPrimitive</code> 是以文字形成创建，是一个字面量并不是一个对象，当调用诸如 <code>length</code>、<code>charAt</code> 这些方法时，引擎会自动将其转换为 <code>new String(&#39;I am a string&#39;)</code>。类似的还有布尔型和数值型变量。</p>
+<ul>
+<li><code>null</code>、<code>undefined</code> 只有文字形式，没有构造形式。</li>
+<li><code>Date</code> 只有构造形式，没有文字形式。</li>
+<li><code>String</code>、<code>Number</code>、<code>Boolean</code> 文字形式创建字面量，构造形式创建对象。</li>
+<li><code>Object</code>、<code>Array</code>、<code>Function</code>、<code>RegExp</code> 无论使用文字形式或构造形式创建，均为对象。</li>
+<li><code>Error</code> 一般为抛出异常时自动创建，亦可以 <code>new Error()</code> 形式创建。</li>
+</ul>
+<h2 id="键访问"><a href="#键访问" class="headerlink" title="键访问"></a>键访问</h2><p><code>myObject[..]</code> 这种形式访问对象的属性称为键访问，如将 <code>string</code> 字面量以外的值用于键访问，那该值会被转为字符串。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> myObject = &#123;&#125;</span><br><span class="line"></span><br><span class="line">myObject[<span class="literal">true</span>] = <span class="string">&#x27;foo&#x27;</span></span><br><span class="line">myObject[<span class="number">3</span>] = <span class="string">&#x27;bar&#x27;</span></span><br><span class="line">myObject[myObject] = <span class="string">&#x27;baz&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(myObject[<span class="string">&#x27;true&#x27;</span>]) <span class="comment">// foo</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(myObject[<span class="string">&#x27;3&#x27;</span>]) <span class="comment">// bar</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(myObject[<span class="string">&#x27;[object Object]&#x27;</span>]) <span class="comment">// baz</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="方法访问"><a href="#方法访问" class="headerlink" title="方法访问"></a>方法访问</h2><p>即使对象内定义的函数技术上并不属于该对象，而是通过该对象调用函数的时候才动态绑定上去。</p>
+<h2 id="深复制-JSON-安全的对象"><a href="#深复制-JSON-安全的对象" class="headerlink" title="深复制 JSON 安全的对象"></a>深复制 JSON 安全的对象</h2><p>对于字符安全的对象可以巧妙利用 <code>JSON</code> 对象的方法来进行复制</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> newObj = <span class="title class_">JSON</span>.<span class="title function_">parse</span>(<span class="title class_">JSON</span>.<span class="title function_">stringify</span>(oldObj))</span><br></pre></td></tr></table></figure>
+
+<h2 id="属性描述符"><a href="#属性描述符" class="headerlink" title="属性描述符"></a>属性描述符</h2><p>ES5 以后所有对象的属性都具备属性描述符。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> myObject = &#123;</span><br><span class="line">  <span class="attr">a</span>: <span class="number">2</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title class_">Object</span>.<span class="title function_">getOwnPropertyDescriptor</span>(myObject, <span class="string">&#x27;a&#x27;</span>)</span><br><span class="line"><span class="comment">// &#123;</span></span><br><span class="line"><span class="comment">//    value: 2,  </span></span><br><span class="line"><span class="comment">//    writable: true,</span></span><br><span class="line"><span class="comment">//    enumerable: true,</span></span><br><span class="line"><span class="comment">//    configurable: true</span></span><br><span class="line"><span class="comment">// &#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><code>writable</code> 代表是否可以修改该属性的值，若为 <code>false</code> 则不能修改。</p>
+<p><code>configurable</code> 代表是否可以使用 <code>defineProperty</code> 来修改属性描述符。若为 <code>true</code> 还同时会禁止删除该属性。</p>
+<p><code>enumerable</code> 代表该属性是否可枚举，例如使用 <code>for..in</code> 循环时，就不会出现 <code>enumerable</code> 为 <code>false</code> 的属性。</p>
+<p><strong>参考</strong></p>
+<p><a target="_blank" rel="noopener" href="https://book.douban.com/subject/26351021/">你不知道的JavaScript（上卷）</a></p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/学习笔记/">学习笔记</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/JavaScript/">JavaScript</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2022 acwong
+    
+  </p>
+</footer>
+    
+    
+  </div>
+</div>
+</body>
+</html>

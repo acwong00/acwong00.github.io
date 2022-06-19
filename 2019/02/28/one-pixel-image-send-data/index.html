@@ -1,0 +1,163 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>204 请求图片快捷发送数据 | ac黄的博客 | acwong&#39;s blog</title>
+
+  
+  <meta name="author" content="acwong">
+  
+
+  
+  <meta name="description" content="ac黄的博客">
+  
+
+  
+  
+  <meta name="keywords" content="前端,跨域">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="204 请求图片快捷发送数据"/>
+
+  <meta property="og:site_name" content="ac黄的博客"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="ac黄的博客" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">ac黄的博客</a>
+    </h1>
+    <p class="site-description">acwong&#39;s blog</p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">Home</a></li>
+        
+      
+        <li><a href="/archives">Archives</a></li>
+        
+      
+        <li><a href="/tags">Tags</a></li>
+        
+      
+        
+        <li><a href="mailto:acwong@yeah.net">Email</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>204 请求图片快捷发送数据</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2019/02/28/one-pixel-image-send-data/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-02-28T12:00:28.000Z">
+          2019-02-28
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>在打开 Chrome 查看网络请求时，常常可以看到网站请求一张图片，返回的状态码是 204，这是网站用于发送一些页面数据的常用手段，现在就来探讨一下。</p>
+<p>首先 204 状态码表示目前请求成功，但客户端不需要更新现有的页面。因此，这张图片的作用并不是用于展示到页面当中。</p>
+<p>然后，我们可以看到请求这张图片的 url 后面必定会带有 query 的参数，其实，这张图片真正的用途就是向服务器传输它 url 后面带有的数据。</p>
+<p>这其实是一种被称为<strong>网络信标（Web beacon）</strong>的技术，利用一张不可见的图像 get 请求将信息传送到服务器当中。</p>
+<p>对于用户行为搜集、google analysis 之类的服务是是一种常用的手段，相比与 ajax 请求，它的资源开销会更少，而且可以突破 ajax 不能跨域的限制。对于向服务器传输数据但并不需要返回结果的应用场景当中是一种非常好的选择。</p>
+<p>现在我们就来模拟一下这个过程。首先创建一个简单的 web 服务。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> http = <span class="built_in">require</span>(<span class="string">&#x27;http&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> path = <span class="built_in">require</span>(<span class="string">&#x27;path&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> url = <span class="built_in">require</span>(<span class="string">&#x27;url&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> port = <span class="number">2345</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">requestHandler</span> = (<span class="params">req, res</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> &#123; pathname, query &#125; = url.<span class="title function_">parse</span>(req.<span class="property">url</span>)</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">const</span> filePath = <span class="string">`.<span class="subst">$&#123;pathname&#125;</span>`</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> extname = path.<span class="title function_">extname</span>(filePath)</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 打印 query</span></span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(query)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (extname === <span class="string">&#x27;.gif&#x27;</span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> contentType = <span class="string">&#x27;image/gif&#x27;</span></span><br><span class="line">    <span class="comment">// 返回 204 响应</span></span><br><span class="line">    res.<span class="title function_">writeHead</span>(<span class="number">204</span>, &#123; <span class="string">&#x27;Content-Type&#x27;</span>: contentType &#125;)</span><br><span class="line">    res.<span class="title function_">end</span>(<span class="string">&#x27;&#x27;</span>, <span class="string">&#x27;utf-8&#x27;</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> server = http.<span class="title function_">createServer</span>(requestHandler)</span><br><span class="line"></span><br><span class="line">server.<span class="title function_">listen</span>(port, <span class="function"><span class="params">err</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (err) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(err)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`server is listening on <span class="subst">$&#123;port&#125;</span>`</span>)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>浏览器定时请求图片。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">setInterval</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> img = <span class="keyword">new</span> <span class="title class_">Image</span>()</span><br><span class="line">  img.<span class="property">src</span> = <span class="string">`http://localhost:2345/test.gif?num=<span class="subst">$&#123;<span class="built_in">Math</span>.random()&#125;</span>`</span></span><br><span class="line">&#125;, <span class="number">3000</span>)</span><br></pre></td></tr></table></figure>
+
+<p>这个时候可以看到 web 服务的日志每隔三秒就会收到一个名为 <code>num</code> 的参数，参数的值是一个随机的浮点数。</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/学习笔记/">学习笔记</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/前端/">前端</a><a href="/tags/跨域/">跨域</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2022 acwong
+    
+  </p>
+</footer>
+    
+    
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,199 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>从一个居中方法说起 —— 谈 translate 与 相对、绝对定位 | ac黄的博客 | acwong&#39;s blog</title>
+
+  
+  <meta name="author" content="acwong">
+  
+
+  
+  <meta name="description" content="通过一个居中的例子引入，谈谈 translate 和 相对、绝对定位的区别。">
+  
+
+  
+  
+  <meta name="keywords" content="CSS,CSS3,定位,CSS3动画">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="从一个居中方法说起 —— 谈 translate 与 相对、绝对定位"/>
+
+  <meta property="og:site_name" content="ac黄的博客"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="ac黄的博客" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">ac黄的博客</a>
+    </h1>
+    <p class="site-description">acwong&#39;s blog</p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">Home</a></li>
+        
+      
+        <li><a href="/archives">Archives</a></li>
+        
+      
+        <li><a href="/tags">Tags</a></li>
+        
+      
+        
+        <li><a href="mailto:acwong@yeah.net">Email</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>从一个居中方法说起 —— 谈 translate 与 相对、绝对定位</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2014/12/21/css3-middle-translate-and-relative/" rel="bookmark">
+        <time class="entry-date published" datetime="2014-12-21T07:59:47.000Z">
+          2014-12-21
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="方法介绍"><a href="#方法介绍" class="headerlink" title="方法介绍"></a>方法介绍</h2><p>垂直水平居中是日常前端开发当中一个常见的需求，在支持 CSS3 属性的现代浏览器当中，有一个利用 CSS3 属性的垂直水平居中方法：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.center</span> &#123;</span><br><span class="line">    <span class="attribute">position</span>: absolute;</span><br><span class="line">    <span class="attribute">top</span>: <span class="number">50%</span>;</span><br><span class="line">    <span class="attribute">left</span>: <span class="number">50%</span>;</span><br><span class="line">    -ms-<span class="attribute">transform</span>: <span class="built_in">translate</span>(-<span class="number">50%</span>,-<span class="number">50%</span>);</span><br><span class="line">    -moz-<span class="attribute">transform</span>: <span class="built_in">translate</span>(-<span class="number">50%</span>,-<span class="number">50%</span>);</span><br><span class="line">    -o-<span class="attribute">transform</span>: <span class="built_in">translate</span>(-<span class="number">50%</span>,-<span class="number">50%</span>);</span><br><span class="line">    <span class="attribute">transform</span>: <span class="built_in">translate</span>(-<span class="number">50%</span>,-<span class="number">50%</span>); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>**<a target="_blank" rel="noopener" href="http://jsfiddle.net/acwong/kjcvss1a/">例子传送门</a>**（请用现代浏览器打开）</p>
+<p>从上面的例子看到，无论我们怎样调整窗口的大小，红色方块始终会在窗口垂直、水平居中。</p>
+<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>为了解释原理，我们创建两个元素:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;outer&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;inner&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>先不加上 <code>transform</code> 属性：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-id">#outer</span> &#123;</span><br><span class="line">    <span class="attribute">position</span>: relative;</span><br><span class="line">    <span class="attribute">width</span>: <span class="number">500px</span>;</span><br><span class="line">    <span class="attribute">height</span>: <span class="number">500px</span>;</span><br><span class="line">    <span class="attribute">border</span>: <span class="number">2px</span> solid yellow;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-id">#inner</span> &#123;</span><br><span class="line">    <span class="attribute">position</span>: absolute;</span><br><span class="line">    <span class="attribute">top</span>: <span class="number">50%</span>;</span><br><span class="line">    <span class="attribute">left</span>: <span class="number">50%</span>;</span><br><span class="line">    <span class="attribute">width</span>: <span class="number">100px</span>;</span><br><span class="line">    <span class="attribute">height</span>: <span class="number">100px</span>;</span><br><span class="line">    <span class="attribute">background-color</span>: red;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="http://jsfiddle.net/acwong/kjcvss1a/1">未加上 <code>transform</code> 属性的例子</a>。</p>
+<p><a target="_blank" rel="noopener" href="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2014-12_middle-position.PNG"><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2014-12_middle-position.PNG"></a></p>
+<p>可以看到红色方块左、上方距离外层方块的距离都是250个像素，如果我们想实现垂直水平居中，就应该将红色方块的中心点移动到目前元素左上角的位置，也就是分别向上和向左移动一半方块边长的长度，50个像素。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"> <span class="selector-id">#inner</span> &#123;</span><br><span class="line">    <span class="attribute">position</span>: absolute;</span><br><span class="line">    <span class="attribute">top</span>: <span class="number">50%</span>;</span><br><span class="line">    <span class="attribute">left</span>: <span class="number">50%</span>;</span><br><span class="line">    <span class="attribute">width</span>: <span class="number">100px</span>;</span><br><span class="line">    <span class="attribute">height</span>: <span class="number">100px</span>;</span><br><span class="line">    <span class="attribute">background-color</span>: red;</span><br><span class="line">    -ms-<span class="attribute">transform</span>: <span class="built_in">translate</span>(-<span class="number">50%</span>,-<span class="number">50%</span>);</span><br><span class="line">    -moz-<span class="attribute">transform</span>: <span class="built_in">translate</span>(-<span class="number">50%</span>,-<span class="number">50%</span>);</span><br><span class="line">    -o-<span class="attribute">transform</span>: <span class="built_in">translate</span>(-<span class="number">50%</span>,-<span class="number">50%</span>);</span><br><span class="line">    <span class="attribute">transform</span>: <span class="built_in">translate</span>(-<span class="number">50%</span>,-<span class="number">50%</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="http://jsfiddle.net/acwong/kjcvss1a/2/">加上 <code>transform</code> 属性</a>。</p>
+<p>所以我们可以看到在 <code>translate</code> 函数当中使用百分比是以该元素的内容区、补白(<code>padding</code>)、边框(<code>border</code>)为标准计算的，为了说明这一点，我们在 <em>innner</em> 元素加上一些 <code>padding</code> 和 <code>border</code>:</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"> <span class="selector-id">#inner</span> &#123;</span><br><span class="line">     <span class="attribute">position</span>: absolute;</span><br><span class="line">     <span class="attribute">top</span>: <span class="number">50%</span>;</span><br><span class="line">     <span class="attribute">left</span>: <span class="number">50%</span>;</span><br><span class="line">     <span class="attribute">width</span>: <span class="number">100px</span>;</span><br><span class="line">     <span class="attribute">height</span>: <span class="number">100px</span>;</span><br><span class="line">     <span class="attribute">border</span>: <span class="number">25px</span> solid yellow;</span><br><span class="line">     <span class="attribute">padding</span>: <span class="number">25px</span>;</span><br><span class="line">     <span class="attribute">background-color</span>: red;</span><br><span class="line">     -ms-<span class="attribute">transform</span>: <span class="built_in">translate</span>(-<span class="number">50%</span>,-<span class="number">50%</span>);</span><br><span class="line">     -moz-<span class="attribute">transform</span>: <span class="built_in">translate</span>(-<span class="number">50%</span>,-<span class="number">50%</span>);</span><br><span class="line">     -o-<span class="attribute">transform</span>: <span class="built_in">translate</span>(-<span class="number">50%</span>,-<span class="number">50%</span>);</span><br><span class="line">     <span class="attribute">transform</span>: <span class="built_in">translate</span>(-<span class="number">50%</span>,-<span class="number">50%</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="http://jsfiddle.net/acwong/kjcvss1a/3/">加上 <code>padding</code> 和 <code>border</code> 以后</a>。</p>
+<p>可以看到 <em>inner</em> 元素一样做到了垂直、水平居中。</p>
+<h2 id="translate-与绝对定位、相对定位"><a href="#translate-与绝对定位、相对定位" class="headerlink" title="translate 与绝对定位、相对定位"></a>translate 与绝对定位、相对定位</h2><p>在表现上看，使用 CSS3 <code>translate</code> 函数和绝对定位、相对定位属性加上 <code>top</code>、<code>left</code> 数值都可以使元素产生位移。实际上它们还是有不少的区别。</p>
+<h3 id="元素视图属性中的-offsetLeft-和-offsetTop-属性。"><a href="#元素视图属性中的-offsetLeft-和-offsetTop-属性。" class="headerlink" title="元素视图属性中的 offsetLeft 和 offsetTop 属性。"></a>元素视图属性中的 <code>offsetLeft</code> 和 <code>offsetTop</code> 属性。</h3><p>我们分别用相对定位和 <code>translate</code> 的方法来使元素产生位移：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"> <span class="selector-id">#box1</span> &#123;</span><br><span class="line">     <span class="attribute">position</span>: relative;</span><br><span class="line">     <span class="attribute">width</span>: <span class="number">50px</span>;</span><br><span class="line">     <span class="attribute">height</span>: <span class="number">50px</span>;</span><br><span class="line">     <span class="attribute">background-color</span>: blue;</span><br><span class="line">     <span class="attribute">top</span>: <span class="number">100px</span>;</span><br><span class="line">     <span class="attribute">left</span>: <span class="number">300px</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-id">#box2</span> &#123;</span><br><span class="line">    <span class="attribute">width</span>: <span class="number">50px</span>;</span><br><span class="line">    <span class="attribute">height</span>: <span class="number">50px</span>;</span><br><span class="line">    <span class="attribute">background-color</span>: red;</span><br><span class="line">    -ms-<span class="attribute">transform</span>: <span class="built_in">translate</span>(<span class="number">300px</span>,<span class="number">100px</span>);</span><br><span class="line">    -moz-<span class="attribute">transform</span>: <span class="built_in">translate</span>(<span class="number">300px</span>,<span class="number">100px</span>);</span><br><span class="line">    -o-<span class="attribute">transform</span>: <span class="built_in">translate</span>(<span class="number">300px</span>,<span class="number">100px</span>);</span><br><span class="line">    <span class="attribute">transform</span>: <span class="built_in">translate</span>(<span class="number">300px</span>,<span class="number">100px</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后看看两者的 <code>offsetTop</code> 和 <code>offsetLeft</code> 的数值：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> box1 = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;box1&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="title function_">alert</span>(box1.<span class="property">offsetLeft</span>);</span><br><span class="line"><span class="title function_">alert</span>(box1.<span class="property">offsetTop</span>);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> box2 = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;box1&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="title function_">alert</span>(box2.<span class="property">offsetLeft</span>);</span><br><span class="line"><span class="title function_">alert</span>(box2.<span class="property">offsetTop</span>);</span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="http://jsfiddle.net/acwong/kjcvss1a/5/">使用相对定位的例子</a></p>
+<p><a target="_blank" rel="noopener" href="http://jsfiddle.net/acwong/kjcvss1a/6/">使用 translate 的例子</a></p>
+<p>可以看出使用 <code>translate</code> 的例子的 <code>offsetTop</code> 和 <code>offsetLeft</code> 的数值与没有产生位移的元素没有然后区别，无论位移多少这两个数值都是固定不变的。</p>
+<p>而使用相对定位的例子 <code>offsetTop</code> 和 <code>offsetLeft</code> 的数值则根据位移的长度发生了改变。</p>
+<h3 id="动画表现的区别"><a href="#动画表现的区别" class="headerlink" title="动画表现的区别"></a>动画表现的区别</h3><p>在 CSS3 属性还没很好地被浏览器支持的时候，我们常常会使用绝对定位(<code>position:absolute</code>)，然后结合 <em>jQuery</em> 改变元素的 <code>top</code>、<code>left</code> 的数值来做位移的动画效果。</p>
+<p>然而，两者在位移动画的表现上也有一定的区别。借用国外博主 Paul Irish 的两个例子：</p>
+<p><a target="_blank" rel="noopener" href="http://codepen.io/paulirish/pen/nkwKs">Animating with Top/Left</a></p>
+<p><a target="_blank" rel="noopener" href="http://codepen.io/paulirish/pen/LsxyF">Animating with Translate</a></p>
+<p>对比两个例子来看，可以看出使用 <code>translate</code> 来制作的动画比绝对定位的动画更加平滑。</p>
+<p>原因在于使用绝对定位的动画效果会受制于利用像素(<em>px</em>)为单位进行位移，而使用 <code>translate</code> 函数的动画则可以不受像素的影响，以更小的单位进行位移。</p>
+<p>另外，绝对定位的动画效果完全使用 CPU 进行计算，而使用 <code>translate</code> 函数的动画则是利用 GPU，因此在视觉上使用  <code>translate</code> 函数的动画可以有比绝对定位动画有更高的帧数。</p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>CSS3 动画相关的属性出现以后，可以让我们更加轻松地制作复杂的动画，同时 <code>position:relative</code> 和 <code>position:absolute</code> 这一类的属性可以回归它们原本的定位，为定位、布局服务，而将动画的重任交给 CSS3 的相关属性。</p>
+<p>感谢您的阅读，有不足之处请在评论为我指出。</p>
+<p><strong>参考</strong></p>
+<p><a target="_blank" rel="noopener" href="http://www.paulirish.com/2012/why-moving-elements-with-translate-is-better-than-posabs-topleft/">Why Moving Elements With Translate() Is Better Than Pos:abs Top/left</a></p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/技术研究/">技术研究</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/CSS/">CSS</a><a href="/tags/CSS3/">CSS3</a><a href="/tags/定位/">定位</a><a href="/tags/CSS3动画/">CSS3动画</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2022 acwong
+    
+  </p>
+</footer>
+    
+    
+  </div>
+</div>
+</body>
+</html>

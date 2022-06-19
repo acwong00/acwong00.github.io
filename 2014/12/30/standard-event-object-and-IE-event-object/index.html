@@ -1,0 +1,193 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>JavaScript 笔记 —— 标准事件对象与 IE 事件对象 | ac黄的博客 | acwong&#39;s blog</title>
+
+  
+  <meta name="author" content="acwong">
+  
+
+  
+  <meta name="description" content="总结 IE 事件对象和标准事件对象的区别。">
+  
+
+  
+  
+  <meta name="keywords" content="兼容性,JavaScript,事件,事件对象">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="JavaScript 笔记 —— 标准事件对象与 IE 事件对象"/>
+
+  <meta property="og:site_name" content="ac黄的博客"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="ac黄的博客" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">ac黄的博客</a>
+    </h1>
+    <p class="site-description">acwong&#39;s blog</p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">Home</a></li>
+        
+      
+        <li><a href="/archives">Archives</a></li>
+        
+      
+        <li><a href="/tags">Tags</a></li>
+        
+      
+        
+        <li><a href="mailto:acwong@yeah.net">Email</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>JavaScript 笔记 —— 标准事件对象与 IE 事件对象</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2014/12/30/standard-event-object-and-IE-event-object/" rel="bookmark">
+        <time class="entry-date published" datetime="2014-12-30T13:26:22.000Z">
+          2014-12-30
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>标准的事件绑定函数是 <code>addEventListener</code> 函数，而 IE 浏览器（IE9 以下）则是用 <code>attachEvent</code>。 这两个函数中的事件处理函数都可以传入一个 <code>event</code> 参数，就是我们所说的事件对象，本文就来总结一下两者的区别。</p>
+<h2 id="获取事件的目标"><a href="#获取事件的目标" class="headerlink" title="获取事件的目标"></a>获取事件的目标</h2><p>事件的目标就是指当前触发事件的元素。</p>
+<p>有如下的 HTML：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">body</span> <span class="attr">id</span>=<span class="string">&quot;myBody&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">button</span> <span class="attr">id</span>=<span class="string">&quot;myButton&quot;</span>&gt;</span>click<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>标准事件对象使用 <code>event</code> 的 <code>target</code> 属性获取事件目标。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> btn = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;myButton&#x27;</span>);</span><br><span class="line">btn.<span class="title function_">addEventListener</span>(<span class="string">&quot;click&quot;</span>, <span class="keyword">function</span>(<span class="params">event</span>) &#123;</span><br><span class="line">    <span class="title function_">alert</span>(event.<span class="property">target</span>.<span class="property">id</span>);    <span class="comment">// myButton</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>IE 事件对象使用 <code>event</code> 的 <code>srcElement</code> 属性获取事件目标。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> btn = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;myButton&quot;</span>);</span><br><span class="line">btn.<span class="title function_">attachEvent</span>(<span class="string">&quot;onclick&quot;</span>, <span class="keyword">function</span>(<span class="params">event</span>) &#123;</span><br><span class="line">    <span class="title function_">alert</span>(event.<span class="property">srcElement</span>.<span class="property">id</span>);    <span class="comment">// myButton</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p><strong>另外</strong>，标准事件对象还有一个 <code>currentTarget</code> 属性，该属性在事件处理函数当中始终与 <code>this</code> 相等，而 <code>target</code> 属性则是指向事件触发的具体目标。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">document</span>.<span class="property">body</span>.<span class="title function_">addEventListener</span>(<span class="string">&quot;click&quot;</span>, <span class="keyword">function</span> (<span class="params">event</span>) &#123;</span><br><span class="line">    <span class="title function_">alert</span>(event.<span class="property">currentTarget</span>.<span class="property">id</span>);    <span class="comment">// myBody</span></span><br><span class="line">    <span class="title function_">alert</span>(event.<span class="property">target</span>.<span class="property">id</span>);           <span class="comment">// myButton</span></span><br><span class="line">    <span class="title function_">alert</span>(<span class="variable language_">this</span>.<span class="property">id</span>);                   <span class="comment">// myBody</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h2 id="取消事件默认行为"><a href="#取消事件默认行为" class="headerlink" title="取消事件默认行为"></a>取消事件默认行为</h2><p>有如下的 HTML：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">a</span> <span class="attr">id</span>=<span class="string">&quot;myLink&quot;</span> <span class="attr">href</span>=<span class="string">&quot;http://blog.acwong.org&quot;</span>&gt;</span>acwong blog<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>标准事件对象使用 <code>event</code> 的 <code>preventDefault()</code> 方法取消事件默认行为。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> myLink = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;myLink&#x27;</span>);</span><br><span class="line">myLink.<span class="title function_">addEventListener</span>(<span class="string">&quot;click&quot;</span>,<span class="keyword">function</span>(<span class="params">event</span>) &#123;</span><br><span class="line">    <span class="title function_">alert</span>(<span class="string">&quot;haha&quot;</span>);          <span class="comment">// haha</span></span><br><span class="line">    event.<span class="title function_">preventDefault</span>(); <span class="comment">// 浏览器不会跳转</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>IE 事件对象使用 <code>event</code> 的 <code>returnValue</code> 属性取消事件默认行为，该属性默认值为 <code>true</code> 设置为 <code>false</code> 就可以取消事件默认行为。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> myLink = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;myLink&#x27;</span>);</span><br><span class="line">myLink.<span class="title function_">attaxchEvent</span>(<span class="string">&quot;onclick&quot;</span>,<span class="keyword">function</span>(<span class="params">event</span>) &#123;</span><br><span class="line">    <span class="title function_">alert</span>(<span class="string">&quot;haha&quot;</span>);                  <span class="comment">// haha</span></span><br><span class="line">    event.<span class="property">returnValue</span> = <span class="literal">false</span>;      <span class="comment">// 浏览器不会跳转</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h2 id="禁止事件冒泡"><a href="#禁止事件冒泡" class="headerlink" title="禁止事件冒泡"></a>禁止事件冒泡</h2><p>有如下的 HTML:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">body</span> <span class="attr">id</span>=<span class="string">&quot;myBody&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">button</span> <span class="attr">id</span>=<span class="string">&quot;myButton&quot;</span>&gt;</span>click<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>标准事件对象使用 <code>event</code> 的 <code>stopPropagation()</code> 方法禁止事件冒泡。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> btn = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;myButton&quot;</span>);</span><br><span class="line">btn.<span class="title function_">addEventListener</span>(<span class="string">&quot;click&quot;</span>, <span class="keyword">function</span>(<span class="params">event</span>) &#123;</span><br><span class="line">    <span class="title function_">alert</span>(<span class="variable language_">this</span>.<span class="property">id</span>);            <span class="comment">// myButton</span></span><br><span class="line">    event.<span class="title function_">stopPropagation</span>();   <span class="comment">// 禁止事件冒泡</span></span><br><span class="line">&#125;);</span><br><span class="line"><span class="variable language_">document</span>.<span class="property">body</span>.<span class="title function_">addEventListener</span>(<span class="string">&quot;click&quot;</span>,<span class="keyword">function</span>(<span class="params">event</span>) &#123;</span><br><span class="line">    <span class="title function_">alert</span>(<span class="variable language_">this</span>.<span class="property">id</span>);           <span class="comment">// 不会出现</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>IE 事件对象使用 <code>event</code> 的 <code>cancelBubble</code> 属性禁止事件冒泡，该属性值默认为 <code>false</code>，设置为 <code>true</code> 就可以禁止事件冒泡。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> btn = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;myButton&quot;</span>);</span><br><span class="line">btn.<span class="title function_">attachEvent</span>(<span class="string">&quot;onclick&quot;</span>, <span class="keyword">function</span>(<span class="params">event</span>) &#123;</span><br><span class="line">    <span class="title function_">alert</span>(<span class="string">&quot;haha&quot;</span>);              <span class="comment">// haha</span></span><br><span class="line">    event.<span class="property">cancelBubble</span> = <span class="literal">true</span>;  <span class="comment">// 禁止事件冒泡</span></span><br><span class="line">&#125;);</span><br><span class="line"><span class="variable language_">document</span>.<span class="property">body</span>.<span class="title function_">attachEvent</span>(<span class="string">&quot;onclick&quot;</span>,<span class="keyword">function</span>(<span class="params">event</span>) &#123;</span><br><span class="line">    <span class="title function_">alert</span>(<span class="string">&quot;hehe&quot;</span>);             <span class="comment">// 不会出现</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h2 id="IE-事件处理函数中的-this"><a href="#IE-事件处理函数中的-this" class="headerlink" title="IE 事件处理函数中的 this"></a>IE 事件处理函数中的 <code>this</code></h2><p>最后，还要一个与事件对象无关的小点，在 IE 事件处理函数当中 <code>this</code> 的值并不等于被绑定元素，而是等于 <code>window</code> 对象。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> btn = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;myButton&quot;</span>);</span><br><span class="line">btn.<span class="title function_">attachEvent</span>(<span class="string">&quot;onclick&quot;</span>, <span class="keyword">function</span>(<span class="params">event</span>) &#123;</span><br><span class="line">    <span class="title function_">alert</span>(<span class="variable language_">this</span> === <span class="variable language_">window</span>);              <span class="comment">// true</span></span><br><span class="line">    <span class="title function_">alert</span>(<span class="variable language_">this</span>.<span class="property">id</span>)                       <span class="comment">// undefined</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>而在标准事件绑定当中，<code>this</code> 的值等于被绑定的元素。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> btn = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;myButton&quot;</span>);</span><br><span class="line">btn.<span class="title function_">addEventListener</span>(<span class="string">&quot;click&quot;</span>, <span class="keyword">function</span>(<span class="params">event</span>) &#123;</span><br><span class="line">    <span class="title function_">alert</span>(<span class="variable language_">this</span> === btn);                  <span class="comment">// true</span></span><br><span class="line">    <span class="title function_">alert</span>(<span class="variable language_">this</span>.<span class="property">id</span>);                       <span class="comment">// myButton</span></span><br><span class="line">    <span class="title function_">alert</span>(<span class="variable language_">this</span> === event.<span class="property">currentTarget</span>);  <span class="comment">// true</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>最后祝大家新年快乐~</p>
+<p>感谢您的阅读，有不足之处请为我指出。</p>
+<p><strong>参考</strong></p>
+<p><a target="_blank" rel="noopener" href="http://book.douban.com/subject/10546125/">JavaScript高级程序设计(第3版)</a></p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/学习笔记/">学习笔记</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/兼容性/">兼容性</a><a href="/tags/JavaScript/">JavaScript</a><a href="/tags/事件/">事件</a><a href="/tags/事件对象/">事件对象</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2022 acwong
+    
+  </p>
+</footer>
+    
+    
+  </div>
+</div>
+</body>
+</html>

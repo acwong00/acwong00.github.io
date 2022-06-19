@@ -1,0 +1,199 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>实用的margin负值 | ac黄的博客 | acwong&#39;s blog</title>
+
+  
+  <meta name="author" content="acwong">
+  
+
+  
+  <meta name="description" content="介绍 margin 负值以及 margin 负值在实际当中的应用。">
+  
+
+  
+  
+  <meta name="keywords" content="CSS,布局,盒模型">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="实用的margin负值"/>
+
+  <meta property="og:site_name" content="ac黄的博客"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="ac黄的博客" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">ac黄的博客</a>
+    </h1>
+    <p class="site-description">acwong&#39;s blog</p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">Home</a></li>
+        
+      
+        <li><a href="/archives">Archives</a></li>
+        
+      
+        <li><a href="/tags">Tags</a></li>
+        
+      
+        
+        <li><a href="mailto:acwong@yeah.net">Email</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>实用的margin负值</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2014/12/06/negative-margins/" rel="bookmark">
+        <time class="entry-date published" datetime="2014-12-06T03:33:58.000Z">
+          2014-12-06
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>无论是在介绍前端知识的书籍还是谈论盒模型的文章，margin 都是最重要的属性之一，然而它的负值用法却极少被提到。其实 margin 负值是一个相当实用的属性，可以被应用于日常前端开发当中的不少场景。</p>
+<h2 id="margin-负值初体验"><a href="#margin-负值初体验" class="headerlink" title="margin 负值初体验"></a>margin 负值初体验</h2><p>与正值的 margin 一样，margin 的负值同样可以被用于上下左右四个方向，我把它所起到的效果总结为：</p>
+<p><strong>上和左方的 margin 负值使该元素向上和左方向移动。</strong></p>
+<p><strong>下和右方的 margin 负值使该元素下方、右方的元素被拉向该元素。</strong></p>
+<p>我们通过几个简单的小例子去理解。**<a target="_blank" rel="noopener" href="http://jsfiddle.net/acwong/j8x2r6a7/">传送门……</a>**</p>
+<p>在例子当中一个大的正方形包裹着两个分别是蓝色和黄色的正方形，分别对蓝色的正方形使用上、下、左、右四个方向的 margin 负值。</p>
+<p>结果我们可以看到，使用<code>margin-top: -50px</code> 和 <code>margin-left: -50px</code> 的例子，蓝色正方形分别向上方和左方移动了50个像素。</p>
+<p><a target="_blank" rel="noopener" href="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2014-12_negative-margin-top.PNG"><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2014-12_negative-margin-top.PNG" alt="negative margin-top"></a></p>
+<p><a target="_blank" rel="noopener" href="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2014-12_negative-margin-left.PNG"><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2014-12_negative-margin-left.PNG" alt="negative margin-left"></a></p>
+<p>而使用 <code>margin-bottom: -50px</code> 和 <code>margin-right: -50px</code> 的例子，位于下方和右方的黄色正方形向蓝色正方形方向移动了50个像素，覆盖了蓝色正方形的一部分。</p>
+<p><a target="_blank" rel="noopener" href="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2014-12_negative-margin-bottom.PNG"><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2014-12_negative-margin-bottom.PNG" alt="negative margin-bottom"></a></p>
+<p><a target="_blank" rel="noopener" href="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2014-12_negative-margin-right.PNG"><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2014-12_negative-margin-right.PNG" alt="negative margin-right"></a></p>
+<h2 id="原理浅析"><a href="#原理浅析" class="headerlink" title="原理浅析"></a>原理浅析</h2><p>产生上述两种情况的差异是由于 margin 在上、左方和下、右方解析逻辑有所不同。这里引用怿飞博客**<a target="_blank" rel="noopener" href="http://www.planabc.net/2007/03/18/css_attribute_margin/">《由浅入深漫谈margin属性》</a>** 中参考线的概念。</p>
+<p><a target="_blank" rel="noopener" href="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2014-12_margin-move.png"><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2014-12_margin-move.png" alt="margin-move"></a></p>
+<p>简单来说就是上、左方和下、右方参考线的不同导致的。</p>
+<p><strong>margin 上方负值以包含块(Containing block) 内容区域的上边或者上方相连元素 margin 的下边为参考线</strong></p>
+<p><strong>margin 左方负值以包含块(Containing block) 内容区域的左边或者左方相连元素 margin 的右边为参考线</strong></p>
+<p><strong>margin 下方负值以元素本身 border 的下边为参考线</strong></p>
+<p><strong>margin 右方负值以元素本身 border 的右边为参考线</strong></p>
+<p>所以使用 margin 上、左方负值时可以理解为与参考线的距离减少，导致元素产生位移；使用使用 margin 下、右方负值时可以理解为参考线向上、右方移动。</p>
+<p>深入理解可以看**<a target="_blank" rel="noopener" href="http://www.planabc.net/2007/03/18/css_attribute_margin/">《由浅入深漫谈margin属性》</a><strong>。另外，关于</strong><a target="_blank" rel="noopener" href="http://w3help.org/zh-cn/kb/008/">包含块( Containing block )</a>**。</p>
+<h2 id="margin-负值在实际当中的应用"><a href="#margin-负值在实际当中的应用" class="headerlink" title="margin 负值在实际当中的应用"></a>margin 负值在实际当中的应用</h2><p>margin 负值虽然不是常常被提起，但是在实际当中已经有相当广泛的应用。现在来看几个实例。</p>
+<h3 id="大众点评团购城市列表"><a href="#大众点评团购城市列表" class="headerlink" title="大众点评团购城市列表"></a>大众点评团购城市列表</h3><p><a target="_blank" rel="noopener" href="http://t.dianping.com/citylist">http://t.dianping.com/citylist</a></p>
+<p><a target="_blank" rel="noopener" href="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2014-12_dianpin-list.PNG"><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2014-12_dianpin-list.PNG" alt="dianping-list"></a></p>
+<p>上图每一个城市之间都有一条浅灰色竖线作为分割符，查看源码我们可以发现它其实是每个<code>li</code>元素的左边界，然而通常使用<code>border</code>来完成类似需求时我们不希望第一个（或最后一个）<code>li</code> 元素出现<code>border</code>，因此我们通常会在第一个（或最后一个）<code>li</code> 元素添加 <em>frist-item</em>(或 <em>last-item</em>) 的 class 使他们不显示，而这里的城市列表用了一个更加简单的方法：每一个<code>li</code> 元素添加一个像素左方向的 <code>margin</code> 负值。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.list</span> <span class="selector-tag">li</span> <span class="selector-class">.cityes</span> <span class="selector-tag">li</span> &#123;</span><br><span class="line">    <span class="attribute">border-left</span>: <span class="number">1px</span> solid <span class="number">#ccc</span>;</span><br><span class="line">    <span class="attribute">margin</span>: <span class="number">17px</span> <span class="number">0</span> <span class="number">0</span> -<span class="number">1px</span>;</span><br><span class="line">    <span class="comment">/* 省略其余代码 */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>第一个城市的左方 <code>border</code> 就这样被隐藏了。</p>
+<h3 id="segmentfault-首页tab"><a href="#segmentfault-首页tab" class="headerlink" title="segmentfault 首页tab"></a>segmentfault 首页tab</h3><p><a target="_blank" rel="noopener" href="http://segmentfault.com/">http://segmentfault.com/</a></p>
+<p><a target="_blank" rel="noopener" href="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2014-12_segmentfault-tab.PNG"><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2014-12_segmentfault-tab.PNG" alt="segmentfault-tab"></a></p>
+<p>完成类似的tab效果，我们需要分别给各个 tab 元素和其父元素添加 <code>border</code>，这个时候会出现双边框的情况。segmentfault 的解决方法是给每一个tab元素添加一像素下方的 <code>margin</code> 负值。</p>
+<p>另外，为了类似上一个例子中的城市列表，这里的元素添加了一个像素的右方的 <code>margin</code> 负值，tab 元素之间不会出现双边框的情况。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.nav-tabs</span> &#123;</span><br><span class="line">    <span class="attribute">border-bottom</span>: <span class="number">1px</span> solid <span class="number">#ddd</span>;</span><br><span class="line">    <span class="comment">/* 父元素ul */</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.nav-tabs</span> &gt; <span class="selector-tag">li</span> &#123;</span><br><span class="line">    <span class="attribute">margin-bottom</span>: -<span class="number">1px</span>;</span><br><span class="line">    <span class="comment">/* 省略其余代码 */</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.nav-tabs-zen</span> &gt; <span class="selector-tag">li</span> &gt; <span class="selector-tag">a</span> &#123;</span><br><span class="line">    <span class="attribute">margin-right</span>： <span class="number">1px</span>;</span><br><span class="line">    <span class="attribute">border</span>: <span class="number">1px</span> solid <span class="number">#ddd</span>;</span><br><span class="line">    <span class="comment">/* 省略其余代码 */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Bootstrap-网格系统"><a href="#Bootstrap-网格系统" class="headerlink" title="Bootstrap 网格系统"></a>Bootstrap 网格系统</h3><p>在 Bootstrap 的网格系统当中，每一个使用 <code>col-**-*</code> 类的列元素都应该包裹在 <code>row</code> 类的元素当中。为了使页面美观每个 <code>col-**-*</code> 的类都设置了左、右15个像素的补白 <code>padding</code>，这样会导致一个结果，第一个和最后一个元素会离开容器15个像素的距离。为此，Bootstrap在 <code>row</code> 类当中分别定义了左、右方向15个像素的 <code>margin</code> 负值来抵消第一列和最后一列产生的左右补白。</p>
+<p><a target="_blank" rel="noopener" href="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2014-12_bootstrap-grid-system.jpg"><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2014-12_bootstrap-grid-system.jpg" alt="bootstrap-grid-system"></a></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.col-xs-1</span>, <span class="selector-class">.col-sm-1</span>, <span class="selector-class">.col-md-1</span>, <span class="selector-class">.col-lg-1</span>, </span><br><span class="line"><span class="selector-class">.col-xs-2</span>, <span class="selector-class">.col-sm-2</span>, <span class="selector-class">.col-md-2</span>, <span class="selector-class">.col-lg-2</span>, </span><br><span class="line"><span class="selector-class">.col-xs-3</span>, <span class="selector-class">.col-sm-3</span>, <span class="selector-class">.col-md-3</span>, <span class="selector-class">.col-lg-3</span>, </span><br><span class="line"><span class="selector-class">.col-xs-4</span>, <span class="selector-class">.col-sm-4</span>, <span class="selector-class">.col-md-4</span>, <span class="selector-class">.col-lg-4</span>, </span><br><span class="line"><span class="selector-class">.col-xs-5</span>, <span class="selector-class">.col-sm-5</span>, <span class="selector-class">.col-md-5</span>, <span class="selector-class">.col-lg-5</span>, </span><br><span class="line"><span class="selector-class">.col-xs-6</span>, <span class="selector-class">.col-sm-6</span>, <span class="selector-class">.col-md-6</span>, <span class="selector-class">.col-lg-6</span>, </span><br><span class="line"><span class="selector-class">.col-xs-7</span>, <span class="selector-class">.col-sm-7</span>, <span class="selector-class">.col-md-7</span>, <span class="selector-class">.col-lg-7</span>, </span><br><span class="line"><span class="selector-class">.col-xs-8</span>, <span class="selector-class">.col-sm-8</span>, <span class="selector-class">.col-md-8</span>, <span class="selector-class">.col-lg-8</span>, </span><br><span class="line"><span class="selector-class">.col-xs-9</span>, <span class="selector-class">.col-sm-9</span>, <span class="selector-class">.col-md-9</span>, <span class="selector-class">.col-lg-9</span>, </span><br><span class="line"><span class="selector-class">.col-xs-10</span>, <span class="selector-class">.col-sm-10</span>, <span class="selector-class">.col-md-10</span>, <span class="selector-class">.col-lg-10</span>, </span><br><span class="line"><span class="selector-class">.col-xs-11</span>, <span class="selector-class">.col-sm-11</span>, <span class="selector-class">.col-md-11</span>, <span class="selector-class">.col-lg-11</span>, </span><br><span class="line"><span class="selector-class">.col-xs-12</span>, <span class="selector-class">.col-sm-12</span>, <span class="selector-class">.col-md-12</span>, <span class="selector-class">.col-lg-12</span> &#123;</span><br><span class="line">  <span class="attribute">position</span>: relative;</span><br><span class="line">  <span class="attribute">min-height</span>: <span class="number">1px</span>;</span><br><span class="line">  <span class="attribute">padding-right</span>: <span class="number">15px</span>;</span><br><span class="line">  <span class="attribute">padding-left</span>: <span class="number">15px</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.row</span> &#123;</span><br><span class="line">  <span class="attribute">margin-right</span>: -<span class="number">15px</span>;</span><br><span class="line">  <span class="attribute">margin-left</span>: -<span class="number">15px</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="左右并排布局"><a href="#左右并排布局" class="headerlink" title="左右并排布局"></a>左右并排布局</h3><p>在做左右并排布局时候，除了可以使用 <code>float</code> 或者 <code>inline-block</code> 之外，还可以尝试使用 margin 负值。</p>
+<p><a target="_blank" rel="noopener" href="http://jsfiddle.net/acwong/r0ujysb9/">直接上例子</a></p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>利用 margin 负值可以简单直接的解决某些我们日常开发当中遇到的问题，margin 负值还有很多其余的使用实例，这里不一一叙述，只要平时多看看别人写的代码，就会发现 margin 负值的应用其实无处不在。</p>
+<p>感谢您的阅读，有不足之处请在评论为我指出。</p>
+<p><strong>参考</strong></p>
+<ol>
+<li><a target="_blank" rel="noopener" href="http://www.planabc.net/2007/03/18/css_attribute_margin/">由浅入深漫谈margin属性</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.hicss.net/i-know-you-do-not-know-the-negative-margin/">我知道你不知道的负Margin</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.imooc.com/code/2325">Bootstrap框架的网格系统工作原理</a></li>
+</ol>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/技术研究/">技术研究</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/CSS/">CSS</a><a href="/tags/布局/">布局</a><a href="/tags/盒模型/">盒模型</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2022 acwong
+    
+  </p>
+</footer>
+    
+    
+  </div>
+</div>
+</body>
+</html>

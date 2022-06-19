@@ -1,0 +1,702 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>ac黄的博客 | acwong&#39;s blog</title>
+
+  
+  <meta name="author" content="acwong">
+  
+
+  
+  <meta name="description" content="ac黄的博客">
+  
+
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  
+
+  <meta property="og:site_name" content="ac黄的博客"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="ac黄的博客" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">ac黄的博客</a>
+    </h1>
+    <p class="site-description">acwong&#39;s blog</p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">Home</a></li>
+        
+      
+        <li><a href="/archives">Archives</a></li>
+        
+      
+        <li><a href="/tags">Tags</a></li>
+        
+      
+        
+        <li><a href="mailto:acwong@yeah.net">Email</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2019/03/10/three-column-layout/"><span>三栏布局 —— 圣杯布局、双飞翼布局和 flex</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2019/03/10/three-column-layout/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-03-10T07:47:38.000Z">
+          2019-03-10
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>三栏式布局是日常开发当中常见的布局方式，常见的布局要求是：左右两边是固定宽度，中间自适应，同时要让中间的内容优先渲染。接下来就来看看最常见的三种三栏式布局的实现方式。</p>
+<h2 id="圣杯布局"><a href="#圣杯布局" class="headerlink" title="圣杯布局"></a>圣杯布局</h2><p>首先是 html 的结构：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;content&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;main&quot;</span>&gt;</span>main<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;left&quot;</span>&gt;</span>left<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;right&quot;</span>&gt;</span>right<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>设置元素的基本样式，三栏的元素都向左浮动，容器 <code>content</code> 设置左右的 <code>padding</code> 为左右两栏的元素预留出空位。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.content</span> &#123;</span><br><span class="line">  <span class="attribute">overflow</span>: hidden;</span><br><span class="line">  <span class="attribute">padding-left</span>: <span class="number">100px</span>;</span><br><span class="line">  <span class="attribute">padding-right</span>: <span class="number">100px</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.content</span> &gt; <span class="selector-tag">div</span> &#123;</span><br><span class="line">  <span class="attribute">float</span>: left;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.main</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">100%</span>;</span><br><span class="line">  <span class="attribute">background-color</span>: red;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.left</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">100px</span>;</span><br><span class="line">  <span class="attribute">background-color</span>: yellow;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.right</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">100px</span>;</span><br><span class="line">  <span class="attribute">background-color</span>: green;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>设置完毕之后可以看到，左右两栏目前处于中间栏的下方，接下来就要让左右两栏浮动到合适的位置，这个时候虽然使用到 <code>margin</code> 负值的技术。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 忽略其余代码 */</span></span><br><span class="line"><span class="selector-class">.left</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">100px</span>;</span><br><span class="line">  <span class="attribute">background-color</span>: yellow;</span><br><span class="line">  <span class="attribute">margin-left</span>: -<span class="number">100%</span>; <span class="comment">/* 设置 margin 负值 */</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.right</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">100px</span>;</span><br><span class="line">  <span class="attribute">background-color</span>: yellow;</span><br><span class="line">  <span class="attribute">margin-left</span>: -<span class="number">100px</span>; <span class="comment">/* 设置 margin 负值 */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>margin: -100%;</code> 让左边栏移动了整个 <code>content</code> 容器的长度减去左右两端 <code>padding</code> 的长度。而 <code>margin: -100px;</code> 则让右边栏刚好能浮动到与中间栏同一行上面。</p>
+<p>这个时候看到左右两栏已经浮动到中间栏上方，并覆盖了中间栏的左右两端。接下来只要把左右两栏位移到 <code>padding</code> 预留的位置就大功告成了。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.content</span> &gt; <span class="selector-tag">div</span> &#123;</span><br><span class="line">  <span class="attribute">position</span>: relative; <span class="comment">/* 将元素设为相对定位 */</span></span><br><span class="line">  <span class="attribute">float</span>: left;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.left</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">100px</span>;</span><br><span class="line">  <span class="attribute">background-color</span>: yellow;</span><br><span class="line">  <span class="attribute">margin-left</span>: -<span class="number">100%</span>;</span><br><span class="line">  <span class="attribute">left</span>: -<span class="number">100px</span>; <span class="comment">/* 位移到正确位置 */</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.right</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">100px</span>;</span><br><span class="line">  <span class="attribute">background-color</span>: green;</span><br><span class="line">  <span class="attribute">margin-left</span>: -<span class="number">100px</span>;</span><br><span class="line">  <span class="attribute">right</span>: -<span class="number">100px</span>; <span class="comment">/* 位移到正确位置 */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://codepen.io/acwong/pen/rRwRWy">最终代码</a></p>
+<h2 id="双飞翼布局"><a href="#双飞翼布局" class="headerlink" title="双飞翼布局"></a>双飞翼布局</h2><p>双飞翼布局与圣杯布局有类似的思路，不同的是它不需要用相对定位，方法是在中间栏外面添加一个容器，使用 <code>margin</code>去解决。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;content&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;main&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;main-inner&quot;</span>&gt;</span>main<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;left&quot;</span>&gt;</span>left<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;right&quot;</span>&gt;</span>right<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.content</span> &#123;</span><br><span class="line">  <span class="attribute">overflow</span>: hidden;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.content</span> &gt; <span class="selector-tag">div</span> &#123;</span><br><span class="line">  <span class="attribute">float</span>: left;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.main</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">100%</span>;</span><br><span class="line">  <span class="attribute">background-color</span>: red;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.main-inner</span> &#123;</span><br><span class="line">  <span class="attribute">margin-left</span>: <span class="number">100px</span>;</span><br><span class="line">  <span class="attribute">margin-right</span>: <span class="number">100px</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.left</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">100px</span>;</span><br><span class="line">  <span class="attribute">background-color</span>: yellow;</span><br><span class="line">  <span class="attribute">margin-left</span>: -<span class="number">100%</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.right</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">100px</span>;</span><br><span class="line">  <span class="attribute">background-color</span>: green;</span><br><span class="line">  <span class="attribute">margin-left</span>: -<span class="number">100px</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://codepen.io/acwong/pen/ywXwZX">最终代码</a></p>
+<h2 id="flex-布局"><a href="#flex-布局" class="headerlink" title="flex 布局"></a>flex 布局</h2><p>对于不需要考虑兼容性的情况，可以使用 flex 布局，这种布局比较简单，设置中间栏占满，左右两栏固定宽度，然后使用 <code>order</code> 属性调换一下排序就可以了。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;content&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;main&quot;</span>&gt;</span>main<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;left&quot;</span>&gt;</span>left<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;right&quot;</span>&gt;</span>right<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.content</span> &#123;</span><br><span class="line">  <span class="attribute">display</span>: flex;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.main</span> &#123;</span><br><span class="line">  <span class="attribute">flex</span>: <span class="number">1</span>;</span><br><span class="line">  <span class="attribute">background-color</span>: red;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.left</span> &#123;</span><br><span class="line">  <span class="attribute">order</span>: -<span class="number">1</span>;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">100px</span>;</span><br><span class="line">  <span class="attribute">background-color</span>: yellow;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.right</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">100px</span>;</span><br><span class="line">  <span class="attribute">background-color</span>: green;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://codepen.io/acwong/pen/ywXwro">最终代码</a></p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/学习笔记/">学习笔记</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/CSS/">CSS</a><a href="/tags/布局/">布局</a><a href="/tags/flex/">flex</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2019/02/28/one-pixel-image-send-data/"><span>204 请求图片快捷发送数据</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2019/02/28/one-pixel-image-send-data/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-02-28T12:00:28.000Z">
+          2019-02-28
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>在打开 Chrome 查看网络请求时，常常可以看到网站请求一张图片，返回的状态码是 204，这是网站用于发送一些页面数据的常用手段，现在就来探讨一下。</p>
+<p>首先 204 状态码表示目前请求成功，但客户端不需要更新现有的页面。因此，这张图片的作用并不是用于展示到页面当中。</p>
+<p>然后，我们可以看到请求这张图片的 url 后面必定会带有 query 的参数，其实，这张图片真正的用途就是向服务器传输它 url 后面带有的数据。</p>
+<p>这其实是一种被称为<strong>网络信标（Web beacon）</strong>的技术，利用一张不可见的图像 get 请求将信息传送到服务器当中。</p>
+<p>对于用户行为搜集、google analysis 之类的服务是是一种常用的手段，相比与 ajax 请求，它的资源开销会更少，而且可以突破 ajax 不能跨域的限制。对于向服务器传输数据但并不需要返回结果的应用场景当中是一种非常好的选择。</p>
+<p>现在我们就来模拟一下这个过程。首先创建一个简单的 web 服务。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> http = <span class="built_in">require</span>(<span class="string">&#x27;http&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> path = <span class="built_in">require</span>(<span class="string">&#x27;path&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> url = <span class="built_in">require</span>(<span class="string">&#x27;url&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> port = <span class="number">2345</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">requestHandler</span> = (<span class="params">req, res</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> &#123; pathname, query &#125; = url.<span class="title function_">parse</span>(req.<span class="property">url</span>)</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">const</span> filePath = <span class="string">`.<span class="subst">$&#123;pathname&#125;</span>`</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> extname = path.<span class="title function_">extname</span>(filePath)</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 打印 query</span></span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(query)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (extname === <span class="string">&#x27;.gif&#x27;</span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> contentType = <span class="string">&#x27;image/gif&#x27;</span></span><br><span class="line">    <span class="comment">// 返回 204 响应</span></span><br><span class="line">    res.<span class="title function_">writeHead</span>(<span class="number">204</span>, &#123; <span class="string">&#x27;Content-Type&#x27;</span>: contentType &#125;)</span><br><span class="line">    res.<span class="title function_">end</span>(<span class="string">&#x27;&#x27;</span>, <span class="string">&#x27;utf-8&#x27;</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> server = http.<span class="title function_">createServer</span>(requestHandler)</span><br><span class="line"></span><br><span class="line">server.<span class="title function_">listen</span>(port, <span class="function"><span class="params">err</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (err) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(err)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`server is listening on <span class="subst">$&#123;port&#125;</span>`</span>)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>浏览器定时请求图片。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">setInterval</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> img = <span class="keyword">new</span> <span class="title class_">Image</span>()</span><br><span class="line">  img.<span class="property">src</span> = <span class="string">`http://localhost:2345/test.gif?num=<span class="subst">$&#123;<span class="built_in">Math</span>.random()&#125;</span>`</span></span><br><span class="line">&#125;, <span class="number">3000</span>)</span><br></pre></td></tr></table></figure>
+
+<p>这个时候可以看到 web 服务的日志每隔三秒就会收到一个名为 <code>num</code> 的参数，参数的值是一个随机的浮点数。</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/学习笔记/">学习笔记</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/前端/">前端</a><a href="/tags/跨域/">跨域</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2018/07/29/javascript-object-notes/"><span>《你不知道的 JavaScript 上卷》对象笔记</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/07/29/javascript-object-notes/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-07-29T04:51:29.000Z">
+          2018-07-29
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="typeof-null-为何返回-object"><a href="#typeof-null-为何返回-object" class="headerlink" title="typeof null 为何返回 object"></a>typeof null 为何返回 object</h2><p>因为不同的对象在底层到表示为二进制，在 JavaScript 中二进制前三位都为 0 的话会判断为 <code>object</code> 类型，由于 <code>null</code> 二进制表示全为 0，所以就被判断为 <code>object</code>。</p>
+<h2 id="字面量和对象"><a href="#字面量和对象" class="headerlink" title="字面量和对象"></a>字面量和对象</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> strPrimitive = <span class="string">&#x27;I am a string&#x27;</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(strPrimitive.<span class="property">length</span>) <span class="comment">// 13</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(strPrimitive.<span class="title function_">charAt</span>(<span class="number">3</span>)) <span class="comment">// m</span></span><br></pre></td></tr></table></figure>
+
+<p><code>strPrimitive</code> 是以文字形成创建，是一个字面量并不是一个对象，当调用诸如 <code>length</code>、<code>charAt</code> 这些方法时，引擎会自动将其转换为 <code>new String(&#39;I am a string&#39;)</code>。类似的还有布尔型和数值型变量。</p>
+<ul>
+<li><code>null</code>、<code>undefined</code> 只有文字形式，没有构造形式。</li>
+<li><code>Date</code> 只有构造形式，没有文字形式。</li>
+<li><code>String</code>、<code>Number</code>、<code>Boolean</code> 文字形式创建字面量，构造形式创建对象。</li>
+<li><code>Object</code>、<code>Array</code>、<code>Function</code>、<code>RegExp</code> 无论使用文字形式或构造形式创建，均为对象。</li>
+<li><code>Error</code> 一般为抛出异常时自动创建，亦可以 <code>new Error()</code> 形式创建。</li>
+</ul>
+<h2 id="键访问"><a href="#键访问" class="headerlink" title="键访问"></a>键访问</h2><p><code>myObject[..]</code> 这种形式访问对象的属性称为键访问，如将 <code>string</code> 字面量以外的值用于键访问，那该值会被转为字符串。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> myObject = &#123;&#125;</span><br><span class="line"></span><br><span class="line">myObject[<span class="literal">true</span>] = <span class="string">&#x27;foo&#x27;</span></span><br><span class="line">myObject[<span class="number">3</span>] = <span class="string">&#x27;bar&#x27;</span></span><br><span class="line">myObject[myObject] = <span class="string">&#x27;baz&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(myObject[<span class="string">&#x27;true&#x27;</span>]) <span class="comment">// foo</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(myObject[<span class="string">&#x27;3&#x27;</span>]) <span class="comment">// bar</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(myObject[<span class="string">&#x27;[object Object]&#x27;</span>]) <span class="comment">// baz</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="方法访问"><a href="#方法访问" class="headerlink" title="方法访问"></a>方法访问</h2><p>即使对象内定义的函数技术上并不属于该对象，而是通过该对象调用函数的时候才动态绑定上去。</p>
+<h2 id="深复制-JSON-安全的对象"><a href="#深复制-JSON-安全的对象" class="headerlink" title="深复制 JSON 安全的对象"></a>深复制 JSON 安全的对象</h2><p>对于字符安全的对象可以巧妙利用 <code>JSON</code> 对象的方法来进行复制</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> newObj = <span class="title class_">JSON</span>.<span class="title function_">parse</span>(<span class="title class_">JSON</span>.<span class="title function_">stringify</span>(oldObj))</span><br></pre></td></tr></table></figure>
+
+<h2 id="属性描述符"><a href="#属性描述符" class="headerlink" title="属性描述符"></a>属性描述符</h2><p>ES5 以后所有对象的属性都具备属性描述符。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> myObject = &#123;</span><br><span class="line">  <span class="attr">a</span>: <span class="number">2</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title class_">Object</span>.<span class="title function_">getOwnPropertyDescriptor</span>(myObject, <span class="string">&#x27;a&#x27;</span>)</span><br><span class="line"><span class="comment">// &#123;</span></span><br><span class="line"><span class="comment">//    value: 2,  </span></span><br><span class="line"><span class="comment">//    writable: true,</span></span><br><span class="line"><span class="comment">//    enumerable: true,</span></span><br><span class="line"><span class="comment">//    configurable: true</span></span><br><span class="line"><span class="comment">// &#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><code>writable</code> 代表是否可以修改该属性的值，若为 <code>false</code> 则不能修改。</p>
+<p><code>configurable</code> 代表是否可以使用 <code>defineProperty</code> 来修改属性描述符。若为 <code>true</code> 还同时会禁止删除该属性。</p>
+<p><code>enumerable</code> 代表该属性是否可枚举，例如使用 <code>for..in</code> 循环时，就不会出现 <code>enumerable</code> 为 <code>false</code> 的属性。</p>
+<p><strong>参考</strong></p>
+<p><a target="_blank" rel="noopener" href="https://book.douban.com/subject/26351021/">你不知道的JavaScript（上卷）</a></p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/学习笔记/">学习笔记</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/JavaScript/">JavaScript</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2018/07/23/javascript-this/"><span>JavaScript 中 this 绑定的对象</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/07/23/javascript-this/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-07-23T12:41:53.000Z">
+          2018-07-23
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>在 JavaScript 工程师的面试当中， <code>this</code> 的绑定常常是考察的重点，现在就来总结一下如何判断 <code>this</code> 所绑定的对象。</p>
+<p>在开始之前，首先要清楚一点是 ** 函数中的 <code>this</code> 是函数调用的时候被绑定的<strong>。因此，判断  <code>this</code> 所绑定的对象也就是判断函数</strong>调用的位置**。</p>
+<h2 id="new-绑定"><a href="#new-绑定" class="headerlink" title="new 绑定"></a>new 绑定</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">foo</span>(<span class="params">a</span>) &#123;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">a</span> = a</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> bar = <span class="keyword">new</span> <span class="title function_">foo</span>(<span class="number">2</span>)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(bar.<span class="property">a</span>) <span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
+
+<p>在有 <code>class</code> 关键字之前，通常会使用 <code>new</code> 关键字配合构造函数来实现面向对象编程。 使用 <code>new</code> 调用构造函数时，会执行下面的操作：</p>
+<ol>
+<li>创建一个新的对象</li>
+<li>新对象执行 [[Prototype]] 连接</li>
+<li>新对象会绑定到函数调用的 <code>this</code></li>
+<li>如果函数没有返回其他对象，那么 <code>new</code> 表达式中的函数调用会自动返回该新对象</li>
+</ol>
+<p>因此当使用 <code>new</code> 关键字构造新对象的时候，<code>this</code> 会被绑定到新创建的对象上面。</p>
+<h2 id="显式绑定"><a href="#显式绑定" class="headerlink" title="显式绑定"></a>显式绑定</h2><h3 id="call-和-apply"><a href="#call-和-apply" class="headerlink" title="call 和 apply"></a>call 和 apply</h3><p> <code>call</code> 和 <code>apply</code> 函数的第一个参数是一个对象，可以为当前调用的函数 强制指定一个 <code>this</code> 的绑定对象，此时， <code>this</code> 指向绑定的对象。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">foo</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">this</span>.<span class="property">a</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> obj = &#123; <span class="attr">a</span>: <span class="number">2</span> &#125;</span><br><span class="line"></span><br><span class="line">foo.<span class="title function_">call</span>(obj) <span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="bind"><a href="#bind" class="headerlink" title="bind"></a>bind</h3><p><code>bind</code> 是 ES5 提供的一个方法，它 同样会为原始函数绑定一个 <code>this</code> 但不同的是它不会直接调用该函数，而是返回一个新的被包裹之后的函数，之后调用包裹后的函数，函数 <code>this</code> 都会指向新绑定的对象。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">foo</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">this</span>.<span class="property">a</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> obj = &#123; <span class="attr">a</span>: <span class="number">2</span> &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> bar = foo.<span class="title function_">bind</span>(obj)</span><br><span class="line"></span><br><span class="line"><span class="title function_">bar</span>() <span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="上下文参数"><a href="#上下文参数" class="headerlink" title="上下文参数"></a>上下文参数</h3><p>一些 JavaScrip 内置的函数也会提供用于显式绑定的参数，可以手动指定回调函数当中 <code>this</code> 的指向。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">foo</span>(<span class="params">el</span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(el, <span class="variable language_">this</span>.<span class="property">id</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> obj = &#123;</span><br><span class="line">  <span class="attr">id</span>: <span class="string">&#x27;acwong&#x27;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// forEach 第二个参数用于指定回调的 this</span></span><br><span class="line">[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>].<span class="title function_">forEach</span>(foo, obj) <span class="comment">// 1 acwong 2 acwong 3 acwong</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="隐式绑定"><a href="#隐式绑定" class="headerlink" title="隐式绑定"></a>隐式绑定</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">foo</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">this</span>.<span class="property">a</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> obj = &#123;</span><br><span class="line">  <span class="attr">a</span>: <span class="number">2</span>,</span><br><span class="line">  <span class="attr">foo</span>: foo</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">obj.<span class="title function_">foo</span>() <span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
+
+<p>看上方的代码，函数 <code>foo</code> 并非在对象当中定义，而是定义之后当作属性添加到对象当中。但是由于使用 <code>obj</code> 调用，因此 <code>obj</code> 隐性绑定到  <code>foo</code> 上，成为其 <code>this</code> 上下文。</p>
+<p>隐性绑定只与最后一层调用有关。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">foo</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">this</span>.<span class="property">a</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> obj2 = &#123;</span><br><span class="line">  <span class="attr">a</span>: <span class="number">42</span>,</span><br><span class="line">  <span class="attr">foo</span>: foo</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> obj1 = &#123;</span><br><span class="line">  <span class="attr">a</span>: <span class="number">2</span>,</span><br><span class="line">  <span class="attr">obj2</span>: obj2</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">obj1.<span class="property">obj2</span>.<span class="title function_">foo</span>() <span class="comment">// 42</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="隐性丢失"><a href="#隐性丢失" class="headerlink" title="隐性丢失"></a>隐性丢失</h3><p>隐性绑定有一个值得注意的现象——隐性丢失，隐性丢失是指 隐性绑定的函数会丢失对象，变为应用默认绑定，也就是将 <code>this</code> 绑定到全局对象或 <code>undefined</code>（严格模式时）上。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">foo</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">this</span>.<span class="property">a</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> obj = &#123;</span><br><span class="line">  <span class="attr">a</span>: <span class="number">2</span>,</span><br><span class="line">  <span class="attr">foo</span>: foo</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> bar = obj.<span class="property">foo</span> <span class="comment">// 实际上是引用 foo 函数本身</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> a = <span class="string">&#x27;global&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="title function_">bar</span>() <span class="comment">// global</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">foo</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">this</span>.<span class="property">a</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">doFoo</span>(<span class="params">fn</span>) &#123;</span><br><span class="line">  <span class="comment">//  传入参数也相当于赋值</span></span><br><span class="line">  <span class="title function_">fn</span>()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> obj = &#123;</span><br><span class="line">  <span class="attr">a</span>: <span class="number">2</span>,</span><br><span class="line">  <span class="attr">foo</span>: foo</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> a = <span class="string">&#x27;global&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="title function_">doFoo</span>(obj.<span class="property">foo</span>) <span class="comment">// &#x27;global&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="默认绑定"><a href="#默认绑定" class="headerlink" title="默认绑定"></a>默认绑定</h2><p>当上面规则到不能应用的时候就可以判断为默认绑定，<code>this</code> 会被绑定为全局对象或被绑定为 <code>undefined</code>（ 严格模式下）。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">foo</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">this</span>.<span class="property">a</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> a = <span class="number">2</span></span><br><span class="line"></span><br><span class="line"><span class="title function_">foo</span>() <span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">foo</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="string">&#x27;use strict&#x27;</span></span><br><span class="line"></span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">this</span>.<span class="property">a</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> a = <span class="number">2</span></span><br><span class="line"></span><br><span class="line"><span class="title function_">foo</span>() <span class="comment">// TypeError: this is undefined</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="被忽略的-this-和-箭头函数"><a href="#被忽略的-this-和-箭头函数" class="headerlink" title="被忽略的 this 和 箭头函数"></a>被忽略的 this 和 箭头函数</h2><p>接下来分享两种 比较常见的例外情况。</p>
+<p> <strong>被忽略的  this</strong></p>
+<p>当我们使用 <code>call</code> 和 <code>apply</code> 或者 <code>bind</code> 传入的绑定参数为 <code>null</code> 和 <code>undefined</code> 会被忽略， 取而代之会执行默认绑定。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">foo</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">this</span>.<span class="property">a</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> a = <span class="number">2</span></span><br><span class="line"></span><br><span class="line">foo.<span class="title function_">call</span>(<span class="literal">null</span>) <span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>箭头函数</strong></p>
+<p>ES6 当中新增的箭头函数，不应用上述的四条规则，不为函数绑定 <code>this</code> ,而是根据外层的作用域而定。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">foo</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="built_in">setTimeout</span>(<span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">this</span>.<span class="property">a</span>)</span><br><span class="line">  &#125;, <span class="number">100</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> obj = &#123;</span><br><span class="line">  <span class="attr">a</span>: <span class="number">2</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">foo.<span class="title function_">call</span>(obj) <span class="comment">// undefined</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">foo</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">this</span>.<span class="property">a</span>)</span><br><span class="line">  &#125;, <span class="number">100</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> obj = &#123;</span><br><span class="line">  <span class="attr">a</span>: <span class="number">2</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">foo.<span class="title function_">call</span>(obj) <span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>当我们遇到需要判断 <code>this</code> 所绑定对象的 问题时，可以遵循下面列出的规则来逐一判断：</p>
+<ol>
+<li><code>new</code> 关键字调用，绑定到新创建的对象。</li>
+<li><code>call</code>、<code> apply</code>、<code>bind</code> 调用，绑定到参数指定的对象（<code>null</code> 和 <code>undefined</code> 除外）。</li>
+<li>由上下文对象调用，绑定到改上下文。</li>
+<li> 默认绑定，严格模式下为 <code>undefined</code>，否则为全局对象。</li>
+</ol>
+<p>最后要留意例外规则。</p>
+<p><strong>参考</strong></p>
+<p><a target="_blank" rel="noopener" href="https://book.douban.com/subject/26351021/">你不知道的JavaScript（上卷）</a></p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/学习笔记/">学习笔记</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/JavaScript/">JavaScript</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2018/05/19/sql-n-to-m-with-bitwise-operation/"><span>使用位运算处理关系型数据库多对多关系</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/05/19/sql-n-to-m-with-bitwise-operation/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-05-19T09:53:23.000Z">
+          2018-05-19
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>最近在工作当中需要处理一个本地 SQLite 数据库多对多查询的需求，一般情况下关系型数据库多对多关系都是通过一张关系表来记录，令多对多关系变成一对多关系来处理，但是相对来说这样的设计查询效率会较差。下面就记录一下这次使用二进制按位运算的方法来解决多对多的问题。</p>
+<h2 id="定义数据库结构"><a href="#定义数据库结构" class="headerlink" title="定义数据库结构"></a>定义数据库结构</h2><p>定义科目和学生是多对多的关系，分别使用科目表和学生表来储存数据。以 SQLite 为例。</p>
+<p><strong>科目表 subject</strong></p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>id</td>
+<td>自增id</td>
+</tr>
+<tr>
+<td>subject_name</td>
+<td>科目名</td>
+</tr>
+<tr>
+<td>subject_bit</td>
+<td>记录二进制位 1 的十进制数</td>
+</tr>
+</tbody></table>
+<p>科目表里面的 subject_bit 是一个十进制数，记录的是当前的科目对应的是哪个二进制位的一，举个例子：</p>
+<ul>
+<li>256 代表二进制 100000000</li>
+<li>1024 代表二进制 10000000000</li>
+</ul>
+<p><strong>学生表 student</strong></p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>id</td>
+<td>自增id</td>
+</tr>
+<tr>
+<td>student_name</td>
+<td>学生名</td>
+</tr>
+<tr>
+<td>subjects</td>
+<td>记录各学科按位或的结果</td>
+</tr>
+</tbody></table>
+<p>学生表里面的 subjects 字段同样是一个十进制数，记录的是学习对应的各个科目 subject_bit 按位或运算的结果，举个例子：</p>
+<ul>
+<li>10 代表学生同时选修 subject_bit 为 2 和 8 的科目</li>
+<li>1025 代表学生同时选修 subject_bit 为 1 和 1024 的科目</li>
+</ul>
+<h2 id="数据查询"><a href="#数据查询" class="headerlink" title="数据查询"></a>数据查询</h2><p>示例数据</p>
+<p><strong>subject</strong></p>
+<table>
+<thead>
+<tr>
+<th>id</th>
+<th>subject_name</th>
+<th>subject_bit</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>语文</td>
+<td>1</td>
+</tr>
+<tr>
+<td>2</td>
+<td>数学</td>
+<td>2</td>
+</tr>
+<tr>
+<td>3</td>
+<td>英语</td>
+<td>4</td>
+</tr>
+<tr>
+<td>4</td>
+<td>政治</td>
+<td>8</td>
+</tr>
+<tr>
+<td>5</td>
+<td>地理</td>
+<td>16</td>
+</tr>
+<tr>
+<td>6</td>
+<td>历史</td>
+<td>32</td>
+</tr>
+<tr>
+<td>7</td>
+<td>物理</td>
+<td>64</td>
+</tr>
+<tr>
+<td>8</td>
+<td>生物</td>
+<td>128</td>
+</tr>
+<tr>
+<td>9</td>
+<td>化学</td>
+<td>256</td>
+</tr>
+</tbody></table>
+<p><strong>student</strong></p>
+<table>
+<thead>
+<tr>
+<th>id</th>
+<th>student_name</th>
+<th>subjects</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>Amy</td>
+<td>234</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Bill</td>
+<td>34</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Cody</td>
+<td>3</td>
+</tr>
+<tr>
+<td>4</td>
+<td>David</td>
+<td>15</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Eva</td>
+<td>26</td>
+</tr>
+</tbody></table>
+<p><strong>根据科目查询所属学生</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> student <span class="keyword">WHERE</span> subject_bit <span class="operator">&amp;</span> <span class="number">32</span> <span class="operator">!=</span> <span class="number">0</span></span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>id</th>
+<th>student_name</th>
+<th>subjects</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>Amy</td>
+<td>234</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Bill</td>
+<td>34</td>
+</tr>
+</tbody></table>
+<p><strong>根据学生查询科目</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> subject <span class="keyword">WHERE</span> subject_bit <span class="operator">&amp;</span> </span><br><span class="line">(<span class="keyword">SELECT</span> subjects <span class="keyword">FROM</span> student <span class="keyword">WHERE</span> student_name <span class="operator">=</span> <span class="string">&#x27;Cody&#x27;</span>) <span class="operator">!=</span> <span class="number">0</span></span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>id</th>
+<th>subject_name</th>
+<th>subject_bit</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>语文</td>
+<td>1</td>
+</tr>
+<tr>
+<td>2</td>
+<td>数学</td>
+<td>2</td>
+</tr>
+</tbody></table>
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>虽然这种方式能够提高部分查询效率，但是同样有非常大的局限性。</p>
+<p>首先，以二进制方式来标识类目的方法要将类目数量限制在 32 个以下。然后，虽然查询的 SQL 语句并不复杂，但是当要修改数据的时候就会非常麻烦。</p>
+<p>因为笔者本次开发的需求是一个纯查询的数据库，而且类目数量少于 32 所以采取了这个方案，大家参考的时候必须要结合自身的需要。</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/学习笔记/">学习笔记</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/关系型数据库/">关系型数据库</a><a href="/tags/SQL/">SQL</a><a href="/tags/位运算/">位运算</a><a href="/tags/数据库设计/">数据库设计</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+
+<nav class="pagination">
+  
+  
+  <a href="/page/2/" class="pagination-next">Next</a>
+  
+</nav>
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2022 acwong
+    
+  </p>
+</footer>
+    
+    
+  </div>
+</div>
+</body>
+</html>

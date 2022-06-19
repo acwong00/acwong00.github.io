@@ -1,0 +1,203 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Webpack 和 Gulp 构建伪命令行项目 | ac黄的博客 | acwong&#39;s blog</title>
+
+  
+  <meta name="author" content="acwong">
+  
+
+  
+  <meta name="description" content="利用 Webpack 和 Gulp 构建 Backbone 伪命令行项目">
+  
+
+  
+  
+  <meta name="keywords" content="前端模块化,Backbone,webpack,gulp">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="Webpack 和 Gulp 构建伪命令行项目"/>
+
+  <meta property="og:site_name" content="ac黄的博客"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="ac黄的博客" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">ac黄的博客</a>
+    </h1>
+    <p class="site-description">acwong&#39;s blog</p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">Home</a></li>
+        
+      
+        <li><a href="/archives">Archives</a></li>
+        
+      
+        <li><a href="/tags">Tags</a></li>
+        
+      
+        
+        <li><a href="mailto:acwong@yeah.net">Email</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>Webpack 和 Gulp 构建伪命令行项目</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2015/04/22/backbone-command-line-with-webpack-and-gulp/" rel="bookmark">
+        <time class="entry-date published" datetime="2015-04-22T06:26:30.000Z">
+          2015-04-22
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p><a target="_blank" rel="noopener" href="http://blog.acwong.org/2015/04/13/backbone-command-line/">上一篇文章</a>分享了我的一个 Backbone 小项目的实践过程。在项目上线之前先看看 <em>index.html</em>。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;./js/command-model.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;./js/command-collection.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;./js/command-view.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;./js/message-view.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;./js/app-view.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span>     </span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;test.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>显然这样的写法是不符合 Web 性能优化原则的。我们应该把多个文件尽量构建成一个单独的文件，减少客户端请求资源的次数。</p>
+<p>本文就通过 Webpack 和 Gulp 两个工具介绍将这个 Backbone 伪命令行项目模块化和构建上线的实践过程。</p>
+<h2 id="Webpack"><a href="#Webpack" class="headerlink" title="Webpack"></a>Webpack</h2><p>Webpack 是德国开发者 Tobias Koppers 开发的模块加载器，是前端模块化开发的有力竞争者。</p>
+<p>Webpack 特点之一是把所有资源都当成模块，css，js，图片，模版文件等等。另外，Webpack 除了作为一个模版加载器之外还具有 Gulp 和 Grunt 一部分的构建功能。</p>
+<h2 id="伪命令行模块化"><a href="#伪命令行模块化" class="headerlink" title="伪命令行模块化"></a>伪命令行模块化</h2><h3 id="以-CommonJS-改写伪命令行项目"><a href="#以-CommonJS-改写伪命令行项目" class="headerlink" title="以 CommonJS 改写伪命令行项目"></a>以 CommonJS 改写伪命令行项目</h3><p>Webpack 支持 CommonJS 和 AMD 的语法，这里选用了 CommonJS 方式对原来的代码进行改写。</p>
+<p>在原来的代码当中我们创建了一个名为 <code>app</code> 的全局变量，我们就通过这个全局的变量来引用项目各个部分的方法。</p>
+<p>因此改写的方法也相当简单，就是把 <code>app</code> 变量去掉，然后把各个文件写成独立的模块。</p>
+<p>例如:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// command-model.js</span></span><br><span class="line"><span class="keyword">var</span> <span class="title class_">CommandModel</span> = <span class="title class_">Backbone</span>.<span class="property">Model</span>.<span class="title function_">extend</span>(&#123;</span><br><span class="line">    <span class="attr">default</span>: &#123;</span><br><span class="line">        <span class="attr">name</span>: <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">        <span class="attr">messages</span>: []</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = <span class="title class_">CommandModel</span>;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// command-collection.js</span></span><br><span class="line"><span class="keyword">var</span> <span class="title class_">CommandModel</span> = <span class="built_in">require</span>(<span class="string">&quot;./command-model.js&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> <span class="title class_">CommandCollection</span> = <span class="title class_">Backbone</span>.<span class="property">Collection</span>.<span class="title function_">extend</span>(&#123;</span><br><span class="line">    <span class="attr">model</span>: <span class="title class_">CommandModel</span></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = <span class="title class_">CommandCollection</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="将模版文件分离"><a href="#将模版文件分离" class="headerlink" title="将模版文件分离"></a>将模版文件分离</h3><p>改写完 js 模块之后，还有一些东西很应该被分类开来。 <em>command-view.js</em> 和 <em>message-view.js</em> 分别对应着两个模版。通常的做法会把 模版文件写在 <em>index.html</em> 当中，用 <code>&lt;script&gt;</code> 标签包裹起来。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">id</span>=<span class="string">&quot;commandTemplate&quot;</span> <span class="attr">type</span>=<span class="string">&quot;text/template&quot;</span>&gt;</span><span class="language-handlebars"><span class="language-xml"></span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars">    <span class="tag">&lt;<span class="name">label</span>&gt;</span>&lt;%- prompt %&gt;<span class="tag">&lt;/<span class="name">label</span>&gt;</span></span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars"></span></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">id</span>=<span class="string">&quot;messageTemplate&quot;</span> <span class="attr">type</span>=<span class="string">&quot;text/template&quot;</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">    &lt;div &lt;%= color ? (<span class="string">&#x27;style=&quot;color:&#x27;</span> + color + <span class="string">&#x27;&quot;&#x27;</span>) : <span class="string">&#x27;&#x27;</span> %&gt;&gt;</span></span><br><span class="line"><span class="language-javascript">        &lt;%= link ? (<span class="string">&#x27;&lt;a href=&quot;&#x27;</span> + link + <span class="string">&#x27;&quot;&gt;&#x27;</span>) : <span class="string">&#x27;&#x27;</span> %&gt;</span></span><br><span class="line"><span class="language-javascript">            &lt;%= message %&gt;</span></span><br><span class="line"><span class="language-javascript">        &lt;%= link ? (<span class="string">&#x27;&lt;/a&gt;&#x27;</span>) : <span class="string">&#x27;&#x27;</span> %&gt;</span></span><br><span class="line"><span class="language-javascript">    &lt;/div&gt;</span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>把模版文件分离开来会使我们的维护更加方便。</p>
+<p>首先，把这两个模版分离开来，写成两个 html 文件。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- commandTemplate.html --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">label</span>&gt;</span>&lt;%- prompt %&gt;<span class="tag">&lt;/<span class="name">label</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- messageTemplate.html --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> &lt;%= <span class="string">color</span> ? (&#x27;<span class="attr">style</span>=<span class="string">&quot;color:&#x27; + color + &#x27;&quot;</span>&#x27;) <span class="attr">:</span> &#x27;&#x27; %&gt;</span>&gt;</span><br><span class="line">    &lt;%= link ? (&#x27;<span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&quot;&#x27; + link + &#x27;&quot;</span>&gt;</span>&#x27;) : &#x27;&#x27; %&gt;</span><br><span class="line">        &lt;%= message %&gt;</span><br><span class="line">    &lt;%= link ? (&#x27;<span class="tag">&lt;/<span class="name">a</span>&gt;</span>&#x27;) : &#x27;&#x27; %&gt;</span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>Webpack 把除了 js 之外的资源作为模块加载的时候，需要用到不同的加载<br>器，对于 html 文件这里使用 <a target="_blank" rel="noopener" href="https://github.com/webpack/html-loader">html-loader</a>。它会将 html 文件加载成 String 形式。</p>
+<p>然后就可以在 js 文件当中引用模版了。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 要添加 html! 前缀才会用 html-loader 加载</span></span><br><span class="line"><span class="keyword">var</span> commandTemplate = <span class="built_in">require</span>(<span class="string">&#x27;html!../templates/commandTemplate.html&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<h3 id="webpack-config-js"><a href="#webpack-config-js" class="headerlink" title="webpack.config.js"></a>webpack.config.js</h3><p>在运行 <code>webpack</code> 命令之前要先安装 Webpack。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install webpack -g</span><br></pre></td></tr></table></figure>
+
+<p>先全局安装以便可以使用 <code>webpack</code> 命令。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install webpack html-loader --save-dev</span><br></pre></td></tr></table></figure>
+
+<p>然后在项目中安装 Webpack 和 html-loader。</p>
+<p>Webpack 运行根据一个名为 webpack.config.js 的文件配置。这里简单写一下。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = &#123;</span><br><span class="line">    <span class="attr">entry</span>: <span class="string">&#x27;./test.js&#x27;</span>,</span><br><span class="line">    <span class="attr">output</span>: &#123;</span><br><span class="line">        <span class="attr">filename</span>: <span class="string">&#x27;./dist/all.js&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>在命令行模式下运行 <code>webpack</code> 命令，打包就可以完成了。</p>
+<h3 id="压缩代码"><a href="#压缩代码" class="headerlink" title="压缩代码"></a>压缩代码</h3><p>在上线之前，我们还应该将代码进行压缩尽量把文件的体积减到最少。然而，我们可以看到 Webpack 打包后的 <em>all.js</em> 文件不仅没有压缩，而且代码当中的注释也没有去掉。</p>
+<p>Webpack 同样提供了 UglifyJsPlugin 的插件来进行压缩代码操作。但是在我尝试的过程中，这个插件和 html-loader 配合使用的时候会出现错误，因此在这里我使用了 Gulp 来进行代码压缩的工作。</p>
+<p>Webpack 与 Gulp 配合使用也相当简单，只需要安装 <a target="_blank" rel="noopener" href="https://github.com/shama/gulp-webpack">gulp-webpack</a>。</p>
+<p>安装 Gulp 和其他所需的工具。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install gulp gulp-jshint gulp-rename gulp-uglify gulp-webpack --save-dev</span><br></pre></td></tr></table></figure>
+
+<p>写 <em>gulpfile.js</em>。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> gulp = <span class="built_in">require</span>(<span class="string">&#x27;gulp&#x27;</span>),</span><br><span class="line">    jshint = <span class="built_in">require</span>(<span class="string">&#x27;gulp-jshint&#x27;</span>),</span><br><span class="line">    webpack = <span class="built_in">require</span>(<span class="string">&#x27;gulp-webpack&#x27;</span>),</span><br><span class="line">    uglify = <span class="built_in">require</span>(<span class="string">&#x27;gulp-uglify&#x27;</span>),</span><br><span class="line">    rename = <span class="built_in">require</span>(<span class="string">&#x27;gulp-rename&#x27;</span>);</span><br><span class="line"></span><br><span class="line">gulp.<span class="title function_">task</span>(<span class="string">&#x27;lint&#x27;</span>, <span class="keyword">function</span>  (<span class="params"></span>) &#123;</span><br><span class="line">    gulp.<span class="title function_">src</span>(<span class="string">&#x27;./js/*.js&#x27;</span>)</span><br><span class="line">        .<span class="title function_">pipe</span>(<span class="title function_">jshint</span>())</span><br><span class="line">        .<span class="title function_">pipe</span>(jshint.<span class="title function_">reporter</span>(<span class="string">&#x27;default&#x27;</span>));</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">gulp.<span class="title function_">task</span>(<span class="string">&#x27;webpack&#x27;</span>, <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">    gulp.<span class="title function_">src</span>(<span class="string">&#x27;./test.js&#x27;</span>)</span><br><span class="line">        .<span class="title function_">pipe</span>(<span class="title function_">webpack</span>())</span><br><span class="line">        .<span class="title function_">pipe</span>(gulp.<span class="title function_">dest</span>(<span class="string">&#x27;dist/&#x27;</span>))</span><br><span class="line">        .<span class="title function_">pipe</span>(<span class="title function_">rename</span>(<span class="string">&#x27;all.min.js&#x27;</span>))</span><br><span class="line">        .<span class="title function_">pipe</span>(<span class="title function_">uglify</span>())</span><br><span class="line">        .<span class="title function_">pipe</span>(gulp.<span class="title function_">dest</span>(<span class="string">&#x27;./dist&#x27;</span>));</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">gulp.<span class="title function_">task</span>(<span class="string">&#x27;default&#x27;</span>, <span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">    gulp.<span class="title function_">run</span>(<span class="string">&#x27;lint&#x27;</span>, <span class="string">&#x27;webpack&#x27;</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>运行 <code>gulp</code> 命令，构建完成。</p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>完整的 demo 可以看我的博客 <a target="_blank" rel="noopener" href="http://blog.acwong.org/#"><del>about 页面</del></a>。</p>
+<p>源代码请点<a target="_blank" rel="noopener" href="https://github.com/acwong00/blog-demo-code/tree/master/backbone-command-line">这里</a>。</p>
+<p>感谢您的阅读，有不足之处请为我指出。</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/技术实践/">技术实践</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/前端模块化/">前端模块化</a><a href="/tags/Backbone/">Backbone</a><a href="/tags/webpack/">webpack</a><a href="/tags/gulp/">gulp</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2022 acwong
+    
+  </p>
+</footer>
+    
+    
+  </div>
+</div>
+</body>
+</html>

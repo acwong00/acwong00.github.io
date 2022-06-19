@@ -1,0 +1,166 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>清洗种子脚本更新 | ac黄的博客 | acwong&#39;s blog</title>
+
+  
+  <meta name="author" content="acwong">
+  
+
+  
+  <meta name="description" content="清洗种子脚本更新。">
+  
+
+  
+  
+  <meta name="keywords" content="Node.js,bt种子">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="清洗种子脚本更新"/>
+
+  <meta property="og:site_name" content="ac黄的博客"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="ac黄的博客" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">ac黄的博客</a>
+    </h1>
+    <p class="site-description">acwong&#39;s blog</p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">Home</a></li>
+        
+      
+        <li><a href="/archives">Archives</a></li>
+        
+      
+        <li><a href="/tags">Tags</a></li>
+        
+      
+        
+        <li><a href="mailto:acwong@yeah.net">Email</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>清洗种子脚本更新</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2015/05/20/clean-torrents-update/" rel="bookmark">
+        <time class="entry-date published" datetime="2015-05-20T08:27:19.000Z">
+          2015-05-20
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p><a target="_blank" rel="noopener" href="http://blog.acwong.org/2015/03/25/clean-your-torrent-with-node/">之前的文章</a>当中探讨了使用 Node.js 和 parse-torrent 库来清洗 BT 种子文件。发布了源码之后有些朋友给了我一些反馈意见，有些种子在清洗之后会导致种子失效。</p>
+<h2 id="种子失效的问题"><a href="#种子失效的问题" class="headerlink" title="种子失效的问题"></a>种子失效的问题</h2><p>在研究一番之后发现原来的脚本有两个问题。</p>
+<p>首先，没有分清楚单文件种子和多文件种子的区别。先看看种子文件的典型结构。</p>
+<p><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2015-03_torrent-structure.PNG"></p>
+<p>对于单文件种子，文件名的信息会直接存在 info 的 name 字段当中，而没有 files 字段。而多文件种子则会把所有文件名的信息存在 files 的 path当中。</p>
+<p>第二个问题，对于某些种子文件使用 parse-torrent 库解析之后会出现不同的解析结构，而且仅仅使用当中 info 对象来生成新的清洗后的种子也会导致未知的错误。</p>
+<h2 id="nt-库"><a href="#nt-库" class="headerlink" title="nt 库"></a>nt 库</h2><p>为了解决这两个问题，新的脚本采用了一个新的 BT 种子解析库—— <a target="_blank" rel="noopener" href="https://github.com/fent/node-torrent">node-torrent</a>。</p>
+<p>使用这个库的好处在于，它在解析各个种子文件时候返回的对象结构比较统一，使用一个 metadata 的对象处理整个种子文件。而且 node-torrent 集成了生产种子文件的 API，不需要再像之前使用 node 的文件系统去生成新的种子文件。</p>
+<h2 id="新的特性"><a href="#新的特性" class="headerlink" title="新的特性"></a>新的特性</h2><ul>
+<li>支持批量清洗整个文件夹的种子。</li>
+<li>支持批量转换整个文件夹的种子为磁力链接。</li>
+<li>添加了对 comment 和 publisher 的清洗。</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://github.com/acwong00/Clean-Torrents">新版本传送门</a>。大家继续支持哦！</p>
+<p>感谢你的阅读，有不足之处请为我指出。</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/技术实践/">技术实践</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Node-js/">Node.js</a><a href="/tags/bt种子/">bt种子</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2022 acwong
+    
+  </p>
+</footer>
+    
+    
+  </div>
+</div>
+</body>
+</html>

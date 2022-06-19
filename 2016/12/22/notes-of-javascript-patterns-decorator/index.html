@@ -1,0 +1,165 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>JavaScript 设计模式笔记（十二） —— 装饰者模式 | ac黄的博客 | acwong&#39;s blog</title>
+
+  
+  <meta name="author" content="acwong">
+  
+
+  
+  <meta name="description" content="JavaScript 设计模式笔记 —— 装饰者模式">
+  
+
+  
+  
+  <meta name="keywords" content="JavaScript,设计模式">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="JavaScript 设计模式笔记（十二） —— 装饰者模式"/>
+
+  <meta property="og:site_name" content="ac黄的博客"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="ac黄的博客" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">ac黄的博客</a>
+    </h1>
+    <p class="site-description">acwong&#39;s blog</p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">Home</a></li>
+        
+      
+        <li><a href="/archives">Archives</a></li>
+        
+      
+        <li><a href="/tags">Tags</a></li>
+        
+      
+        
+        <li><a href="mailto:acwong@yeah.net">Email</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>JavaScript 设计模式笔记（十二） —— 装饰者模式</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2016/12/22/notes-of-javascript-patterns-decorator/" rel="bookmark">
+        <time class="entry-date published" datetime="2016-12-22T07:12:05.000Z">
+          2016-12-22
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><p>装饰者模式(Decorator)动态地给某个对象添加额外的职责，而不会影响这个类中派生的其他对象。</p>
+<p>装饰者模式又称为包装器(Wrapper)，因为其结构上看是一个对象陷入另一个对象里面，就像一层包一层。</p>
+<h2 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h2><p>一个管理软件在 ajax 函数请求成功时会有可能因为权限等问题返回错误的代码，现在要在不改变原有 ajax 函数的情况下，根据返回的错误代码作出全局的提示。</p>
+<h3 id="构建装饰函数"><a href="#构建装饰函数" class="headerlink" title="构建装饰函数"></a>构建装饰函数</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> before = <span class="keyword">function</span>(<span class="params">fn, beforeFn</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    beforeFn.<span class="title function_">apply</span>(<span class="variable language_">this</span>, <span class="variable language_">arguments</span>); <span class="comment">// 执行新函数</span></span><br><span class="line">    <span class="keyword">return</span> fn.<span class="title function_">apply</span>(<span class="variable language_">this</span>, <span class="variable language_">arguments</span>); <span class="comment">// 返回原函数执行结果</span></span><br><span class="line">  &#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h3 id="定义错误处理函数"><a href="#定义错误处理函数" class="headerlink" title="定义错误处理函数"></a>定义错误处理函数</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> extendAjax = <span class="keyword">function</span>(<span class="params">param</span>) &#123;</span><br><span class="line">  param.<span class="property">success</span> = <span class="title function_">before</span>(param.<span class="property">success</span>, handleErrCode);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> handleErrCode = <span class="keyword">function</span>(<span class="params">result</span>) &#123;</span><br><span class="line">  <span class="keyword">switch</span>(result.<span class="property">errCode</span>) &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">&#x27;001&#x27;</span>:</span><br><span class="line">      <span class="title function_">alert</span>(<span class="string">&#x27;权限不足&#x27;</span>);</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">&#x27;002&#x27;</span>:</span><br><span class="line">      <span class="title function_">alert</span>(<span class="string">&#x27;非法操作&#x27;</span>);</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    <span class="attr">default</span>:</span><br><span class="line">      <span class="keyword">return</span>;</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h3 id="修改-ajax"><a href="#修改-ajax" class="headerlink" title="修改 $.ajax"></a>修改 <code>$.ajax</code></h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$.ajax = <span class="title function_">before</span>($.ajax, extendAjax);</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，这里一共用来两次 <code>before</code> 函数，一次是在请求 ajax 函数之前获取到请求的参数，另一次是用于修改请求成功的函数，作错误代码处理。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>装饰者模式的优点是相比起其他增强对象的方式（如继承）灵活得多，只要对一个对象使用不同的装饰器就可以起到不同的效果。而且，装饰器和被装饰的函数可以独立更改，互不影响，符合开闭原则。</p>
+<p>装饰者模式的缺点增加了代码的复杂度，而且有多层装饰器的函数会变得难以调试、理解。</p>
+<p><strong>参考</strong></p>
+<p><a target="_blank" rel="noopener" href="https://book.douban.com/subject/26382780/">JavaScript设计模式与开发实践</a></p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/学习笔记/">学习笔记</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/JavaScript/">JavaScript</a><a href="/tags/设计模式/">设计模式</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2022 acwong
+    
+  </p>
+</footer>
+    
+    
+  </div>
+</div>
+</body>
+</html>

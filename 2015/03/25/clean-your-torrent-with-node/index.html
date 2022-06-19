@@ -1,0 +1,200 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Node.js 清洗万恶的种子 | ac黄的博客 | acwong&#39;s blog</title>
+
+  
+  <meta name="author" content="acwong">
+  
+
+  
+  <meta name="description" content="使用 Node.js 脚本清洗种子。">
+  
+
+  
+  
+  <meta name="keywords" content="Node.js,bt种子,磁力链接">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="Node.js 清洗万恶的种子"/>
+
+  <meta property="og:site_name" content="ac黄的博客"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="ac黄的博客" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">ac黄的博客</a>
+    </h1>
+    <p class="site-description">acwong&#39;s blog</p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">Home</a></li>
+        
+      
+        <li><a href="/archives">Archives</a></li>
+        
+      
+        <li><a href="/tags">Tags</a></li>
+        
+      
+        
+        <li><a href="mailto:acwong@yeah.net">Email</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>Node.js 清洗万恶的种子</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2015/03/25/clean-your-torrent-with-node/" rel="bookmark">
+        <time class="entry-date published" datetime="2015-03-25T05:48:45.000Z">
+          2015-03-25
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="万恶的种子"><a href="#万恶的种子" class="headerlink" title="万恶的种子"></a>万恶的种子</h2><p>torrent文件，又被称为种子，原来只是用于记录 bt下载当中所需信息的一种文件。但是随着互联网的极大发展，一些人士将一些邪恶的信息注入到了小小的 torrent文件当中，种子从此变成了邪恶的代名词。</p>
+<p>2012 年，一部名为 ABS-130 的日本影片引起了网络的震动，网络上纷纷出现了 “当初求种像条狗，如今*完嫌人丑”的现象，成为了 2012 年互联网的一件大事件。</p>
+<p>2014年，净网行动如火如荼地进行，各大互联网公司都作出了表率，一时之间XX云、X雷都把万恶的种子拒之门外。净网行动万岁！！（还我苍老师！！）</p>
+<p>各大网盘、下载应用都从种子当中提取关键信息，将种子拒之门外。这些关键信息究竟藏在哪里？让我们一探究竟。</p>
+<h2 id="种子文件结构"><a href="#种子文件结构" class="headerlink" title="种子文件结构"></a>种子文件结构</h2><p>以下内容来自维基百科</p>
+<blockquote>
+<p>.torrent种子文件本质上是文本文件，包含Tracker信息和文件信息两部分。Tracker信息主要是BT下载中需要用到的Tracker服务器的地址和针对Tracker服务器的设置，文件信息是根据对目标文件的计算生成的，计算结果根据BitTorrent协议内的Bencode规则进行编码。它的主要原理是需要把提供下载的文件虚拟分成大小相等的块，块大小必须为2k的整数次方（由于是虚拟分块，硬盘上并不产生各个块文件），并把每个块的索引信息和Hash验证码写入种子文件中；<strong>所以，种子文件就是被下载文件的“索引”</strong>。</p>
+</blockquote>
+<p><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2015-03_torrent-structure.PNG" alt="种子结构"></p>
+<p>上图是一个典型种子的结构，那些被识别出来的<strong>邪恶关键字</strong>就藏在 name 和 file 当中。name 包含了该种子的名字，如：<em>abcd-123 性感XXXX</em>。而 file 当中的 path 则包含了要下载的所有文件的信息，如：<em>草X社区最新地址.txt</em>等等。</p>
+<h2 id="Node-js-和-parse-torrent-库"><a href="#Node-js-和-parse-torrent-库" class="headerlink" title="Node.js 和 parse-torrent 库"></a>Node.js 和 parse-torrent 库</h2><p>为了寻找出种子当中的邪恶信息我们请出了 Node.js 和 parse-torrent库 作为助手。</p>
+<p>实验准备：</p>
+<ul>
+<li>种子一枚</li>
+<li>安装 Node.js 电脑一台</li>
+</ul>
+<p>首先我们利用 npm 安装 parse-torrent 库，它帮助我们快速找到种子内的信息。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install parse-torrent</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> fs = <span class="built_in">require</span>(<span class="string">&quot;fs&quot;</span>);</span><br><span class="line"><span class="keyword">var</span> parseTorrent = <span class="built_in">require</span>(<span class="string">&#x27;parse-torrent&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> info = <span class="title function_">parseTorrent</span>(fs.<span class="title function_">readFileSync</span>(<span class="string">&#x27;my.torrent&#x27;</span>));</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(info);</span><br></pre></td></tr></table></figure>
+
+<p>这个库会将种子的信息解析出来，以对象的形式返回给我们。</p>
+<p>查看结果：</p>
+<p>name:</p>
+<p><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2015-03_torrent-info-name.PNG" alt="种子信息文件名"></p>
+<p>files:</p>
+<p><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2015-03_torrent-info-files.PNG" alt="种子信息文件名"></p>
+<p>可以看到用 parse-torrent 库解析出来的 name 和 files 的信息都是以 Buffer 形式存储。</p>
+<h2 id="清洗种子"><a href="#清洗种子" class="headerlink" title="清洗种子"></a>清洗种子</h2><p>如何将种子里的邪恶信息清洗掉，把万恶的种子扼杀在摇篮之中，最重要的就算要清除调 name 和 files 里面 path 的信息。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">cleanInfo</span> (info) &#123;</span><br><span class="line">    <span class="comment">// 将种子名用 md5 加密</span></span><br><span class="line">    info.<span class="property">name</span> = <span class="title function_">md5</span>(info.<span class="property">name</span>);</span><br><span class="line">    info[<span class="string">&#x27;name.utf-8&#x27;</span>] = <span class="title function_">md5</span>(info[<span class="string">&#x27;name.utf-8&#x27;</span>]);</span><br><span class="line">    <span class="keyword">var</span> files = info.<span class="property">files</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; files.<span class="property">length</span>; i++) &#123;</span><br><span class="line">        <span class="keyword">var</span> file = files[i];</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">var</span> key <span class="keyword">in</span> file) &#123;</span><br><span class="line">            <span class="keyword">if</span> (key == <span class="string">&quot;path&quot;</span> || key == <span class="string">&quot;path.utf-8&quot;</span>) &#123;</span><br><span class="line">                <span class="keyword">for</span> (<span class="keyword">var</span> j = <span class="number">0</span>; j &lt; file[key].<span class="property">length</span>; j++) &#123;</span><br><span class="line">                    <span class="keyword">var</span> text = file[key][j].<span class="title function_">toString</span>();</span><br><span class="line">                    <span class="keyword">var</span> dotIndex = text.<span class="title function_">lastIndexOf</span>(<span class="string">&quot;.&quot;</span>);</span><br><span class="line">                    <span class="comment">// 将种子名用 md5 加密</span></span><br><span class="line">                    file[key][j] = <span class="title function_">md5</span>(text.<span class="title function_">slice</span>(<span class="number">0</span>,dotIndex)) + text.<span class="title function_">slice</span>(dotIndex,text.<span class="property">length</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> info;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 将清洗干净后的 info 对象重新生成一个 torrent 文件</span></span><br><span class="line"><span class="keyword">var</span> buf = parseTorrent.<span class="title function_">toTorrentFile</span>(&#123;</span><br><span class="line">    <span class="attr">info</span>: cleanInfos[i]</span><br><span class="line">&#125;);</span><br><span class="line">fs.<span class="title function_">writeFile</span>(dir + <span class="string">&quot;/&quot;</span> + cleanInfos[i].<span class="property">name</span> + <span class="string">&quot;.torrent&quot;</span>, buf);</span><br></pre></td></tr></table></figure>
+
+<p>经过这样之后，我们的邪恶种子文件就变成这样了：</p>
+<p><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2015-03_clean-torren-info.PNG" alt="清洗后种子信息"></p>
+<h2 id="实战阶段"><a href="#实战阶段" class="headerlink" title="实战阶段"></a>实战阶段</h2><p>首先准备一个种子，进行XX云的离线下载。</p>
+<p><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2015-03_torrent.PNG" alt="种子"></p>
+<p>一开始它是被拒绝的。</p>
+<p><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2015-03_36000.PNG" alt="拒绝"></p>
+<p>然后运行脚本进行清洗。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">node cleanTorrent IPTD-XXX.torrent</span><br></pre></td></tr></table></figure>
+
+<p>下载成功了！</p>
+<p><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2015-03_download-success.PNG" alt="下载成功"></p>
+<p>脚本源码放在<a target="_blank" rel="noopener" href="https://github.com/acwong00/Clean-Torrents">这里</a>了，要去看一下我的下载内容了！！！</p>
+<p><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2015-03_tips.PNG" alt="温馨提示"></p>
+<p><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2015-03_baoman.jpg" alt="oh no"></p>
+<p>（**都脱了你给我看这个！！！）</p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>本文纯属技术讨论，感谢你的阅读，有不足之处请为我指出。</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/技术实践/">技术实践</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Node-js/">Node.js</a><a href="/tags/bt种子/">bt种子</a><a href="/tags/磁力链接/">磁力链接</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2022 acwong
+    
+  </p>
+</footer>
+    
+    
+  </div>
+</div>
+</body>
+</html>

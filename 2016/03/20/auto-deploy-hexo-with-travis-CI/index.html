@@ -1,0 +1,203 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>用 Travis CI 自动部署 hexo | ac黄的博客 | acwong&#39;s blog</title>
+
+  
+  <meta name="author" content="acwong">
+  
+
+  
+  <meta name="description" content="介绍使用 Travis CI 自动部署 hexo 的方法">
+  
+
+  
+  
+  <meta name="keywords" content="hexo,自动部署,Travis CI">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="用 Travis CI 自动部署 hexo"/>
+
+  <meta property="og:site_name" content="ac黄的博客"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="ac黄的博客" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">ac黄的博客</a>
+    </h1>
+    <p class="site-description">acwong&#39;s blog</p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">Home</a></li>
+        
+      
+        <li><a href="/archives">Archives</a></li>
+        
+      
+        <li><a href="/tags">Tags</a></li>
+        
+      
+        
+        <li><a href="mailto:acwong@yeah.net">Email</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>用 Travis CI 自动部署 hexo</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2016/03/20/auto-deploy-hexo-with-travis-CI/" rel="bookmark">
+        <time class="entry-date published" datetime="2016-03-20T04:22:21.000Z">
+          2016-03-20
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>hexo 是当下一个比较流行的静态网站生成器，一般用户的使用方法都是将 hexo 项目的文件放到本地，然后编写文章，最后运行部署的命令将网站部署到一些代码托管网站(如：github)。但是，这样的使用方法有时会带来一些不便。</p>
+<p>首先，如果我想在另外一台设备上面写博客，必须将整个项目拷贝过来，完成之后要保持两台设备的内容是一致的，不然就会导致部署之后有不同的地方。</p>
+<p>在这种情况下一般会将整个项目都托管到 github 上面。但是这又会导致另外一个问题，每次有改动的时候不但要部署博客，还要提交项目的代码，这又增加了操作的步骤。</p>
+<p>之前也有不少文章用不同的方法解决上述的问题，例如<a target="_blank" rel="noopener" href="http://lucifr.com/2013/06/02/hexo-on-cloud-with-dropbox-and-vps/">利用 Dropbox 同步</a>或者<a target="_blank" rel="noopener" href="http://blog.sunnyyan.com/2015/05/01/hexo-auto-generate/">利用 Github 的 Webhooks</a> 进行自动部署。这些方法需要付出一定的成本，因为都需要利用到一台 VPS 去完成。而今有一个更加简单而且免费的方法去完成 hexo 的自动部署，就是利用 Travis CI。</p>
+<h2 id="Travis-CI"><a href="#Travis-CI" class="headerlink" title="Travis CI"></a>Travis CI</h2><p>顾名思义，Travis CI 是一个持续集成(Continuous integration，简称CI)的工具。它可以在公共的 Github 仓库上免费使用。</p>
+<h2 id="构建"><a href="#构建" class="headerlink" title="构建"></a>构建</h2><h3 id="在-Github-建立代码库"><a href="#在-Github-建立代码库" class="headerlink" title="在 Github 建立代码库"></a>在 Github 建立代码库</h3><p>首先，要在 Github 上建立一个代码仓库，要将自己 hexo 博客 push 到上面。hexo 项目作为运行部署的项目，然后 Github Page 的项目作为部署的目标项目。</p>
+<h3 id="开启-Travis-CI"><a href="#开启-Travis-CI" class="headerlink" title="开启 Travis CI"></a>开启 Travis CI</h3><p>第二步，我们需要有一个 Travis CI 的账号，直接进入 <a target="_blank" rel="noopener" href="https://travis-ci.org/">Travis CI</a> 官网，用自己的 Github 账号授权登录即可。</p>
+<p>然后可以看到当前账号的所有代码仓库，接下来将博客项目的状态设置为启用。</p>
+<p><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2016-03_travis-on.png" alt="trun on travis"></p>
+<h3 id="创建-SSH-key"><a href="#创建-SSH-key" class="headerlink" title="创建 SSH key"></a>创建 SSH key</h3><p>第三步，创建一个部署在 Travis CI 上面的 SSH key 利用这个 SSH key 可以让 Travis CI 向我们自己的项目提交代码(也就是将博客部署到 <code>gh-page</code>)。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ssh-keygen -t rsa -C <span class="string">&quot;youremail@example.com&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>得到 <code>id_rsa.pub</code> 和 <code>id_rsa</code>，然后将有 <code>pub</code> 后缀的配置到 <code>gh-page</code> 的 Deploy key。</p>
+<p><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2016-03_deploy-key.png" alt="set deploy key"></p>
+<p>记得要将 <code>Allow write access</code> 的选项选上，这样 Travis CI 才能获得 push 代码的权限。</p>
+<h3 id="加密私钥"><a href="#加密私钥" class="headerlink" title="加密私钥"></a>加密私钥</h3><p>刚才讲公钥文件配置好了，然后就要配置私钥文件，在 hexo 项目下面建立一个 <code>.travis</code> 的文件夹来放置需要配置的文件。</p>
+<p>首先要安装 travis 命令行工具(如果在国内的网络环境下建议安装之前先<a target="_blank" rel="noopener" href="https://ruby.taobao.org/">换源</a>)。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ gem install travis</span><br></pre></td></tr></table></figure>
+
+<p>用命令行工具登录：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ travis login --auto</span><br></pre></td></tr></table></figure>
+
+<p>然后将刚刚生成的 <code>id_rsa</code> 复制到 <code>.travis</code> 文件夹，用命令行工具进行加密：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ travis encrypt-file id_rsa --add</span><br></pre></td></tr></table></figure>
+
+<p>这个时候会生成加密之后的秘钥文件 <code>id_rsa.enc</code>，原来的文件 <code>id_rsa</code> 就可以删掉了。</p>
+<p>这时可以看到终端输出了一段</p>
+<p><code>openssl aes-256-cbc -K $encrypted_xxxxxxxxxxx_key -iv $encrypted_xxxxxxxxxxx_iv</code></p>
+<p>这样格式的信息，这是 travis 用来解密 <code>id_rsa.enc</code> 的 key，先保存起来，后面配置 <code>.travis.yml</code> 会用到它。</p>
+<p>为了让 git 默认连接 SSH 还要创建一个 <code>ssh_config</code> 文件。在 <code>.travis</code> 文件夹下创建一个 <code>ssh_config</code> 文件，输入以下内容：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Host github.com</span><br><span class="line">    User git</span><br><span class="line">    StrictHostKeyChecking no</span><br><span class="line">    IdentityFile ~/.ssh/id_rsa</span><br><span class="line">    IdentitiesOnly yes</span><br></pre></td></tr></table></figure>
+
+<p>现在进入 travis CI 设置页面</p>
+<p><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2016-03_travis-setting.png" alt="travis setting"></p>
+<p>可以看到刚刚 travis 命令行生成的解密 key</p>
+<p><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2016-03_environment-variables.png" alt="environment variables"></p>
+<p>顺便把上面的开关打开</p>
+<p><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2016-03_trun-on-travis-setting.png" alt="trun on travis setting"></p>
+<p>这样，当向项目 push 代码的时候 travis CI 就会根据 <code>.travis.yml</code> 的内容去部署我们的项目了。</p>
+<h3 id="travis-yml"><a href="#travis-yml" class="headerlink" title=".travis.yml"></a>.travis.yml</h3><p>最后就要配置 <code>.travis.yml</code>。在项目的根目录创建 <code>.travis.yml</code> 文件。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 配置语言及相应版本</span></span><br><span class="line"><span class="attr">language:</span> <span class="string">node_js</span></span><br><span class="line"></span><br><span class="line"><span class="attr">node_js:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">&quot;4&quot;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 项目所在分支</span></span><br><span class="line"><span class="attr">branches:</span></span><br><span class="line">  <span class="attr">only:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">master</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 配置环境</span></span><br><span class="line"><span class="attr">before_install:</span></span><br><span class="line"><span class="comment"># 替换为刚才生成的解密信息</span></span><br><span class="line"><span class="bullet">-</span> <span class="string">openssl</span> <span class="string">aes-256-cbc</span> <span class="string">-K</span> <span class="string">$encrypted_xxxxxxxxxxxx_key</span> <span class="string">-iv</span> <span class="string">$encrypted_xxxxxxxxxxxx_iv</span> <span class="string">-in</span> <span class="string">.travis/id_rsa.enc</span> <span class="string">-out</span> <span class="string">~/.ssh/id_rsa</span> <span class="string">-d</span></span><br><span class="line"><span class="comment"># 改变文件权限</span></span><br><span class="line"><span class="bullet">-</span> <span class="string">chmod</span> <span class="number">600</span> <span class="string">~/.ssh/id_rsa</span> </span><br><span class="line"><span class="comment"># 配置 ssh</span></span><br><span class="line"><span class="bullet">-</span> <span class="string">eval</span> <span class="string">$(ssh-agent)</span></span><br><span class="line"><span class="bullet">-</span> <span class="string">ssh-add</span> <span class="string">~/.ssh/id_rsa</span></span><br><span class="line"><span class="bullet">-</span> <span class="string">cp</span> <span class="string">.travis/ssh_config</span> <span class="string">~/.ssh/config</span></span><br><span class="line"><span class="comment"># 配置 git 替换为自己的信息</span></span><br><span class="line"><span class="bullet">-</span> <span class="string">git</span> <span class="string">config</span> <span class="string">--global</span> <span class="string">user.name</span> <span class="string">&#x27;acwong&#x27;</span></span><br><span class="line"><span class="bullet">-</span> <span class="string">git</span> <span class="string">config</span> <span class="string">--global</span> <span class="string">user.email</span> <span class="string">acwong00@gmail.com</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装依赖</span></span><br><span class="line"><span class="attr">install:</span></span><br><span class="line"><span class="bullet">-</span> <span class="string">npm</span> <span class="string">install</span> <span class="string">hexo-cli</span> <span class="string">-g</span></span><br><span class="line"><span class="bullet">-</span> <span class="string">npm</span> <span class="string">install</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 部署的命令</span></span><br><span class="line"><span class="attr">script:</span></span><br><span class="line"><span class="bullet">-</span> <span class="string">npm</span> <span class="string">run</span> <span class="string">deploy</span>  <span class="comment"># hexo clean &amp;&amp; hexo g -d</span></span><br></pre></td></tr></table></figure>
+
+<p>好了现在只要向项目 push 代码就可以触发部署了，进入<a target="_blank" rel="noopener" href="https://travis-ci.org/">https://travis-ci.org</a>就可以看到部署的过程了。</p>
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>在部署了一遍之后发现，运行 <code>npm install</code> 安装 node 的库时候占据了部署的很大一部分时间，这里有一个技巧，可以将 <code>node_modules</code> 缓存起来，这样可以节省部署的时间。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># .travis.yml 配置</span></span><br><span class="line"><span class="attr">cache:</span></span><br><span class="line">  <span class="attr">directories:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">node_modules</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p><code>.travis.yml</code> 的完整代码可以看我的 <a target="_blank" rel="noopener" href="https://github.com/acwong00/blog/blob/master/.travis.yml"><code>.travis.yml</code></a> 文件。博客的完整代码可以看<a target="_blank" rel="noopener" href="https://github.com/acwong00/blog">这里</a>。</p>
+<p>感谢您的阅读，有问题欢迎与我交流。</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/技术实践/">技术实践</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/hexo/">hexo</a><a href="/tags/自动部署/">自动部署</a><a href="/tags/Travis-CI/">Travis CI</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2022 acwong
+    
+  </p>
+</footer>
+    
+    
+  </div>
+</div>
+</body>
+</html>

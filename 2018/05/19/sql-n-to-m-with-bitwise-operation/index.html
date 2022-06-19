@@ -1,0 +1,343 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>使用位运算处理关系型数据库多对多关系 | ac黄的博客 | acwong&#39;s blog</title>
+
+  
+  <meta name="author" content="acwong">
+  
+
+  
+  <meta name="description" content="ac黄的博客">
+  
+
+  
+  
+  <meta name="keywords" content="关系型数据库,SQL,位运算,数据库设计">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="使用位运算处理关系型数据库多对多关系"/>
+
+  <meta property="og:site_name" content="ac黄的博客"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="ac黄的博客" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">ac黄的博客</a>
+    </h1>
+    <p class="site-description">acwong&#39;s blog</p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">Home</a></li>
+        
+      
+        <li><a href="/archives">Archives</a></li>
+        
+      
+        <li><a href="/tags">Tags</a></li>
+        
+      
+        
+        <li><a href="mailto:acwong@yeah.net">Email</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>使用位运算处理关系型数据库多对多关系</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/05/19/sql-n-to-m-with-bitwise-operation/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-05-19T09:53:23.000Z">
+          2018-05-19
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>最近在工作当中需要处理一个本地 SQLite 数据库多对多查询的需求，一般情况下关系型数据库多对多关系都是通过一张关系表来记录，令多对多关系变成一对多关系来处理，但是相对来说这样的设计查询效率会较差。下面就记录一下这次使用二进制按位运算的方法来解决多对多的问题。</p>
+<h2 id="定义数据库结构"><a href="#定义数据库结构" class="headerlink" title="定义数据库结构"></a>定义数据库结构</h2><p>定义科目和学生是多对多的关系，分别使用科目表和学生表来储存数据。以 SQLite 为例。</p>
+<p><strong>科目表 subject</strong></p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>id</td>
+<td>自增id</td>
+</tr>
+<tr>
+<td>subject_name</td>
+<td>科目名</td>
+</tr>
+<tr>
+<td>subject_bit</td>
+<td>记录二进制位 1 的十进制数</td>
+</tr>
+</tbody></table>
+<p>科目表里面的 subject_bit 是一个十进制数，记录的是当前的科目对应的是哪个二进制位的一，举个例子：</p>
+<ul>
+<li>256 代表二进制 100000000</li>
+<li>1024 代表二进制 10000000000</li>
+</ul>
+<p><strong>学生表 student</strong></p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>id</td>
+<td>自增id</td>
+</tr>
+<tr>
+<td>student_name</td>
+<td>学生名</td>
+</tr>
+<tr>
+<td>subjects</td>
+<td>记录各学科按位或的结果</td>
+</tr>
+</tbody></table>
+<p>学生表里面的 subjects 字段同样是一个十进制数，记录的是学习对应的各个科目 subject_bit 按位或运算的结果，举个例子：</p>
+<ul>
+<li>10 代表学生同时选修 subject_bit 为 2 和 8 的科目</li>
+<li>1025 代表学生同时选修 subject_bit 为 1 和 1024 的科目</li>
+</ul>
+<h2 id="数据查询"><a href="#数据查询" class="headerlink" title="数据查询"></a>数据查询</h2><p>示例数据</p>
+<p><strong>subject</strong></p>
+<table>
+<thead>
+<tr>
+<th>id</th>
+<th>subject_name</th>
+<th>subject_bit</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>语文</td>
+<td>1</td>
+</tr>
+<tr>
+<td>2</td>
+<td>数学</td>
+<td>2</td>
+</tr>
+<tr>
+<td>3</td>
+<td>英语</td>
+<td>4</td>
+</tr>
+<tr>
+<td>4</td>
+<td>政治</td>
+<td>8</td>
+</tr>
+<tr>
+<td>5</td>
+<td>地理</td>
+<td>16</td>
+</tr>
+<tr>
+<td>6</td>
+<td>历史</td>
+<td>32</td>
+</tr>
+<tr>
+<td>7</td>
+<td>物理</td>
+<td>64</td>
+</tr>
+<tr>
+<td>8</td>
+<td>生物</td>
+<td>128</td>
+</tr>
+<tr>
+<td>9</td>
+<td>化学</td>
+<td>256</td>
+</tr>
+</tbody></table>
+<p><strong>student</strong></p>
+<table>
+<thead>
+<tr>
+<th>id</th>
+<th>student_name</th>
+<th>subjects</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>Amy</td>
+<td>234</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Bill</td>
+<td>34</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Cody</td>
+<td>3</td>
+</tr>
+<tr>
+<td>4</td>
+<td>David</td>
+<td>15</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Eva</td>
+<td>26</td>
+</tr>
+</tbody></table>
+<p><strong>根据科目查询所属学生</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> student <span class="keyword">WHERE</span> subject_bit <span class="operator">&amp;</span> <span class="number">32</span> <span class="operator">!=</span> <span class="number">0</span></span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>id</th>
+<th>student_name</th>
+<th>subjects</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>Amy</td>
+<td>234</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Bill</td>
+<td>34</td>
+</tr>
+</tbody></table>
+<p><strong>根据学生查询科目</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> subject <span class="keyword">WHERE</span> subject_bit <span class="operator">&amp;</span> </span><br><span class="line">(<span class="keyword">SELECT</span> subjects <span class="keyword">FROM</span> student <span class="keyword">WHERE</span> student_name <span class="operator">=</span> <span class="string">&#x27;Cody&#x27;</span>) <span class="operator">!=</span> <span class="number">0</span></span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>id</th>
+<th>subject_name</th>
+<th>subject_bit</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>语文</td>
+<td>1</td>
+</tr>
+<tr>
+<td>2</td>
+<td>数学</td>
+<td>2</td>
+</tr>
+</tbody></table>
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>虽然这种方式能够提高部分查询效率，但是同样有非常大的局限性。</p>
+<p>首先，以二进制方式来标识类目的方法要将类目数量限制在 32 个以下。然后，虽然查询的 SQL 语句并不复杂，但是当要修改数据的时候就会非常麻烦。</p>
+<p>因为笔者本次开发的需求是一个纯查询的数据库，而且类目数量少于 32 所以采取了这个方案，大家参考的时候必须要结合自身的需要。</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/学习笔记/">学习笔记</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/关系型数据库/">关系型数据库</a><a href="/tags/SQL/">SQL</a><a href="/tags/位运算/">位运算</a><a href="/tags/数据库设计/">数据库设计</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2022 acwong
+    
+  </p>
+</footer>
+    
+    
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,581 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Page 6 | ac黄的博客 | acwong&#39;s blog</title>
+
+  
+  <meta name="author" content="acwong">
+  
+
+  
+  <meta name="description" content="ac黄的博客">
+  
+
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  
+
+  <meta property="og:site_name" content="ac黄的博客"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="ac黄的博客" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">ac黄的博客</a>
+    </h1>
+    <p class="site-description">acwong&#39;s blog</p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">Home</a></li>
+        
+      
+        <li><a href="/archives">Archives</a></li>
+        
+      
+        <li><a href="/tags">Tags</a></li>
+        
+      
+        
+        <li><a href="mailto:acwong@yeah.net">Email</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2016/03/20/auto-deploy-hexo-with-travis-CI/"><span>用 Travis CI 自动部署 hexo</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2016/03/20/auto-deploy-hexo-with-travis-CI/" rel="bookmark">
+        <time class="entry-date published" datetime="2016-03-20T04:22:21.000Z">
+          2016-03-20
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>hexo 是当下一个比较流行的静态网站生成器，一般用户的使用方法都是将 hexo 项目的文件放到本地，然后编写文章，最后运行部署的命令将网站部署到一些代码托管网站(如：github)。但是，这样的使用方法有时会带来一些不便。</p>
+<p>首先，如果我想在另外一台设备上面写博客，必须将整个项目拷贝过来，完成之后要保持两台设备的内容是一致的，不然就会导致部署之后有不同的地方。</p>
+<p>在这种情况下一般会将整个项目都托管到 github 上面。但是这又会导致另外一个问题，每次有改动的时候不但要部署博客，还要提交项目的代码，这又增加了操作的步骤。</p>
+<p>之前也有不少文章用不同的方法解决上述的问题，例如<a target="_blank" rel="noopener" href="http://lucifr.com/2013/06/02/hexo-on-cloud-with-dropbox-and-vps/">利用 Dropbox 同步</a>或者<a target="_blank" rel="noopener" href="http://blog.sunnyyan.com/2015/05/01/hexo-auto-generate/">利用 Github 的 Webhooks</a> 进行自动部署。这些方法需要付出一定的成本，因为都需要利用到一台 VPS 去完成。而今有一个更加简单而且免费的方法去完成 hexo 的自动部署，就是利用 Travis CI。</p>
+<h2 id="Travis-CI"><a href="#Travis-CI" class="headerlink" title="Travis CI"></a>Travis CI</h2><p>顾名思义，Travis CI 是一个持续集成(Continuous integration，简称CI)的工具。它可以在公共的 Github 仓库上免费使用。</p>
+<h2 id="构建"><a href="#构建" class="headerlink" title="构建"></a>构建</h2><h3 id="在-Github-建立代码库"><a href="#在-Github-建立代码库" class="headerlink" title="在 Github 建立代码库"></a>在 Github 建立代码库</h3><p>首先，要在 Github 上建立一个代码仓库，要将自己 hexo 博客 push 到上面。hexo 项目作为运行部署的项目，然后 Github Page 的项目作为部署的目标项目。</p>
+<h3 id="开启-Travis-CI"><a href="#开启-Travis-CI" class="headerlink" title="开启 Travis CI"></a>开启 Travis CI</h3><p>第二步，我们需要有一个 Travis CI 的账号，直接进入 <a target="_blank" rel="noopener" href="https://travis-ci.org/">Travis CI</a> 官网，用自己的 Github 账号授权登录即可。</p>
+<p>然后可以看到当前账号的所有代码仓库，接下来将博客项目的状态设置为启用。</p>
+<p><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2016-03_travis-on.png" alt="trun on travis"></p>
+<h3 id="创建-SSH-key"><a href="#创建-SSH-key" class="headerlink" title="创建 SSH key"></a>创建 SSH key</h3><p>第三步，创建一个部署在 Travis CI 上面的 SSH key 利用这个 SSH key 可以让 Travis CI 向我们自己的项目提交代码(也就是将博客部署到 <code>gh-page</code>)。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ssh-keygen -t rsa -C <span class="string">&quot;youremail@example.com&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>得到 <code>id_rsa.pub</code> 和 <code>id_rsa</code>，然后将有 <code>pub</code> 后缀的配置到 <code>gh-page</code> 的 Deploy key。</p>
+<p><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2016-03_deploy-key.png" alt="set deploy key"></p>
+<p>记得要将 <code>Allow write access</code> 的选项选上，这样 Travis CI 才能获得 push 代码的权限。</p>
+<h3 id="加密私钥"><a href="#加密私钥" class="headerlink" title="加密私钥"></a>加密私钥</h3><p>刚才讲公钥文件配置好了，然后就要配置私钥文件，在 hexo 项目下面建立一个 <code>.travis</code> 的文件夹来放置需要配置的文件。</p>
+<p>首先要安装 travis 命令行工具(如果在国内的网络环境下建议安装之前先<a target="_blank" rel="noopener" href="https://ruby.taobao.org/">换源</a>)。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ gem install travis</span><br></pre></td></tr></table></figure>
+
+<p>用命令行工具登录：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ travis login --auto</span><br></pre></td></tr></table></figure>
+
+<p>然后将刚刚生成的 <code>id_rsa</code> 复制到 <code>.travis</code> 文件夹，用命令行工具进行加密：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ travis encrypt-file id_rsa --add</span><br></pre></td></tr></table></figure>
+
+<p>这个时候会生成加密之后的秘钥文件 <code>id_rsa.enc</code>，原来的文件 <code>id_rsa</code> 就可以删掉了。</p>
+<p>这时可以看到终端输出了一段</p>
+<p><code>openssl aes-256-cbc -K $encrypted_xxxxxxxxxxx_key -iv $encrypted_xxxxxxxxxxx_iv</code></p>
+<p>这样格式的信息，这是 travis 用来解密 <code>id_rsa.enc</code> 的 key，先保存起来，后面配置 <code>.travis.yml</code> 会用到它。</p>
+<p>为了让 git 默认连接 SSH 还要创建一个 <code>ssh_config</code> 文件。在 <code>.travis</code> 文件夹下创建一个 <code>ssh_config</code> 文件，输入以下内容：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Host github.com</span><br><span class="line">    User git</span><br><span class="line">    StrictHostKeyChecking no</span><br><span class="line">    IdentityFile ~/.ssh/id_rsa</span><br><span class="line">    IdentitiesOnly yes</span><br></pre></td></tr></table></figure>
+
+<p>现在进入 travis CI 设置页面</p>
+<p><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2016-03_travis-setting.png" alt="travis setting"></p>
+<p>可以看到刚刚 travis 命令行生成的解密 key</p>
+<p><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2016-03_environment-variables.png" alt="environment variables"></p>
+<p>顺便把上面的开关打开</p>
+<p><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2016-03_trun-on-travis-setting.png" alt="trun on travis setting"></p>
+<p>这样，当向项目 push 代码的时候 travis CI 就会根据 <code>.travis.yml</code> 的内容去部署我们的项目了。</p>
+<h3 id="travis-yml"><a href="#travis-yml" class="headerlink" title=".travis.yml"></a>.travis.yml</h3><p>最后就要配置 <code>.travis.yml</code>。在项目的根目录创建 <code>.travis.yml</code> 文件。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 配置语言及相应版本</span></span><br><span class="line"><span class="attr">language:</span> <span class="string">node_js</span></span><br><span class="line"></span><br><span class="line"><span class="attr">node_js:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">&quot;4&quot;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 项目所在分支</span></span><br><span class="line"><span class="attr">branches:</span></span><br><span class="line">  <span class="attr">only:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">master</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 配置环境</span></span><br><span class="line"><span class="attr">before_install:</span></span><br><span class="line"><span class="comment"># 替换为刚才生成的解密信息</span></span><br><span class="line"><span class="bullet">-</span> <span class="string">openssl</span> <span class="string">aes-256-cbc</span> <span class="string">-K</span> <span class="string">$encrypted_xxxxxxxxxxxx_key</span> <span class="string">-iv</span> <span class="string">$encrypted_xxxxxxxxxxxx_iv</span> <span class="string">-in</span> <span class="string">.travis/id_rsa.enc</span> <span class="string">-out</span> <span class="string">~/.ssh/id_rsa</span> <span class="string">-d</span></span><br><span class="line"><span class="comment"># 改变文件权限</span></span><br><span class="line"><span class="bullet">-</span> <span class="string">chmod</span> <span class="number">600</span> <span class="string">~/.ssh/id_rsa</span> </span><br><span class="line"><span class="comment"># 配置 ssh</span></span><br><span class="line"><span class="bullet">-</span> <span class="string">eval</span> <span class="string">$(ssh-agent)</span></span><br><span class="line"><span class="bullet">-</span> <span class="string">ssh-add</span> <span class="string">~/.ssh/id_rsa</span></span><br><span class="line"><span class="bullet">-</span> <span class="string">cp</span> <span class="string">.travis/ssh_config</span> <span class="string">~/.ssh/config</span></span><br><span class="line"><span class="comment"># 配置 git 替换为自己的信息</span></span><br><span class="line"><span class="bullet">-</span> <span class="string">git</span> <span class="string">config</span> <span class="string">--global</span> <span class="string">user.name</span> <span class="string">&#x27;acwong&#x27;</span></span><br><span class="line"><span class="bullet">-</span> <span class="string">git</span> <span class="string">config</span> <span class="string">--global</span> <span class="string">user.email</span> <span class="string">acwong00@gmail.com</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装依赖</span></span><br><span class="line"><span class="attr">install:</span></span><br><span class="line"><span class="bullet">-</span> <span class="string">npm</span> <span class="string">install</span> <span class="string">hexo-cli</span> <span class="string">-g</span></span><br><span class="line"><span class="bullet">-</span> <span class="string">npm</span> <span class="string">install</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 部署的命令</span></span><br><span class="line"><span class="attr">script:</span></span><br><span class="line"><span class="bullet">-</span> <span class="string">npm</span> <span class="string">run</span> <span class="string">deploy</span>  <span class="comment"># hexo clean &amp;&amp; hexo g -d</span></span><br></pre></td></tr></table></figure>
+
+<p>好了现在只要向项目 push 代码就可以触发部署了，进入<a target="_blank" rel="noopener" href="https://travis-ci.org/">https://travis-ci.org</a>就可以看到部署的过程了。</p>
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>在部署了一遍之后发现，运行 <code>npm install</code> 安装 node 的库时候占据了部署的很大一部分时间，这里有一个技巧，可以将 <code>node_modules</code> 缓存起来，这样可以节省部署的时间。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># .travis.yml 配置</span></span><br><span class="line"><span class="attr">cache:</span></span><br><span class="line">  <span class="attr">directories:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">node_modules</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p><code>.travis.yml</code> 的完整代码可以看我的 <a target="_blank" rel="noopener" href="https://github.com/acwong00/blog/blob/master/.travis.yml"><code>.travis.yml</code></a> 文件。博客的完整代码可以看<a target="_blank" rel="noopener" href="https://github.com/acwong00/blog">这里</a>。</p>
+<p>感谢您的阅读，有问题欢迎与我交流。</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/技术实践/">技术实践</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/hexo/">hexo</a><a href="/tags/自动部署/">自动部署</a><a href="/tags/Travis-CI/">Travis CI</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2016/03/05/change-webpack-certificate/"><span>记一次移动端开发环境调试</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2016/03/05/change-webpack-certificate/" rel="bookmark">
+        <time class="entry-date published" datetime="2016-03-05T13:39:29.000Z">
+          2016-03-05
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>最近的一个项目要在手机淘宝客户端里面开发网页，由于淘宝目前全站https，所以在开发环境搭建时候遇到了之前没有料想到的一些问题，这里分享一下这次踩坑的经历。</p>
+<h2 id="一"><a href="#一" class="headerlink" title="一"></a>一</h2><p>在这个项目当中使用了 webpack 作为模块加载器，使用 webpack 进行前端开发一般会同时使用 webpack-dev-server 来提高开发的效率。</p>
+<p>webpack-dev-server 会利用 Express 建立一个服务器，将打包后的 js 文件 引入到页面当中，即时反映对文件的修改。</p>
+<p>在配置好 webpack 之后，运行之后发现 webpack-dev-server 加载的 js 文件并不能在页面上显示。经过一番研究之后发现这里涉及到了 https 的 Mixed Content 问题。</p>
+<h3 id="Mixed-Content"><a href="#Mixed-Content" class="headerlink" title="Mixed Content"></a>Mixed Content</h3><p>如果一个 HTTPS 网页当中有请求 HTTP 的资源，这种网页就被称为 <strong>Mixed Content Page</strong>。</p>
+<p>Mixed Content 被分为两类 <strong>Optionally-blockable Content</strong> 和 <strong>Blockable Content</strong>。</p>
+<h4 id="Optionally-blockable-Content"><a href="#Optionally-blockable-Content" class="headerlink" title="Optionally-blockable Content"></a>Optionally-blockable Content</h4><p>Optionally-blockable Content 包括一些引入风险较低的资源:</p>
+<ul>
+<li>&lt;img&gt;</li>
+<li>&lt;audio&gt;</li>
+<li>&lt;video&gt;</li>
+</ul>
+<p>在现代的浏览器当中这些资源即时不是通过 https 引用也会被加载到页面当中。</p>
+<p><a target="_blank" rel="noopener" href="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2016-03_mixed-content-2.png"><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2016-03_mixed-content-2.png"></a></p>
+<h4 id="Blockable-Content"><a href="#Blockable-Content" class="headerlink" title="Blockable Content"></a>Blockable Content</h4><p>而其他的引入风险较高的资源就被称为 Blockable Content，包括 &lt;script&gt;、&lt;link&gt;、&lt;iframe&gt; 等。这些资源如果是通过 http 协议引用的话是不会被加载到页面当中的。</p>
+<p><a target="_blank" rel="noopener" href="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2016-03_mixed-content-1.png"><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2016-03_mixed-content-1.png"></a></p>
+<h3 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h3><p>既然知道问题所在，解决的方法也就非常简单了，修改一下 webpack-dev-server 的配置，启用 https 协议。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> <span class="title class_">WebpackDevServer</span>(<span class="title function_">webpack</span>(config), &#123;</span><br><span class="line">	<span class="comment">// 省略其余代码</span></span><br><span class="line">	<span class="attr">https</span>: <span class="literal">true</span>  <span class="comment">// 启用 https </span></span><br><span class="line">&#125;).<span class="title function_">listen</span>(<span class="number">3000</span>, <span class="keyword">function</span>(<span class="params">err, res</span>) &#123;&#125;);</span><br></pre></td></tr></table></figure>
+
+<h2 id="二"><a href="#二" class="headerlink" title="二"></a>二</h2><p>启用了 https 协议之后，依然无法正常访问 webpack 打包的资源。在桌面浏览器访问一些 https 网站时候经常会看到这样的画面：</p>
+<p><a target="_blank" rel="noopener" href="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2016-03_https-wran.PNG"><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2016-03_https-wran.PNG"></a></p>
+<p>出现这个画面的原因是网站的证书不受信任，在桌面端的浏览器可以点击继续前往来访问不受信任的资源。而在移动端的浏览器除了少数的浏览器（如：uc浏览器）可以访问不受信任的资源之外，大部分的浏览器会直接禁止访问。</p>
+<h3 id="解决方法-1"><a href="#解决方法-1" class="headerlink" title="解决方法"></a>解决方法</h3><p>要在手机浏览器上访问 https 协议的 webpack-dev-server 服务器上面的资源，就要安装匹配服务器的证书。</p>
+<p>打开 node-module 找到 webpack-dev-server 会发现一个叫 ssl 的文件夹，这就是用来放置 webpack-dev-server 证书的地方。</p>
+<p><a target="_blank" rel="noopener" href="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2016-03_server-ssl.png"><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2016-03_server-ssl.png"></a></p>
+<p>现在把客户端用的 ca.crt 证书安装到手机上，搞定。</p>
+<h2 id="三"><a href="#三" class="headerlink" title="三"></a>三</h2><p>安装完证书之后再打开手机淘宝，发现静态资源依然不能访问，打开手机安装的证书发现 webpack-dev-server 的证书已经过期了T_T。</p>
+<p><a target="_blank" rel="noopener" href="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2016-03_expired.jpg"><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2016-03_expired.jpg"></a></p>
+<p>再看看 webpack-dev-server github 的项目，发现这些证书最近的更新是一年前。看来现在只能自己去生成新的自签证书了。</p>
+<p><a target="_blank" rel="noopener" href="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2016-03_webpakc-dev-server-github.png"><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2016-03_webpakc-dev-server-github.png"></a></p>
+<p>查看 webpakc-dev-server 的代码：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// using built-in self-signed certificate if no certificate was configured</span></span><br><span class="line">options.<span class="property">https</span>.<span class="property">key</span> = options.<span class="property">https</span>.<span class="property">key</span> || fs.<span class="title function_">readFileSync</span>(path.<span class="title function_">join</span>(__dirname, <span class="string">&quot;../ssl/server.key&quot;</span>));</span><br><span class="line">options.<span class="property">https</span>.<span class="property">cert</span> = options.<span class="property">https</span>.<span class="property">cert</span> || fs.<span class="title function_">readFileSync</span>(path.<span class="title function_">join</span>(__dirname, <span class="string">&quot;../ssl/server.crt&quot;</span>));</span><br><span class="line">options.<span class="property">https</span>.<span class="property">ca</span> = options.<span class="property">https</span>.<span class="property">ca</span> || fs.<span class="title function_">readFileSync</span>(path.<span class="title function_">join</span>(__dirname, <span class="string">&quot;../ssl/ca.crt&quot;</span>));</span><br></pre></td></tr></table></figure>
+
+<p>要替代原来的证书需要生成这三个文件。</p>
+<h3 id="解决方法-2"><a href="#解决方法-2" class="headerlink" title="解决方法"></a>解决方法</h3><p>生成自签的证书最常见的方法就是用 OpenSSl 工具，在 Mac OSX 上面默认已经安装了。</p>
+<p>首先要生成一个证书颁发机构(CA)根证书，利用这个根证书可以创建客户端使用的证书，还需要用根证书去对服务端使用的证书进行签名。</p>
+<p>创建CA证书首先创建私钥文件，2048指的是私钥的位数：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl genrsa -out CA.key 2048</span><br></pre></td></tr></table></figure>
+
+<p>然后创建证书：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl req -x509 -new -key CA.key -out CA.crt -days 730</span><br></pre></td></tr></table></figure>
+
+<p>创建证书的过程当中需要填写一系列的信息，其中要留意 <strong>Common Name</strong> 需要填写服务器的域名，经过个人的测试在安卓机上即使证书是被信任的，但是 <strong>Common Name</strong> 的域名并不对应的话资源同样是无法访问的。CA.crt 已经可以发送到移动设备上面使用了。</p>
+<p>然后创建服务端使用的证书。同样先创建私钥文件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl genrsa -out server.key 2048</span><br></pre></td></tr></table></figure>
+
+<p>然后创建一个证书请求，填写与CA根证书相应的信息：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl req -new -out server.req -key server.key</span><br></pre></td></tr></table></figure>
+
+<p>利用CA证书签发服务端使用的证书：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl x509 -req -<span class="keyword">in</span> server.req -out server.crt -CAkey CA.key -CA CA.crt -days 365 -CAcreateserial -CAserial serial</span><br></pre></td></tr></table></figure>
+
+<p>最后把生成的证书替换 ssl 文件夹里面的内容，大功告成，webpack-dev-server 上的资源可以成功访问了。</p>
+<p><strong>参考</strong></p>
+<p><a target="_blank" rel="noopener" href="http://beyondvincent.com/2014/03/17/2014-03-17-five-tips-for-using-self-signed-ssl-certificates-with-ios/">在iOS上使用自签名的SSL证书</a></p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/学习笔记/">学习笔记</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/webpack/">webpack</a><a href="/tags/开发环境/">开发环境</a><a href="/tags/https/">https</a><a href="/tags/openssl/">openssl</a><a href="/tags/移动前端/">移动前端</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2015/06/22/es6-promise/"><span>谈谈 ES6 的 Promise 对象</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2015/06/22/es6-promise/" rel="bookmark">
+        <time class="entry-date published" datetime="2015-06-22T09:43:07.000Z">
+          2015-06-22
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>开篇首先设想一个日常开发常常会遇到的需求：在多个接口异步请求数据，然后利用这些数据来进行一系列的操作。一般会这样去写：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">$.<span class="title function_">ajax</span>(&#123;</span><br><span class="line">    <span class="attr">url</span>: <span class="string">&#x27;......&#x27;</span>,</span><br><span class="line">    <span class="attr">success</span>: <span class="keyword">function</span> (<span class="params">data</span>) &#123;</span><br><span class="line">        $.<span class="title function_">ajax</span>(&#123;</span><br><span class="line">            <span class="comment">// 要在第一个请求成功后才可以执行下一步</span></span><br><span class="line">            <span class="attr">url</span>: <span class="string">&#x27;......&#x27;</span>,</span><br><span class="line">            <span class="attr">success</span>: <span class="keyword">function</span> (<span class="params">data</span>) &#123;</span><br><span class="line">                 <span class="comment">// ......</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>这样的写法的原理是，当执行一些异步操作时，我们需要知道操作是否已经完成，所有当执行完成的时候会返回一个回调函数，表示操作已经完成。</p>
+<p>使用回调函数的形式理解起来并不困难，但是实际的应用当中会有以下的缺点：</p>
+<ol>
+<li>在需要多个操作的时候，会导致多个回调函数嵌套，导致代码不够直观，就是常说的 <strong>Callback Hell</strong>。</li>
+<li>如果几个异步操作之间并没有前后顺序之分（例如不需要前一个请求的结果作为后一个请求的参数）时，同样需要等待上一个操作完成再实行下一个操作。</li>
+</ol>
+<p>为了解决上述的问题，Promise 对象应运而生，在 EMCAScript 2015 当中已经成为标准。</p>
+<h2 id="什么是-Promise"><a href="#什么是-Promise" class="headerlink" title="什么是 Promise"></a>什么是 Promise</h2><p>一个 Promise 对象可以理解为一次将要执行的操作（常常被用于异步操作），使用了 Promise 对象之后可以用一种链式调用的方式来组织代码，让代码更加直观。而且由于 <code>Promise.all</code> 这样的方法存在，可以让同时执行多个操作变得简单。接下来就来简单介绍 Promise 对象。</p>
+<h3 id="resolve-和-reject"><a href="#resolve-和-reject" class="headerlink" title="resolve 和 reject"></a>resolve 和 reject</h3><p>首先来看一段使用了 Promise 对象的代码。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">helloWorld</span> (ready) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Promise</span>(<span class="keyword">function</span> (<span class="params">resolve, reject</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (ready) &#123;</span><br><span class="line">            <span class="title function_">resolve</span>(<span class="string">&quot;Hello World!&quot;</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="title function_">reject</span>(<span class="string">&quot;Good bye!&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title function_">helloWorld</span>(<span class="literal">true</span>).<span class="title function_">then</span>(<span class="keyword">function</span> (<span class="params">message</span>) &#123;</span><br><span class="line">    <span class="title function_">alert</span>(message);</span><br><span class="line">&#125;, <span class="keyword">function</span> (<span class="params">error</span>) &#123;</span><br><span class="line">    <span class="title function_">alert</span>(error);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="http://jsfiddle.net/acwong/rpswm61r/">jsFiddle</a>(请用现代浏览器打开)</p>
+<p>上面的代码实现的功能非常简单，<code>helloWord</code> 函数接受一个参数，如果为 <code>true</code> 就打印 “Hello World!”，如果为 <code>false</code> 就打印错误的信息。<code>helloWord</code> 函数返回的是一个 Promise 对象。</p>
+<p>在 Promise 对象当中有两个重要方法————<code>resolve</code> 和 <code>reject</code>。</p>
+<p><code>resolve</code> 方法可以使 Promise 对象的状态改变成成功，同时传递一个参数用于后续成功后的操作，在这个例子当中就是 <em>Hello World!</em> 字符串。</p>
+<p><code>reject</code> 方法则是将 Promise 对象的状态改变为失败，同时将错误的信息传递到后续错误处理的操作。</p>
+<h3 id="Promise-的三种状态"><a href="#Promise-的三种状态" class="headerlink" title="Promise 的三种状态"></a>Promise 的三种状态</h3><p>上面提到了 <code>resolve</code> 和 <code>reject</code> 可以改变 Promise 对象的状态，那么它究竟有哪些状态呢？</p>
+<p>Promise 对象有三种状态：</p>
+<ul>
+<li>Fulfilled 可以理解为成功的状态</li>
+<li>Rejected 可以理解为失败的状态</li>
+<li>Pending 既不是 Fulfilld 也不是 Rejected 的状态，可以理解为 Promise 对象实例创建时候的初始状态</li>
+</ul>
+<p>helloWorld 的例子中的 <code>then</code> 方法就是根据 Promise 对象的状态来确定执行的操作，resolve 时执行第一个函数（onFulfilled），reject 时执行第二个函数（onRejected）。</p>
+<h3 id="then-和-catch"><a href="#then-和-catch" class="headerlink" title="then 和 catch"></a>then 和 catch</h3><h4 id="then"><a href="#then" class="headerlink" title="then"></a>then</h4><p>helloWorld 的例子当中利用了 <code>then(onFulfilld, onRejected)</code> 方法来执行一个任务打印 “Hello World!”，在多个任务的情况下 <code>then</code> 方法同样可以用一个清晰的方式完成。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">printHello</span> (ready) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Promise</span>(<span class="keyword">function</span> (<span class="params">resolve, reject</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (ready) &#123;</span><br><span class="line">            <span class="title function_">resolve</span>(<span class="string">&quot;Hello&quot;</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="title function_">reject</span>(<span class="string">&quot;Good bye!&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">printWorld</span> () &#123;</span><br><span class="line">    <span class="title function_">alert</span>(<span class="string">&quot;World&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">printExclamation</span> () &#123;</span><br><span class="line">    <span class="title function_">alert</span>(<span class="string">&quot;!&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title function_">printHello</span>(<span class="literal">true</span>)</span><br><span class="line">    .<span class="title function_">then</span>(<span class="keyword">function</span>(<span class="params">message</span>)&#123;</span><br><span class="line">        <span class="title function_">alert</span>(message);</span><br><span class="line">    &#125;)</span><br><span class="line">    .<span class="title function_">then</span>(printWorld)</span><br><span class="line">    .<span class="title function_">then</span>(printExclamation);</span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="http://jsfiddle.net/acwong/rpswm61r/1/">jsFiddle</a></p>
+<p>上述例子通过链式调用的方式，按顺序打印出了相应的内容。<code>then</code> 可以使用链式调用的写法原因在于，每一次执行该方法时总是会返回一个 Promise 对象。另外，在 <code>then</code> onFulfilled 的函数当中的返回值，可以作为后续操作的参数，因此上面的例子也可以写成：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">printHello</span>(<span class="literal">true</span>).<span class="title function_">then</span>(<span class="keyword">function</span> (<span class="params">message</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> message;</span><br><span class="line">&#125;).<span class="title function_">then</span>(<span class="keyword">function</span> (<span class="params">message</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> message  + <span class="string">&#x27; World&#x27;</span>;</span><br><span class="line">&#125;).<span class="title function_">then</span>(<span class="keyword">function</span> (<span class="params">message</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> message + <span class="string">&#x27;!&#x27;</span>;</span><br><span class="line">&#125;).<span class="title function_">then</span>(<span class="keyword">function</span> (<span class="params">message</span>) &#123;</span><br><span class="line">    <span class="title function_">alert</span>(message);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="http://jsfiddle.net/acwong/rpswm61r/2/">jsFiddle</a></p>
+<p>同样可以打印出正确的内容。</p>
+<h4 id="catch"><a href="#catch" class="headerlink" title="catch"></a>catch</h4><p><code>catch</code> 方法是 <code>then(onFulfilled, onRejected)</code> 方法当中 <code>onRejected</code> 函数的一个简单的写法，也就是说可以写成 <code>then(fn).catch(fn)</code>，相当于 <code>then(fn).then(null, fn)</code>。使用 <code>catch</code> 的写法比一般的写法更加清晰明确。</p>
+<h3 id="Promise-all-和-Promise-race"><a href="#Promise-all-和-Promise-race" class="headerlink" title="Promise.all 和 Promise.race"></a>Promise.all 和 Promise.race</h3><p><code>Promise.all</code> 可以接收一个元素为 Promise 对象的数组作为参数，当这个数组里面所有的 Promise 对象都变为 resolve 时，该方法才会返回。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> p1 = <span class="keyword">new</span> <span class="title class_">Promise</span>(<span class="keyword">function</span> (<span class="params">resolve</span>) &#123;</span><br><span class="line">    <span class="built_in">setTimeout</span>(<span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">        <span class="title function_">resolve</span>(<span class="string">&quot;Hello&quot;</span>);</span><br><span class="line">    &#125;, <span class="number">3000</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> p2 = <span class="keyword">new</span> <span class="title class_">Promise</span>(<span class="keyword">function</span> (<span class="params">resolve</span>) &#123;</span><br><span class="line">    <span class="built_in">setTimeout</span>(<span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">        <span class="title function_">resolve</span>(<span class="string">&quot;World&quot;</span>);</span><br><span class="line">    &#125;, <span class="number">1000</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="title class_">Promise</span>.<span class="title function_">all</span>([p1, p2]).<span class="title function_">then</span>(<span class="keyword">function</span> (<span class="params">result</span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(result); <span class="comment">// [&quot;Hello&quot;, &quot;World&quot;]</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>上面的例子模拟了传输两个数据需要不同的时长，虽然 p2 的速度比 p1 要快，但是 <code>Promise.all</code> 方法会按照数组里面的顺序将结果返回。</p>
+<p>日常开发中经常会遇到这样的需求，在不同的接口请求数据然后拼合成自己所需的数据，通常这些接口之间没有关联（例如不需要前一个接口的数据作为后一个接口的参数），这个时候 <code>Promise.all</code> 方法就可以派上用场了。</p>
+<p>还有一个和 <code>Promise.all</code> 相类似的方法 <code>Promise.race</code>，它同样接收一个数组，不同的是只要该数组中的 Promise 对象的状态发生变化（无论是 resolve 还是 reject）该方法都会返回。</p>
+<h2 id="兼容性"><a href="#兼容性" class="headerlink" title="兼容性"></a>兼容性</h2><p>最后是关于 Promise 对象的兼容性问题。</p>
+<p><a target="_blank" rel="noopener" href="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2015-06_promise-can-i-use.PNG"><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2015-06_promise-can-i-use.PNG" alt="Promise 兼容性"></a></p>
+<p>在浏览器端，一些主流的浏览器都已经可以使用 Promise 对象进行开发，在 Node.js 配合 babel 也可以很方便地使用。</p>
+<p>如果要兼容旧的浏览器，建议可以寻找一些第三方的解决方案，例如 jQuery 的 <a target="_blank" rel="noopener" href="http://api.jquery.com/category/deferred-object/">$.Deferred</a>。</p>
+<p>感谢你的阅读，有不足之处请为我指出。</p>
+<p><strong>参考</strong></p>
+<p><a target="_blank" rel="noopener" href="http://liubin.github.io/promises-book/">JavaScript Promise迷你书（中文版）</a></p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/技术研究/">技术研究</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/JavaScript/">JavaScript</a><a href="/tags/ECMAScript6/">ECMAScript6</a><a href="/tags/Promise/">Promise</a><a href="/tags/异步编程/">异步编程</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2015/05/26/chrome-file-associations-debugging/"><span>Chrome 浏览器文件关联调试方法</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2015/05/26/chrome-file-associations-debugging/" rel="bookmark">
+        <time class="entry-date published" datetime="2015-05-26T06:12:27.000Z">
+          2015-05-26
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>Chrome 浏览器和 FireFox 浏览器一直是前端工程师热爱的两款浏览器。除了因为它们对新的开发标准支持程度高以外，最大的原因莫过于它们都支持强大的调试功能。</p>
+<p>相比而言，我更加习惯于使用 Chrome 浏览器进行调试，今天就介绍一个 Chrome 浏览器的一个文件关联调试方法，使调试的时候更加高效。</p>
+<h2 id="不利用文件关联的调试方式"><a href="#不利用文件关联的调试方式" class="headerlink" title="不利用文件关联的调试方式"></a>不利用文件关联的调试方式</h2><p>通过一个例子来说明。</p>
+<p>文件结构。</p>
+<p><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2015-05_hello-folder-structure.PNG" alt="文件结构"></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- hello.html --&gt;</span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">&quot;en&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>Hello World<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">&quot;stylesheet&quot;</span> <span class="attr">type</span>=<span class="string">&quot;text/css&quot;</span> <span class="attr">href</span>=<span class="string">&quot;style/hello.css&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h1</span>&gt;</span>Hello World<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* hello.css */</span></span><br><span class="line"><span class="selector-tag">h1</span> &#123;</span><br><span class="line">    <span class="attribute">font-size</span>: <span class="number">60px</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以往的调试方式，我们会在 Chrome 调试相应的 CSS 样式，然后再回到 CSS 文件当中修改相应的语句，然后返回到浏览器查看效果。这种调试方法的缺点在于，我们需要不断切换浏览器和编辑器的界面去修改代码。</p>
+<p><a target="_blank" rel="noopener" href="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2015-05_old-debugging.gif"><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2015-05_old-debugging.gif" alt="旧的调试方式"></a></p>
+<h2 id="文件关联调试方式"><a href="#文件关联调试方式" class="headerlink" title="文件关联调试方式"></a>文件关联调试方式</h2><h3 id="建立关联"><a href="#建立关联" class="headerlink" title="建立关联"></a>建立关联</h3><p>文件关联顾名思义就是在浏览器的调试功能下绑定我们本地的文件，在浏览器当中修改属性，本地的文件就会自动被修改。</p>
+<p>首先在需要调试的页面打开调试控制台，然后点击 <em>Sources</em> 的 tab，右键点击添加开发项目的目录。</p>
+<p><a target="_blank" rel="noopener" href="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2015-05_add-folder.gif"><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2015-05_add-folder.gif" alt="添加相关目录"></a></p>
+<p>然后把相应的文件建立关联，这个时候浏览器会请求重启。</p>
+<p><a target="_blank" rel="noopener" href="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2015-05_map-network.gif"><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2015-05_map-network.gif" alt="添加文件关联"></a></p>
+<p>好了，这个时候，浏览器会根据我们关联的文件，自动把相关的其他文件也作一个关联（如本例当中的 hello.css）。当在调试界面修改语句并且保存(Ctrl + s)的时候，chrom 会同步更新本地的文件。</p>
+<p><a target="_blank" rel="noopener" href="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2015-05_update-css.gif"><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2015-05_update-css.gif" alt="更新样式"></a></p>
+<h3 id="删除关联"><a href="#删除关联" class="headerlink" title="删除关联"></a>删除关联</h3><p>删除关联的方式也非常简单，只要在已经关联的文件当中右键点击 <em>Remove network mapping</em> 即可。</p>
+<p>感谢你的阅读，有不足之处请为我指出。</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/学习笔记/">学习笔记</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Chrome/">Chrome</a><a href="/tags/调试/">调试</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2015/05/20/clean-torrents-update/"><span>清洗种子脚本更新</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2015/05/20/clean-torrents-update/" rel="bookmark">
+        <time class="entry-date published" datetime="2015-05-20T08:27:19.000Z">
+          2015-05-20
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p><a target="_blank" rel="noopener" href="http://blog.acwong.org/2015/03/25/clean-your-torrent-with-node/">之前的文章</a>当中探讨了使用 Node.js 和 parse-torrent 库来清洗 BT 种子文件。发布了源码之后有些朋友给了我一些反馈意见，有些种子在清洗之后会导致种子失效。</p>
+<h2 id="种子失效的问题"><a href="#种子失效的问题" class="headerlink" title="种子失效的问题"></a>种子失效的问题</h2><p>在研究一番之后发现原来的脚本有两个问题。</p>
+<p>首先，没有分清楚单文件种子和多文件种子的区别。先看看种子文件的典型结构。</p>
+<p><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2015-03_torrent-structure.PNG"></p>
+<p>对于单文件种子，文件名的信息会直接存在 info 的 name 字段当中，而没有 files 字段。而多文件种子则会把所有文件名的信息存在 files 的 path当中。</p>
+<p>第二个问题，对于某些种子文件使用 parse-torrent 库解析之后会出现不同的解析结构，而且仅仅使用当中 info 对象来生成新的清洗后的种子也会导致未知的错误。</p>
+<h2 id="nt-库"><a href="#nt-库" class="headerlink" title="nt 库"></a>nt 库</h2><p>为了解决这两个问题，新的脚本采用了一个新的 BT 种子解析库—— <a target="_blank" rel="noopener" href="https://github.com/fent/node-torrent">node-torrent</a>。</p>
+<p>使用这个库的好处在于，它在解析各个种子文件时候返回的对象结构比较统一，使用一个 metadata 的对象处理整个种子文件。而且 node-torrent 集成了生产种子文件的 API，不需要再像之前使用 node 的文件系统去生成新的种子文件。</p>
+<h2 id="新的特性"><a href="#新的特性" class="headerlink" title="新的特性"></a>新的特性</h2><ul>
+<li>支持批量清洗整个文件夹的种子。</li>
+<li>支持批量转换整个文件夹的种子为磁力链接。</li>
+<li>添加了对 comment 和 publisher 的清洗。</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://github.com/acwong00/Clean-Torrents">新版本传送门</a>。大家继续支持哦！</p>
+<p>感谢你的阅读，有不足之处请为我指出。</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/技术实践/">技术实践</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Node-js/">Node.js</a><a href="/tags/bt种子/">bt种子</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+
+<nav class="pagination">
+  
+  <a href="/page/5/" class="pagination-prev">Prev</a>
+  
+  
+  <a href="/page/7/" class="pagination-next">Next</a>
+  
+</nav>
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2022 acwong
+    
+  </p>
+</footer>
+    
+    
+  </div>
+</div>
+</body>
+</html>

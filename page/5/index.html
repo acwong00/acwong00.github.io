@@ -1,0 +1,524 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Page 5 | ac黄的博客 | acwong&#39;s blog</title>
+
+  
+  <meta name="author" content="acwong">
+  
+
+  
+  <meta name="description" content="ac黄的博客">
+  
+
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  
+
+  <meta property="og:site_name" content="ac黄的博客"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="ac黄的博客" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">ac黄的博客</a>
+    </h1>
+    <p class="site-description">acwong&#39;s blog</p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">Home</a></li>
+        
+      
+        <li><a href="/archives">Archives</a></li>
+        
+      
+        <li><a href="/tags">Tags</a></li>
+        
+      
+        
+        <li><a href="mailto:acwong@yeah.net">Email</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2016/08/28/notes-of-javascript-patterns-iterator/"><span>JavaScript 设计模式笔记（四）—— 迭代器模式</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2016/08/28/notes-of-javascript-patterns-iterator/" rel="bookmark">
+        <time class="entry-date published" datetime="2016-08-28T06:32:57.000Z">
+          2016-08-28
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><p>迭代器模式（Iterator）的定义为：</p>
+<blockquote>
+<p>提供一种方法顺序一个聚合对象中各个元素，而又不暴露该对象内部表示。</p>
+</blockquote>
+<p>迭代器可以分为内部迭代器和外部迭代器。</p>
+<h2 id="内部迭代器"><a href="#内部迭代器" class="headerlink" title="内部迭代器"></a>内部迭代器</h2><p>内部迭代器的特点是在函数内部已经定义好迭代规则，外部只要一次初始调用。</p>
+<p>原生的 JavaScript 本身已经带有内部迭代器的实现 <code>Array.prototype.forEach</code>，而常见的内部迭代器还有 jQuery 的 <code>$.each</code> 和 lodash 的 <code>_.forEach</code>。接下来看看 jQuery 的迭代器实现。</p>
+<p><strong>jQuery</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">each</span>: <span class="keyword">function</span>(<span class="params"> obj, callback </span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> length, i = <span class="number">0</span>;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">if</span> ( <span class="title function_">isArrayLike</span>( obj ) ) &#123;</span><br><span class="line">    length = obj.<span class="property">length</span>;</span><br><span class="line">    <span class="keyword">for</span> ( ; i &lt; length; i++ ) &#123;</span><br><span class="line">      <span class="keyword">if</span> ( callback.<span class="title function_">call</span>( obj[ i ], i, obj[ i ] ) === <span class="literal">false</span> ) &#123;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">for</span> ( i <span class="keyword">in</span> obj ) &#123;</span><br><span class="line">      <span class="keyword">if</span> ( callback.<span class="title function_">call</span>( obj[ i ], i, obj[ i ] ) === <span class="literal">false</span> ) &#123;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">return</span> obj;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>迭代器不仅可以迭代数组，还可以迭代拥有 <code>length</code> 属性且可以以下标访问的类数组对象。jQuery 利用 JavaScript 的 <code>for in</code> 语句实现对对象的迭代。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> ( callback.<span class="title function_">call</span>( obj[ i ], i, obj[ i ] ) === <span class="literal">false</span> ) &#123;</span><br><span class="line">  <span class="keyword">break</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>jQuery 还通过判断回调函数返回 <code>false</code> 实现中止迭代器的方法。</p>
+<h2 id="外部迭代器"><a href="#外部迭代器" class="headerlink" title="外部迭代器"></a>外部迭代器</h2><p>外部迭代器与内部迭代器的区别在于外部迭代器必须显式请求下一个元素。</p>
+<p>这里实现一个简单的外部迭代器：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> <span class="title class_">Iterator</span> = <span class="keyword">function</span>(<span class="params">obj</span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> current = <span class="number">0</span>;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">var</span> next = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    current += <span class="number">1</span>;</span><br><span class="line">  &#125;;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">var</span> isDone = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> current &gt;= obj.<span class="property">length</span>;</span><br><span class="line">  &#125;;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">var</span> getCurrItem = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> obj[current];</span><br><span class="line">  &#125;;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    <span class="attr">next</span>: next,</span><br><span class="line">    <span class="attr">isDone</span>: isDone,</span><br><span class="line">    <span class="attr">getCurrItem</span>: getCurrItem</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> iterator = <span class="title class_">Iterator</span>([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]);</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span>(!iterator.<span class="title function_">isDone</span>()) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(iterator.<span class="title function_">getCurrItem</span>()); <span class="comment">// 顺序打印 1,2,3,4</span></span><br><span class="line">  iterator.<span class="title function_">next</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="ECMAScript6-迭代器"><a href="#ECMAScript6-迭代器" class="headerlink" title="ECMAScript6 迭代器"></a>ECMAScript6 迭代器</h3><p>ECMASCript6（下文简称 ES6）提供了 <code>for of</code> 的方法可以用于迭代实现了迭代器方法的对象，将上面的例子用 ES6 的语法改写。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Iterator</span> &#123;</span><br><span class="line">  <span class="title function_">constructor</span>(<span class="params">obj</span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">obj</span> = obj;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">current</span> = <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  [<span class="title class_">Symbol</span>.<span class="property">iterator</span>]() &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="title function_">next</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="variable language_">this</span>.<span class="property">current</span> &gt;= <span class="variable language_">this</span>.<span class="property">obj</span>.<span class="property">length</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> &#123;</span><br><span class="line">        <span class="attr">done</span>: <span class="literal">true</span>,</span><br><span class="line">        <span class="attr">value</span>: <span class="literal">undefined</span></span><br><span class="line">      &#125;;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="keyword">var</span> value = <span class="variable language_">this</span>.<span class="property">obj</span>[<span class="variable language_">this</span>.<span class="property">current</span>];</span><br><span class="line">      <span class="variable language_">this</span>.<span class="property">current</span> = <span class="variable language_">this</span>.<span class="property">current</span> + <span class="number">1</span>;</span><br><span class="line">      <span class="keyword">return</span> &#123;</span><br><span class="line">        <span class="attr">done</span>: <span class="literal">false</span>,</span><br><span class="line">        <span class="attr">value</span>: value</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> iterator = <span class="keyword">new</span> <span class="title class_">Iterator</span>([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]);</span><br><span class="line"></span><br><span class="line"><span class="comment">// console.log(iterator.next()); </span></span><br><span class="line"><span class="comment">// &#123; done: false, value: 1 &#125;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> value <span class="keyword">of</span> iterator) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(value); <span class="comment">// 顺序打印 1,2,3,4</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="ECMAScript6-生成器"><a href="#ECMAScript6-生成器" class="headerlink" title="ECMAScript6 生成器"></a>ECMAScript6 生成器</h3><p>ES6 实现迭代对象更加简单的方法是使用生成器，生成器内部已经内建有 <code>next()</code> 和 <code>[Symbol.iterator]()</code> 方法，所以可以将精力集中于循环部分。用生成器改写上面的代码：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span>* <span class="title function_">iterator</span>(<span class="params">obj</span>) &#123;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">var</span> current = <span class="number">0</span>; current &lt; obj.<span class="property">length</span>; current++) &#123;</span><br><span class="line">    <span class="keyword">yield</span> obj[current];</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> myIterator = <span class="title function_">iterator</span>([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>]);</span><br><span class="line"></span><br><span class="line"><span class="comment">// console.log(myIterator.next()); </span></span><br><span class="line"><span class="comment">// &#123; done: false, value: 1 &#125;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> value <span class="keyword">of</span> myIterator) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(value); <span class="comment">// 顺序打印 1,2,3,4</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>感谢你的阅读，有不足之处请为我指出。</p>
+<p><strong>参考</strong></p>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://book.douban.com/subject/26382780/">JavaScript设计模式与开发实践</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.infoq.com/cn/articles/es6-in-depth-iterators-and-the-for-of-loop">深入浅出ES6（二）：迭代器和for-of循环</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.infoq.com/cn/articles/es6-in-depth-generators">深入浅出ES6（三）：生成器 Generators</a></li>
+</ol>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/学习笔记/">学习笔记</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/JavaScript/">JavaScript</a><a href="/tags/ECMAScript6/">ECMAScript6</a><a href="/tags/设计模式/">设计模式</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2016/08/23/a-new-tecknology-of-prohibiting-from-selecting-text/"><span>禁止用户选择的另一种思路（兼容 IE8）</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2016/08/23/a-new-tecknology-of-prohibiting-from-selecting-text/" rel="bookmark">
+        <time class="entry-date published" datetime="2016-08-23T08:15:11.000Z">
+          2016-08-23
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="user-select"><a href="#user-select" class="headerlink" title="user-select"></a>user-select</h2><p>前端开发中常常会遇到一种需求，让某些元素的内容不能被选中，一般的做法会用 <code>user-select: none</code> 来做，由于 <code>user-select</code> 并不是标准的 CSS 属性，所以使用的时候要加上浏览器的前缀。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.disabled-select</span> &#123;</span><br><span class="line">  -ms-user-select: none;</span><br><span class="line">  -moz-user-select: none;</span><br><span class="line">  -webkit-user-select: none;</span><br><span class="line">  user-select: none;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>来看看 <code>user-select</code> 的在桌面端的兼容性：</p>
+<p><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2016-08_user-select-compatibility.png"></p>
+<p>目前依然有大部分桌面端网页需要兼容 IE8 以上的浏览器，因此使用 <code>user-select</code> 并不是一个最完美的解决方案。</p>
+<h2 id="onselectstart"><a href="#onselectstart" class="headerlink" title="onselectstart"></a>onselectstart</h2><p>禁止用户选择的另一种方法是在不想被选中的元素上面绑定 <code>onselectstart</code> 事件并且返回 <code>false</code>。这个在实际应用中并不好用，如果用户在该元素上开始选择的确可以禁止选中，但只要移出该元素外开始选择就可以无视 <code>onselectstart</code> 事件。</p>
+<h2 id="另一种思路：伪类、伪元素"><a href="#另一种思路：伪类、伪元素" class="headerlink" title="另一种思路：伪类、伪元素"></a>另一种思路：伪类、伪元素</h2><p>先上一个<a target="_blank" rel="noopener" href="https://jsfiddle.net/acwong/a1g7zaq8/">例子</a>。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;disable-select&quot;</span>&gt;</span>123<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.disable-select</span><span class="selector-pseudo">:after</span> &#123;</span><br><span class="line">  <span class="attribute">content</span>: <span class="string">&quot;456&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>由于伪类并不是 DOM 里面的一部分，所以可以发现写在伪类 <code>content</code> 里面的值不能被选中。</p>
+<p>但是一般来说页面渲染的内容不能直接写到 CSS 当中，所以这里需要一个强大的 CSS 方法 —— <code>attr</code>。</p>
+<h3 id="attr"><a href="#attr" class="headerlink" title="attr"></a>attr</h3><p>把上面的例子修改一下（<a target="_blank" rel="noopener" href="https://jsfiddle.net/acwong/a1g7zaq8/2/">传送门</a>）</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;disable-select&quot;</span> <span class="attr">data-content</span>=<span class="string">&quot;456&quot;</span>&gt;</span>123<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.disable-select</span><span class="selector-pseudo">:after</span> &#123;</span><br><span class="line">  <span class="attribute">content</span>: <span class="built_in">attr</span>(data-content);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>CSS 的 <code>attr</code> 是一个强大的方法，可以直接获取元素属性的值直接用在 CSS 当中。CSS3 标准当中 <code>attr</code> 方法可以用于所有的 CSS 属性和元素当中，但是目前还没有任何一个浏览器实现了这个标准。</p>
+<p>但应用于伪类、伪元素（IE8 只支持伪类） <code>content</code> 属性返回 <code>string</code> 类型的用法是被大部分浏览器支持。</p>
+<p><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2016-08_css-attr-compatibility.png"></p>
+<h3 id="不足"><a href="#不足" class="headerlink" title="不足"></a>不足</h3><p>虽然使用伪类加上 <code>attr</code> 可以做到兼容性较好的禁止选择效果，但是这种方法在 IE8 里面依然有一些不同的表现，使用 <code>alt + a</code> 全选等快捷键按钮依然可以选择伪类里面的内容。</p>
+<p>感谢您的阅读，有不足之处请为我指出。</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/技术研究/">技术研究</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/CSS/">CSS</a><a href="/tags/伪类/">伪类</a><a href="/tags/伪元素/">伪元素</a><a href="/tags/兼容性/">兼容性</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2016/08/16/notes-of-javascript-patterns-proxy/"><span>JavaScript 设计模式笔记（三）—— 代理模式</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2016/08/16/notes-of-javascript-patterns-proxy/" rel="bookmark">
+        <time class="entry-date published" datetime="2016-08-16T02:28:38.000Z">
+          2016-08-16
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><p>代理模式的定义为：</p>
+<blockquote>
+<p>为其他对象提供一个代理以控制对该对象的访问</p>
+</blockquote>
+<h2 id="代理模式的分类"><a href="#代理模式的分类" class="headerlink" title="代理模式的分类"></a>代理模式的分类</h2><p><strong>保护代理（Protect Proxy）</strong>可以帮助目标对象识别不同权限的访问，过滤掉不合要求的请求。</p>
+<p><strong>虚拟代理（Virtual Proxy）</strong>接受一个请求（需要创建资源消耗较大的对象），在需要创建的时候才会创建。</p>
+<p><strong>缓存代理（Cache Proxy）</strong>为一些运算结果提供暂时的存储，若下次传递的参数与之前一致，可立刻返回结果。</p>
+<h2 id="虚拟代理实例"><a href="#虚拟代理实例" class="headerlink" title="虚拟代理实例"></a>虚拟代理实例</h2><p>先在页面上定义由多个 checkbox 组成的列表。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;checkbox&quot;</span> <span class="attr">value</span>=<span class="string">&quot;1&quot;</span>&gt;</span>1</span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;checkbox&quot;</span> <span class="attr">value</span>=<span class="string">&quot;2&quot;</span>&gt;</span>2</span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;checkbox&quot;</span> <span class="attr">value</span>=<span class="string">&quot;3&quot;</span>&gt;</span>3</span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;checkbox&quot;</span> <span class="attr">value</span>=<span class="string">&quot;4&quot;</span>&gt;</span>4</span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;checkbox&quot;</span> <span class="attr">value</span>=<span class="string">&quot;5&quot;</span>&gt;</span>5</span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;checkbox&quot;</span> <span class="attr">value</span>=<span class="string">&quot;6&quot;</span>&gt;</span>6</span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;checkbox&quot;</span> <span class="attr">value</span>=<span class="string">&quot;7&quot;</span>&gt;</span>7</span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;checkbox&quot;</span> <span class="attr">value</span>=<span class="string">&quot;8&quot;</span>&gt;</span>8</span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;checkbox&quot;</span> <span class="attr">value</span>=<span class="string">&quot;9&quot;</span>&gt;</span>9</span><br></pre></td></tr></table></figure>
+
+<p>假设每点击 checkbox 就会向服务器发送一个请求，不使用代理模式的写法是：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> synchronousFile = <span class="keyword">function</span>(<span class="params">id</span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;开始同步文件，id 为：&#x27;</span> + id);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> checkbox = <span class="variable language_">document</span>.<span class="title function_">getElementsByTagName</span>(<span class="string">&#x27;input&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>, c; c = checkbox[i++];) &#123;</span><br><span class="line">  c.<span class="property">onclick</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="variable language_">this</span>.<span class="property">checked</span> === <span class="literal">true</span>) &#123;</span><br><span class="line">      <span class="title function_">synchronousFile</span>(<span class="variable language_">this</span>.<span class="property">value</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这种方法的缺点在于，如果点击过快会导致频繁的网络请求，增加服务器处理的压力。利用虚拟代理将请求方法改为收集两秒内点击的请求再延迟发送到服务器，可以大大降低服务器的压力。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">var synchronousFile = function(id) &#123;</span><br><span class="line">  console.log(&#x27;开始同步文件，id 为：&#x27; + id);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">var proxySynchronousFile = (function() &#123;</span><br><span class="line">  var cache = [];   // 保存2秒内需要请求的id</span><br><span class="line">  var timer;</span><br><span class="line">  </span><br><span class="line">  return function(id) &#123;</span><br><span class="line">    cache.push(id);</span><br><span class="line">    if (timer) &#123;</span><br><span class="line">      return;</span><br><span class="line">    &#125;</span><br><span class="line">    timer = setTimeout(function() &#123;</span><br><span class="line">      synchronousFile(cache.join(&#x27;,&#x27;));</span><br><span class="line">      clearTimeout(timer);</span><br><span class="line">      timer = null;</span><br><span class="line">      cache.length = 0;  // 清空缓存的id</span><br><span class="line">    &#125;, 2000);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)();</span><br><span class="line"></span><br><span class="line">var checkbox = document.getElementsByTagName(&#x27;input&#x27;);</span><br><span class="line"></span><br><span class="line">for (var i = 0, c; c = checkbox[i++];) &#123;</span><br><span class="line">  c.onclick = function() &#123;</span><br><span class="line">    if (this.checked === true) &#123;</span><br><span class="line">      proxySynchronousFile(this.value);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="缓存代理实例"><a href="#缓存代理实例" class="headerlink" title="缓存代理实例"></a>缓存代理实例</h2><p>一个用于求乘积的函数，如果传入相同的参数就直接返回缓存的结果。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> mult = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> a = <span class="number">1</span>;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>, l = <span class="variable language_">arguments</span>.<span class="property">length</span>; i &lt; l; i++) &#123;</span><br><span class="line">    a = a * <span class="variable language_">arguments</span>[i];</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> a;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> createProxyFactory = <span class="keyword">function</span>(<span class="params">fn</span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> cache = &#123;&#125;;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> args = <span class="title class_">Array</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">join</span>.<span class="title function_">call</span>(<span class="variable language_">arguments</span>, <span class="string">&#x27;,&#x27;</span>);</span><br><span class="line">    <span class="keyword">if</span> (args <span class="keyword">in</span> cache) &#123;</span><br><span class="line">      <span class="keyword">return</span> cache[args];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> cache[args] = fn.<span class="title function_">apply</span>(<span class="variable language_">this</span>, <span class="variable language_">arguments</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> proxyMult = <span class="title function_">createProxyFactory</span>(mult);</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">proxyMult</span>(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>)); <span class="comment">// 6</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">proxyMult</span>(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>)); <span class="comment">// 6 </span></span><br></pre></td></tr></table></figure>
+
+<h2 id="代理模式的接口一致性"><a href="#代理模式的接口一致性" class="headerlink" title="代理模式的接口一致性"></a>代理模式的接口一致性</h2><p>在 Java 语言中实现代理模式时，代理和本体对象都需要实现相同的接口，使得代理和本体可以替代使用。但在 JavaScript 当中只要代理对象和本体对象都接受相同的函数并可以正常执行，就可以被认为是具有同一接口。</p>
+<p>感谢你的阅读，有不足之处请为我指出。</p>
+<p><strong>参考</strong></p>
+<p><a target="_blank" rel="noopener" href="https://book.douban.com/subject/26382780/">JavaScript设计模式与开发实践</a></p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/学习笔记/">学习笔记</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/JavaScript/">JavaScript</a><a href="/tags/设计模式/">设计模式</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2016/08/02/notes-of-javascript-patterns-strategy/"><span>JavaScript 设计模式笔记（二）—— 策略模式</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2016/08/02/notes-of-javascript-patterns-strategy/" rel="bookmark">
+        <time class="entry-date published" datetime="2016-08-02T02:01:50.000Z">
+          2016-08-02
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><p>策略模式（Strategy）的定义为：</p>
+<blockquote>
+<p>定义一系列的算法，把它们一个个封装起来，并且使它们可以相互替换。</p>
+</blockquote>
+<p>实现策略模式需要实现两个部分：</p>
+<p>第一部分为 <strong>Strategy</strong> 类，它封装了算法的实现，并提供了计算的接口。</p>
+<p>第二部分为 <strong>Context</strong> 类，它会维持当前 Strategy 类的引用，让调用者改变策略，并将调用者的请求委托到相应的策略类。</p>
+<p>接下来用例子说明策略模式。</p>
+<h2 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h2><h3 id="面向对象方式"><a href="#面向对象方式" class="headerlink" title="面向对象方式"></a>面向对象方式</h3><p>用上班来做例子，可以选择搭地铁、巴士和骑单车。</p>
+<p>先定义 Strategy 类，封装了计算费用的方法：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> <span class="title class_">Metro</span> = <span class="keyword">function</span>(<span class="params"></span>)&#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="title class_">Metro</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">getPrice</span> = <span class="keyword">function</span>(<span class="params">distance</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> distance &gt; <span class="number">10</span> ? <span class="number">5</span> : <span class="number">2</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> <span class="title class_">Bus</span> = <span class="keyword">function</span>(<span class="params"></span>)&#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="title class_">Bus</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">getPrice</span> = <span class="keyword">function</span>(<span class="params">distance</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="number">2</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> <span class="title class_">Bike</span> = <span class="keyword">function</span>(<span class="params"></span>)&#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="title class_">Bike</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">getPrice</span> = <span class="keyword">function</span>(<span class="params">distance</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>然后定义 context 类：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> <span class="title class_">Work</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">distance</span> = <span class="literal">null</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="title class_">Work</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">setDistance</span> = <span class="keyword">function</span>(<span class="params">distance</span>) &#123;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">distance</span> = distance;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="title class_">Work</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">setStrategy</span> = <span class="keyword">function</span>(<span class="params">strategy</span>) &#123;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">strategy</span> = strategy;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="title class_">Work</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">getPrice</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="property">strategy</span>.<span class="title function_">getPrice</span>(<span class="variable language_">this</span>.<span class="property">distance</span>);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 计算费用</span></span><br><span class="line"><span class="keyword">var</span> work = <span class="keyword">new</span> <span class="title class_">Work</span>();</span><br><span class="line"></span><br><span class="line">work.<span class="title function_">setDistance</span>(<span class="number">5</span>);</span><br><span class="line">work.<span class="title function_">setStrategy</span>(<span class="keyword">new</span> <span class="title class_">Metro</span>());</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(work.<span class="title function_">getPrice</span>()); <span class="comment">// 2</span></span><br><span class="line"></span><br><span class="line">work.<span class="title function_">setStrategy</span>(<span class="keyword">new</span> <span class="title class_">Bike</span>());</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(work.<span class="title function_">getPrice</span>()); <span class="comment">// 0</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="JavaScript-方式"><a href="#JavaScript-方式" class="headerlink" title="JavaScript 方式"></a>JavaScript 方式</h3><p>由于 JavaScript 并不是严格的面向对象语言所以可以用更加简洁的方式实现。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> strategies = &#123;</span><br><span class="line">  <span class="title class_">Metro</span>: <span class="keyword">function</span>(<span class="params">distance</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> distance &gt; <span class="number">10</span> ? <span class="number">5</span> : <span class="number">2</span>;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="title class_">Bus</span>: <span class="keyword">function</span>(<span class="params">distance</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">2</span>;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="title class_">Bike</span>: <span class="keyword">function</span>(<span class="params">distance</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>同时 context 类也可以更加简单，用一个普通的函数去完成委托。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> getPrice = <span class="keyword">function</span>(<span class="params">transportation, distance</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> strategies[transportation](distance);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">getPrice</span>(<span class="string">&#x27;Bike&#x27;</span>, <span class="number">10</span>)); <span class="comment">// 0</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">getPrice</span>(<span class="string">&#x27;Bus&#x27;</span>, <span class="number">5</span>)); <span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
+
+<p>感谢你的阅读，有不足之处请为我指出。</p>
+<p><strong>参考</strong></p>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://book.douban.com/subject/26382780/">JavaScript设计模式与开发实践</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.dofactory.com/javascript/strategy-design-pattern">Strategy</a></li>
+</ol>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/学习笔记/">学习笔记</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/JavaScript/">JavaScript</a><a href="/tags/设计模式/">设计模式</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2016/07/23/notes-of-javascript-patterns-singleton/"><span>JavaScript 设计模式笔记（一）—— 单例模式</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2016/07/23/notes-of-javascript-patterns-singleton/" rel="bookmark">
+        <time class="entry-date published" datetime="2016-07-23T01:42:44.000Z">
+          2016-07-23
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>单例模式（Singleton）是一种常用的设计模式，它被定义为：</p>
+<blockquote>
+<p>保证一个类<strong>仅有一个实例</strong>，并提供一个访问它的<strong>全局访问</strong>点。</p>
+</blockquote>
+<p>实现单例模式的核心思想就是判断当前要创建的对象是否存在，若果存在则直接返回，反之则创建再返回。</p>
+<h2 id="单例模式实现方式"><a href="#单例模式实现方式" class="headerlink" title="单例模式实现方式"></a>单例模式实现方式</h2><h3 id="全局变量"><a href="#全局变量" class="headerlink" title="全局变量"></a>全局变量</h3><p>由于 JavaScript 并不是一种严格的面向对象语言，所以并不一定需要为了创建一个唯一的对象而去定义一个类。因此得到一个唯一对象最简单的方法就是在全局声明一个对象。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a = &#123;&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>在全局声明的变量是独一无二的，而且在任何位置都可以访问，所以满足了单例的两个条件。</p>
+<p>但是使用全局变量会带来命名空间污染，同时为变量管理带来困难。</p>
+<h3 id="函数方式创建"><a href="#函数方式创建" class="headerlink" title="函数方式创建"></a>函数方式创建</h3><p>避免使用全局变量，利用一个函数来创建对象。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> <span class="title class_">Singleton</span> = (<span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> instance;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">init</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="comment">/* 单例 */</span></span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">      <span class="attr">createTime</span>: <span class="keyword">new</span> <span class="title class_">Date</span>()</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    <span class="attr">getInstance</span>: <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">      <span class="keyword">if</span> (!instance) &#123;</span><br><span class="line">        instance = <span class="title function_">init</span>();</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">return</span> instance;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;)();</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> a = <span class="title class_">Singleton</span>.<span class="title function_">getInstance</span>();</span><br><span class="line"><span class="keyword">var</span> b = <span class="title class_">Singleton</span>.<span class="title function_">getInstance</span>();</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(a === b);    <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<p>利用一个闭包来保存单例是否已经创建避免使用全局变量，同时通过上述方式可以在调用 <code>getInstance</code> 方法时才创建单例对象，而非在页面加载好的时候创建，可以提高部分性能。</p>
+<h3 id="透明的单例模式"><a href="#透明的单例模式" class="headerlink" title="透明的单例模式"></a>透明的单例模式</h3><p>然而通常我们习惯像直接使用一个普通的类一样创建单例，所以可以将上面的方式进行修改。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> <span class="title class_">Singleton</span> = (<span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> instance;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">var</span> <span class="title class_">Singleton</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (!instance) &#123;</span><br><span class="line">      instance = <span class="variable language_">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> instance;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> <span class="title class_">Singleton</span>;</span><br><span class="line">&#125;)();</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> a = <span class="keyword">new</span> <span class="title class_">Singleton</span>();</span><br><span class="line"><span class="keyword">var</span> b = <span class="keyword">new</span> <span class="title class_">Singleton</span>();</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(a === b);    <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="通用惰性单例"><a href="#通用惰性单例" class="headerlink" title="通用惰性单例"></a>通用惰性单例</h3><p>想像一个场景，我们需要在页面创建一个唯一的登录弹窗，可以这样去写：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> createLoginLayer = (<span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> div;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (!div) &#123;</span><br><span class="line">      div = <span class="variable language_">document</span>.<span class="title function_">createElement</span>(<span class="string">&#x27;div&#x27;</span>);</span><br><span class="line">      div.<span class="property">innerHTML</span> = <span class="string">&#x27;我是登录弹窗&#x27;</span>;</span><br><span class="line">      div.<span class="property">style</span>.<span class="property">display</span> = <span class="string">&#x27;none&#x27;</span>;</span><br><span class="line">      <span class="variable language_">document</span>.<span class="property">body</span>.<span class="title function_">appendChild</span>(<span class="string">&#x27;div&#x27;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> div;</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure>
+
+<p>这样写已经不错了，可以在需要用到弹窗的时候才创建，但是这段代码有一个缺点，如果下次在页面想创建一个唯一的 iframe 时，几乎就要将函数照炒一遍。</p>
+<p>所以需要将不变的部分分离出来。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> getSingle = <span class="keyword">function</span>(<span class="params">fn</span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> result;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> result || (result = fn.<span class="title function_">apply</span>(<span class="variable language_">this</span>, <span class="variable language_">arguments</span>));</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> createLoginLayer = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> div = <span class="variable language_">document</span>.<span class="title function_">createElement</span>(<span class="string">&#x27;div&#x27;</span>);</span><br><span class="line">  div.<span class="property">innerHTML</span> = <span class="string">&#x27;我是登录浮窗&#x27;</span>;</span><br><span class="line">  div.<span class="property">style</span>.<span class="property">display</span> = <span class="string">&#x27;none&#x27;</span>;</span><br><span class="line">  <span class="variable language_">document</span>.<span class="property">body</span>.<span class="title function_">appendChild</span>(div);</span><br><span class="line">  <span class="keyword">return</span> div;</span><br><span class="line">￼￼&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> createIframe = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> iframe = <span class="variable language_">document</span>.<span class="title function_">createElement</span>(<span class="string">&#x27;iframe&#x27;</span>);</span><br><span class="line">  <span class="variable language_">document</span>.<span class="property">body</span>.<span class="title function_">appendChild</span>(iframe);</span><br><span class="line">  <span class="keyword">return</span> iframe;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> createSingleLoginLayer = <span class="title function_">getSingle</span>(createLoginLayer);</span><br><span class="line"><span class="keyword">var</span> createSingleIframe = <span class="title function_">getSingle</span>(createIframe);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> loginLayer = <span class="title function_">createSingleLoginLayer</span>();</span><br><span class="line"><span class="keyword">var</span> iframe = <span class="title function_">createSingleIframe</span>();</span><br></pre></td></tr></table></figure>
+
+<p>感谢您的阅读，有不足之处请在评论为我指出。</p>
+<p><strong>参考</strong></p>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://book.douban.com/subject/26382780/">JavaScript设计模式与开发实践</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.cnblogs.com/TomXu/archive/2012/02/20/2352817.html">深入理解JavaScript系列（25）：设计模式之单例模式</a></li>
+</ol>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/学习笔记/">学习笔记</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/JavaScript/">JavaScript</a><a href="/tags/设计模式/">设计模式</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+
+<nav class="pagination">
+  
+  <a href="/page/4/" class="pagination-prev">Prev</a>
+  
+  
+  <a href="/page/6/" class="pagination-next">Next</a>
+  
+</nav>
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2022 acwong
+    
+  </p>
+</footer>
+    
+    
+  </div>
+</div>
+</body>
+</html>

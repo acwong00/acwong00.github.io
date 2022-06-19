@@ -1,0 +1,172 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>JavaScript 设计模式笔记（十三） —— 状态模式 | ac黄的博客 | acwong&#39;s blog</title>
+
+  
+  <meta name="author" content="acwong">
+  
+
+  
+  <meta name="description" content="JavaScript 设计模式笔记 —— 状态模式">
+  
+
+  
+  
+  <meta name="keywords" content="JavaScript,设计模式">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="JavaScript 设计模式笔记（十三） —— 状态模式"/>
+
+  <meta property="og:site_name" content="ac黄的博客"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="ac黄的博客" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">ac黄的博客</a>
+    </h1>
+    <p class="site-description">acwong&#39;s blog</p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">Home</a></li>
+        
+      
+        <li><a href="/archives">Archives</a></li>
+        
+      
+        <li><a href="/tags">Tags</a></li>
+        
+      
+        
+        <li><a href="mailto:acwong@yeah.net">Email</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>JavaScript 设计模式笔记（十三） —— 状态模式</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2016/12/24/notes-of-javascript-patterns-state/" rel="bookmark">
+        <time class="entry-date published" datetime="2016-12-24T09:13:14.000Z">
+          2016-12-24
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><p>状态模式定义为：</p>
+<blockquote>
+<p>允许一个对象在其内部状态改变的时候改变它的行为，对象看起来似乎修改了它的类。</p>
+</blockquote>
+<p>这个定义的前半句是指将状态封装成独立的类，并将请求委托给当前的状态对象，使内部状态改变的时候可以有不同的行为。</p>
+<p>后半句指在客户的角度来看，使用的对象，在不同状态下有不同的行为，就像是从不同的类实例化而来的。</p>
+<p>对于不同状态有不同的行为，生活中最常见的就是灯光开关，同一个按钮，在不同的状态下可以进行开灯和关灯操作。现在看一个灯光按钮的例子。</p>
+<h2 id="传统面向对象写法"><a href="#传统面向对象写法" class="headerlink" title="传统面向对象写法"></a>传统面向对象写法</h2><h3 id="封装状态对象"><a href="#封装状态对象" class="headerlink" title="封装状态对象"></a>封装状态对象</h3><p>将各种状态封装成独立的类，并实现操作行为的函数。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> <span class="title class_">OffLightState</span> = <span class="keyword">function</span>(<span class="params">light</span>) &#123;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">light</span> = light;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="title class_">OffLightState</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">buttonWasPressed</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;弱光&#x27;</span>);</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">light</span>.<span class="title function_">setState</span>(<span class="variable language_">this</span>.<span class="property">light</span>.<span class="property">weakLightState</span>);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> <span class="title class_">WeakLightState</span> = <span class="keyword">function</span>(<span class="params">light</span>) &#123;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">light</span> = light;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="title class_">WeakLightState</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">buttonWasPressed</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;强光&#x27;</span>);</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">light</span>.<span class="title function_">setState</span>(<span class="variable language_">this</span>.<span class="property">light</span>.<span class="property">strongLightState</span>);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> <span class="title class_">StrongLightState</span> = <span class="keyword">function</span>(<span class="params">light</span>) &#123;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">light</span> = light;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="title class_">StrongLightState</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">buttonWasPressed</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;关灯&#x27;</span>);</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">light</span>.<span class="title function_">setState</span>(<span class="variable language_">this</span>.<span class="property">light</span>.<span class="property">offLightState</span>);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h3 id="setState-方法"><a href="#setState-方法" class="headerlink" title="setState 方法"></a>setState 方法</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Light</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">setState</span> = <span class="keyword">function</span>(<span class="params">newState</span>) &#123;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">currState</span> = newState;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Light-类"><a href="#Light-类" class="headerlink" title="Light 类"></a>Light 类</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 为每一种状态创建一个状态对象</span></span><br><span class="line"><span class="keyword">var</span> <span class="title class_">Light</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">offLightState</span> = <span class="keyword">new</span> <span class="title class_">OffLightState</span>(<span class="variable language_">this</span>);</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">weakLightState</span> = <span class="keyword">new</span> <span class="title class_">WeakLightState</span>(<span class="variable language_">this</span>);</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">strongLightState</span> = <span class="keyword">new</span> <span class="title class_">StrongLightState</span>(<span class="variable language_">this</span>);</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">button</span> = <span class="literal">null</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="title class_">Light</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">init</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> button = <span class="variable language_">document</span>.<span class="title function_">createElement</span>(<span class="string">&#x27;button&#x27;</span>);</span><br><span class="line">  <span class="keyword">var</span> self = <span class="variable language_">this</span>;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">button</span> = <span class="variable language_">document</span>.<span class="property">body</span>.<span class="title function_">appendChild</span>(button);</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">button</span>.<span class="property">innerHTML</span> = <span class="string">&#x27;开关&#x27;</span>;</span><br><span class="line"></span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">currState</span> = <span class="variable language_">this</span>.<span class="property">offLightState</span>;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">button</span>.<span class="property">onclick</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    self.<span class="property">currState</span>.<span class="title function_">buttonWasPressed</span>();</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 执行</span></span><br><span class="line"><span class="keyword">var</span> light = <span class="keyword">new</span> <span class="title class_">Light</span>();</span><br><span class="line">light.<span class="title function_">init</span>();</span><br></pre></td></tr></table></figure>
+
+<h2 id="非传统面向对象写法"><a href="#非传统面向对象写法" class="headerlink" title="非传统面向对象写法"></a>非传统面向对象写法</h2><p>JavaScript 并非严格的面向对象语言，所以对象并非一定要从类中创建而来。以下改写上述例子。</p>
+<h3 id="使用-call-方法委托"><a href="#使用-call-方法委托" class="headerlink" title="使用 call 方法委托"></a>使用 call 方法委托</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> <span class="title class_">Light</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">currState</span> = <span class="variable constant_">FSM</span>.<span class="property">off</span>; <span class="comment">// 当前状态</span></span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">button</span> = <span class="literal">null</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="title class_">Light</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">init</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> button = <span class="variable language_">document</span>.<span class="title function_">createElement</span>(<span class="string">&#x27;button&#x27;</span>);</span><br><span class="line">  <span class="keyword">var</span> self = <span class="variable language_">this</span>;</span><br><span class="line">  </span><br><span class="line">  button.<span class="property">innerHTML</span> = <span class="string">&#x27;开关&#x27;</span>;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">button</span> = <span class="variable language_">document</span>.<span class="property">body</span>.<span class="title function_">appendChild</span>(button);</span><br><span class="line">  </span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">button</span>.<span class="property">onclick</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    self.<span class="property">currState</span>.<span class="property">buttonWasPressed</span>.<span class="title function_">call</span>(self); <span class="comment">// 把请求委托给 FSM 状态机</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> <span class="variable constant_">FSM</span> = &#123;</span><br><span class="line">  <span class="attr">off</span>: &#123;</span><br><span class="line">    <span class="attr">buttonWasPressed</span>: <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;弱光&#x27;</span>);</span><br><span class="line">      <span class="variable language_">this</span>.<span class="property">currState</span> = <span class="variable constant_">FSM</span>.<span class="property">weak</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">weak</span>: &#123;</span><br><span class="line">    <span class="attr">buttonWasPressed</span>: <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;强光&#x27;</span>);</span><br><span class="line">      <span class="variable language_">this</span>.<span class="property">currState</span> = <span class="variable constant_">FSM</span>.<span class="property">strong</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">strong</span>: &#123;</span><br><span class="line">    <span class="attr">buttonWasPressed</span>: <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;关灯&#x27;</span>);</span><br><span class="line">      <span class="variable language_">this</span>.<span class="property">currState</span> = <span class="variable constant_">FSM</span>.<span class="property">off</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 执行</span></span><br><span class="line"><span class="keyword">var</span> light = <span class="keyword">new</span> <span class="title class_">Light</span>();</span><br><span class="line">light.<span class="title function_">init</span>();</span><br></pre></td></tr></table></figure>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>状态模式的优点：将状态行为封装到一个类里面，可以方便地添加新状态；允许状态转换逻辑与状态对象合成一体，而不是某一个巨大的条件语句块；将转换状态规则封装到类当中。</p>
+<p>状态模式的缺点：增加了对象数量；对“开闭原则”支持不佳，添加状态的时候同时要修改其他状态里面的转换规则。</p>
+<p><strong>参考</strong></p>
+<p><a target="_blank" rel="noopener" href="https://book.douban.com/subject/26382780/">JavaScript设计模式与开发实践</a></p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/学习笔记/">学习笔记</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/JavaScript/">JavaScript</a><a href="/tags/设计模式/">设计模式</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2022 acwong
+    
+  </p>
+</footer>
+    
+    
+  </div>
+</div>
+</body>
+</html>

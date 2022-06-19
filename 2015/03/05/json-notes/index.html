@@ -1,0 +1,219 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>JSON 笔记 | ac黄的博客 | acwong&#39;s blog</title>
+
+  
+  <meta name="author" content="acwong">
+  
+
+  
+  <meta name="description" content="有关 JSON 知识的总结。">
+  
+
+  
+  
+  <meta name="keywords" content="JavaScript,JSON,JavaScript对象">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="JSON 笔记"/>
+
+  <meta property="og:site_name" content="ac黄的博客"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="ac黄的博客" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">ac黄的博客</a>
+    </h1>
+    <p class="site-description">acwong&#39;s blog</p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">Home</a></li>
+        
+      
+        <li><a href="/archives">Archives</a></li>
+        
+      
+        <li><a href="/tags">Tags</a></li>
+        
+      
+        
+        <li><a href="mailto:acwong@yeah.net">Email</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>JSON 笔记</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2015/03/05/json-notes/" rel="bookmark">
+        <time class="entry-date published" datetime="2015-03-05T06:27:31.000Z">
+          2015-03-05
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>JSON 全称为 JavaScript Object Notation(JavaScript对象表示法)，它利用与 JavaScript 对象相似的表示方法来表示数据。虽然 JSON 脱胎于 JavaScript，但是 JSON 并不属于 JavaScript 的一部分，很多的语言都可以解析和序列化 JSON。</p>
+<h2 id="JSON-语法"><a href="#JSON-语法" class="headerlink" title="JSON 语法"></a>JSON 语法</h2><p>JSON 可以表示以下三种类型的值：</p>
+<ul>
+<li>简单值</li>
+<li>对象</li>
+<li>数组</li>
+</ul>
+<p><strong>简单值</strong>包括字符串、数值、布尔值和 null。<strong>但是要注意的是 JSON 不能表示 JavaScript 当中的一种特殊值 undefinde</strong>。</p>
+<p><strong>对象</strong>，与 JavaScript对象相似，表示无序的键值对。键值对中的值可以是简单值，也可以是对象或数组。</p>
+<p><strong>数组</strong>，与 JavaScript数组相似，表示一组有序的值，数组的值可以是简单值，也可以是对象或数组。</p>
+<p>举个例子：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;name&quot;: &quot;acwong&quot;,</span><br><span class="line">    &quot;age&quot;: 23,</span><br><span class="line">    &quot;address&quot;: &#123;</span><br><span class="line">        &quot;province&quot;: &quot;GuangDong&quot;,</span><br><span class="line">        &quot;city&quot;: &quot;GuangZhou&quot;</span><br><span class="line">    &#125;,</span><br><span class="line">    &quot;friends&quot;: [&quot;bc&quot;, &quot;cc&quot;, &quot;dc&quot;],</span><br><span class="line">    &quot;blog&quot;: &quot;http://acwong.org&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>需要注意的是，也是与 JavaScript对象表示方法的不同之处，JSON 字符串当中对象的属性必须加上<strong>双引号</strong>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">// 正确示范</span><br><span class="line">&#123;</span><br><span class="line">    &quot;name&quot;: &quot;acwong&quot;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 错误示范</span><br><span class="line">&#123;</span><br><span class="line">    name: &quot;acwong&quot;</span><br><span class="line">&#125;</span><br><span class="line">// 单引号也是错误的</span><br><span class="line">&#123;</span><br><span class="line">    &#x27;name&#x27;: &#x27;acwong&#x27;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="JavaScript-与-JSON"><a href="#JavaScript-与-JSON" class="headerlink" title="JavaScript 与 JSON"></a>JavaScript 与 JSON</h2><h3 id="JSON-对象"><a href="#JSON-对象" class="headerlink" title="JSON 对象"></a>JSON 对象</h3><p>在 JSON 诞生之初 JavaScript 处理 JSON 的方式基本就靠 <code>eval()</code> 函数。</p>
+<p><code>eval()</code> 函数可以解析 JSON 然后返回 JavaScript 数组。但是由于 <code>eval()</code> 存在安全的风险，因此在 EMCAScript 5 开始有了一个新的全局对象 <strong>JSON对象</strong>用来处理 JSON。</p>
+<h3 id="序列化-JSON"><a href="#序列化-JSON" class="headerlink" title="序列化 JSON"></a>序列化 JSON</h3><p>JavaScript 使用 JSON对象的 <code>stringify()</code> 方法来序列化 JSON。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> person = &#123;</span><br><span class="line">    <span class="attr">name</span>: <span class="string">&quot;acwong&quot;</span>,</span><br><span class="line">    <span class="attr">age</span>: <span class="number">23</span>,</span><br><span class="line">    <span class="attr">address</span>: &#123;</span><br><span class="line">        <span class="attr">province</span>: <span class="string">&quot;GuangDong&quot;</span>,</span><br><span class="line">        <span class="attr">city</span>: <span class="string">&quot;GuangZhou&quot;</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">friends</span>: [<span class="string">&quot;bc&quot;</span>, <span class="string">&quot;cc&quot;</span>, <span class="string">&quot;dc&quot;</span>],</span><br><span class="line">    <span class="attr">blog</span>: <span class="string">&quot;http://acwong.org&quot;</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> jsonText = <span class="title class_">JSON</span>.<span class="title function_">stringify</span>(person);</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(jsonText);</span><br><span class="line"><span class="comment">// &#123;&quot;name&quot;:&quot;acwong&quot;,&quot;age&quot;:23,&quot;address&quot;:&#123;&quot;province&quot;:&quot;GuangDong&quot;,&quot;city&quot;:&quot;GuangZhou&quot;&#125;,&quot;friends&quot;:[&quot;bc&quot;,&quot;cc&quot;,&quot;dc&quot;],&quot;blog&quot;:&quot;http://acwong.org&quot;&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><code>JSON.stringify()</code> 方法在默认情况下输出的 JSON字符串不包含空格字符和缩进。</p>
+<p>如果 JavaScript对象当中包含不被 JSON 支持的类型（如：undefined，函数）会自动被 <code>stringigy()</code> 方法忽略。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> person = &#123;</span><br><span class="line">    <span class="attr">name</span>: <span class="string">&quot;acwong&quot;</span>,</span><br><span class="line">    <span class="attr">blog</span>: <span class="literal">undefined</span>,</span><br><span class="line">    <span class="attr">todo</span>: <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;sleep&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> jsonText = <span class="title class_">JSON</span>.<span class="title function_">stringify</span>(person);</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(jsonText);</span><br><span class="line"><span class="comment">// &#123;&quot;name&quot;:&quot;acwong&quot;&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><code>JSON.stringify()</code> 方法包含三个参数，第一个参数就是要序列化的 JavaScript对象。第二个参数完成<strong>过滤</strong>输出结果功能。第三个参数控制输出字符串的<strong>缩进</strong>。</p>
+<h4 id="过滤输出结果"><a href="#过滤输出结果" class="headerlink" title="过滤输出结果"></a>过滤输出结果</h4><p>第二个参数完成过滤输出结果功能。</p>
+<p>当传入的第二个参数为<strong>数组</strong>时，输出的 JSON字符串只会保留包含在该数组里面的属性值。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">var person = &#123;</span><br><span class="line">    name: &quot;acwong&quot;,</span><br><span class="line">    age: 23,</span><br><span class="line">    address: &#123;</span><br><span class="line">        province: &quot;GuangDong&quot;,</span><br><span class="line">        city: &quot;GuangZhou&quot;</span><br><span class="line">    &#125;,</span><br><span class="line">    friends: [&quot;bc&quot;, &quot;cc&quot;, &quot;dc&quot;],</span><br><span class="line">    blog: &quot;http://acwong.org&quot;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">var jsonText = JSON.stringify(person, [&quot;name&quot;,&quot;blog&quot;]);</span><br><span class="line"></span><br><span class="line">console.log(jsonText);</span><br><span class="line">// &#123;&quot;name&quot;:&quot;acwong&quot;,&quot;blog&quot;:&quot;http://acwong.org&quot;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当传入的第二个参数为<strong>函数</strong>，该函数包含两个参数，分别是 JavaScript对象的属性名和属性值。输出的 JSON字符串会受到该函数的返回值影响。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 省略 person对象</span></span><br><span class="line"><span class="keyword">var</span> jsonText = <span class="title class_">JSON</span>.<span class="title function_">stringify</span>(person, <span class="keyword">function</span>(<span class="params">key, value</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (key === <span class="string">&quot;name&quot;</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;ac&quot;</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (key === <span class="string">&quot;age&quot;</span>) &#123;</span><br><span class="line">        value++;</span><br><span class="line">        <span class="keyword">return</span> value;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> value;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(jsonText);</span><br><span class="line"><span class="comment">// &#123;&quot;name&quot;:&quot;ac&quot;,&quot;age&quot;:24,&quot;address&quot;:&#123;&quot;province&quot;:&quot;GuangDong&quot;,&quot;city&quot;:&quot;GuangZhou&quot;&#125;,&quot;friends&quot;:[&quot;bc&quot;,&quot;cc&quot;,&quot;dc&quot;],&quot;blog&quot;:&quot;http://acwong.org&quot;&#125;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="控制缩进"><a href="#控制缩进" class="headerlink" title="控制缩进"></a>控制缩进</h4><p>第三个参数控制输出字符串的<strong>缩进</strong>。</p>
+<p>当第三个参数传入一个<strong>数值</strong>的时候，表示输出字符串缩进的空格数。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 省略 person对象</span></span><br><span class="line"><span class="keyword">var</span> jsonText = <span class="title class_">JSON</span>.<span class="title function_">stringify</span>(person, <span class="literal">null</span>, <span class="number">2</span>);</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(jsonText);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 输出</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">&quot;name&quot;</span>: <span class="string">&quot;acwong&quot;</span>,</span><br><span class="line">  <span class="string">&quot;age&quot;</span>: <span class="number">23</span>,</span><br><span class="line">  <span class="string">&quot;address&quot;</span>: &#123;</span><br><span class="line">    <span class="string">&quot;province&quot;</span>: <span class="string">&quot;GuangDong&quot;</span>,</span><br><span class="line">    <span class="string">&quot;city&quot;</span>: <span class="string">&quot;GuangZhou&quot;</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="string">&quot;friends&quot;</span>: [</span><br><span class="line">    <span class="string">&quot;bc&quot;</span>,</span><br><span class="line">    <span class="string">&quot;cc&quot;</span>,</span><br><span class="line">    <span class="string">&quot;dc&quot;</span></span><br><span class="line">  ],</span><br><span class="line">  <span class="string">&quot;blog&quot;</span>: <span class="string">&quot;http://acwong.org&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当第三个参数传入一个<strong>字符串</strong>时，输出结果会以该字符串作为缩进符号。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 省略 person对象</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用 * 号缩进</span></span><br><span class="line"><span class="keyword">var</span> jsonText = <span class="title class_">JSON</span>.<span class="title function_">stringify</span>(person, <span class="literal">null</span>, <span class="string">&quot;*&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(jsonText);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 输出</span></span><br><span class="line"> &#123;</span><br><span class="line">*<span class="string">&quot;name&quot;</span>: <span class="string">&quot;acwong&quot;</span>,</span><br><span class="line">*<span class="string">&quot;age&quot;</span>: <span class="number">23</span>,</span><br><span class="line">*<span class="string">&quot;address&quot;</span>: &#123;</span><br><span class="line">**<span class="string">&quot;province&quot;</span>: <span class="string">&quot;GuangDong&quot;</span>,</span><br><span class="line">**<span class="string">&quot;city&quot;</span>: <span class="string">&quot;GuangZhou&quot;</span></span><br><span class="line">*&#125;,</span><br><span class="line">*<span class="string">&quot;friends&quot;</span>: [</span><br><span class="line">**<span class="string">&quot;bc&quot;</span>,</span><br><span class="line">**<span class="string">&quot;cc&quot;</span>,</span><br><span class="line">**<span class="string">&quot;dc&quot;</span></span><br><span class="line">*],</span><br><span class="line">*<span class="string">&quot;blog&quot;</span>: <span class="string">&quot;http://acwong.org&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 省略 person对象</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用制表符(Tab)缩进</span></span><br><span class="line"><span class="keyword">var</span> jsonText = <span class="title class_">JSON</span>.<span class="title function_">stringify</span>(person, <span class="literal">null</span>, <span class="string">&quot;\t&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(jsonText);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 输出</span></span><br><span class="line"> &#123;</span><br><span class="line">	<span class="string">&quot;name&quot;</span>: <span class="string">&quot;acwong&quot;</span>,</span><br><span class="line">	<span class="string">&quot;age&quot;</span>: <span class="number">23</span>,</span><br><span class="line">	<span class="string">&quot;address&quot;</span>: &#123;</span><br><span class="line">		<span class="string">&quot;province&quot;</span>: <span class="string">&quot;GuangDong&quot;</span>,</span><br><span class="line">		<span class="string">&quot;city&quot;</span>: <span class="string">&quot;GuangZhou&quot;</span></span><br><span class="line">	&#125;,</span><br><span class="line">	<span class="string">&quot;friends&quot;</span>: [</span><br><span class="line">		<span class="string">&quot;bc&quot;</span>,</span><br><span class="line">		<span class="string">&quot;cc&quot;</span>,</span><br><span class="line">		<span class="string">&quot;dc&quot;</span></span><br><span class="line">	],</span><br><span class="line">	<span class="string">&quot;blog&quot;</span>: <span class="string">&quot;http://acwong.org&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="自定义序列化"><a href="#自定义序列化" class="headerlink" title="自定义序列化"></a>自定义序列化</h4><p>如果上述的方法都不能满足要求，还可以在要序列化的 JavaScript对象当中加入 <code>toJSON()</code> 函数，可以返回任何想返回的值。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> person = &#123;</span><br><span class="line">    <span class="attr">name</span>: <span class="string">&quot;acwong&quot;</span>,</span><br><span class="line">    <span class="attr">age</span>: <span class="number">23</span>,</span><br><span class="line">    <span class="attr">address</span>: &#123;</span><br><span class="line">        <span class="attr">province</span>: <span class="string">&quot;GuangDong&quot;</span>,</span><br><span class="line">        <span class="attr">city</span>: <span class="string">&quot;GuangZhou&quot;</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">friends</span>: [<span class="string">&quot;bc&quot;</span>, <span class="string">&quot;cc&quot;</span>, <span class="string">&quot;dc&quot;</span>],</span><br><span class="line">    <span class="attr">blog</span>: <span class="string">&quot;http://acwong.org&quot;</span>,</span><br><span class="line">    <span class="attr">toJSON</span>: <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">name</span> = <span class="string">&quot;ac&quot;</span>;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;yoyo &quot;</span> + <span class="variable language_">this</span>.<span class="property">name</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> jsonText = <span class="title class_">JSON</span>.<span class="title function_">stringify</span>(person);</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(jsonText);</span><br><span class="line"><span class="comment">//  &quot;yoyo ac&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="解析-JSON"><a href="#解析-JSON" class="headerlink" title="解析 JSON"></a>解析 JSON</h3><p>JavaScript 使用 JSON对象的 <code>parse()</code> 方法来解析 JSON。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">var jsonText = &#x27;&#123;&quot;name&quot;:&quot;acwong&quot;,&quot;age&quot;:23,&quot;address&quot;:&#123;&quot;province&quot;:&quot;GuangDong&quot;,&quot;city&quot;:&quot;GuangZhou&quot;&#125;,&quot;friends&quot;:[&quot;bc&quot;,&quot;cc&quot;,&quot;dc&quot;],&quot;blog&quot;:&quot;http://acwong.org&quot;&#125;&#x27;;</span><br><span class="line"></span><br><span class="line">var person = JSON.parse(jsonText);</span><br><span class="line"></span><br><span class="line">console.log(person);</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2015-03_parse-json.PNG" alt="parse-json"></p>
+<p><code>JSON.parse()</code> 同样可以传入一个函数作为参数，对键值对进行操作。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">var jsonText = &#x27;&#123;&quot;name&quot;:&quot;acwong&quot;,&quot;age&quot;:23,&quot;blog&quot;:&quot;http://acwong.org&quot;&#125;&#x27;;</span><br><span class="line"></span><br><span class="line">var person = JSON.parse(jsonText);</span><br><span class="line"></span><br><span class="line">console.log(person);</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2015-03_parse-json-with-fun.PNG" alt="parse-json-with-fun"></p>
+<h2 id="JSON-的好处"><a href="#JSON-的好处" class="headerlink" title="JSON 的好处"></a>JSON 的好处</h2><ol>
+<li>与 XML 一样可以表示复杂的数据结构。</li>
+<li>比 XML 轻量得多。</li>
+<li>语法简单易懂。</li>
+<li>由于其轻量级，在传输的时候占用的资源相对较少。</li>
+</ol>
+<p>感谢您的阅读，有不足之处请为我指出。</p>
+<p><strong>参考</strong></p>
+<p><a target="_blank" rel="noopener" href="http://book.douban.com/subject/10546125/">JavaScript高级程序设计(第3版)</a></p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/学习笔记/">学习笔记</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/JavaScript/">JavaScript</a><a href="/tags/JSON/">JSON</a><a href="/tags/JavaScript对象/">JavaScript对象</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2022 acwong
+    
+  </p>
+</footer>
+    
+    
+  </div>
+</div>
+</body>
+</html>

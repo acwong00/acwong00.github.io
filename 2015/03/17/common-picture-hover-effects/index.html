@@ -1,0 +1,203 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>一些常见的图片 hover 效果 | ac黄的博客 | acwong&#39;s blog</title>
+
+  
+  <meta name="author" content="acwong">
+  
+
+  
+  <meta name="description" content="介绍一些常见的图片 hover 效果以及它们的实现方式。">
+  
+
+  
+  
+  <meta name="keywords" content="CSS,CSS3,CSS3动画">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="一些常见的图片 hover 效果"/>
+
+  <meta property="og:site_name" content="ac黄的博客"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="ac黄的博客" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">ac黄的博客</a>
+    </h1>
+    <p class="site-description">acwong&#39;s blog</p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">Home</a></li>
+        
+      
+        <li><a href="/archives">Archives</a></li>
+        
+      
+        <li><a href="/tags">Tags</a></li>
+        
+      
+        
+        <li><a href="mailto:acwong@yeah.net">Email</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>一些常见的图片 hover 效果</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2015/03/17/common-picture-hover-effects/" rel="bookmark">
+        <time class="entry-date published" datetime="2015-03-17T04:08:31.000Z">
+          2015-03-17
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>图片 hover 效果是指鼠标移上图片时候产生的一些交互效果，在各大网站上都非常常见，这里介绍一下一些常见的图片 hover 效果以及它们的实现方式。</p>
+<h2 id="图片透明度改变效果"><a href="#图片透明度改变效果" class="headerlink" title="图片透明度改变效果"></a>图片透明度改变效果</h2><p>改变透明度是我们最常见的图片 hover 效果，实现方式也非常简单，只要鼠标移动到图片上的时候改变它的透明度就可以了。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 减少透明度 */</span></span><br><span class="line"><span class="selector-id">#pic1</span> &#123;</span><br><span class="line">    <span class="attribute">opacity</span>: <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-id">#pic1</span><span class="selector-pseudo">:hover</span> &#123;</span><br><span class="line">    <span class="attribute">opacity</span>: <span class="number">0.5</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 增加透明度 */</span></span><br><span class="line"><span class="selector-id">#pic2</span> &#123;</span><br><span class="line">    <span class="attribute">opacity</span>: <span class="number">0.5</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-id">#pic1</span><span class="selector-pseudo">:hover</span> &#123;</span><br><span class="line">    <span class="attribute">opacity</span>: <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>还可以加上一些过渡效果。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-id">#pic1</span>, <span class="selector-id">#pic2</span> &#123;</span><br><span class="line">    <span class="attribute">transition</span>: <span class="number">1s</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://jsfiddle.net/acwong/nrwkfq91/">看例子</a></p>
+<p>网站实例：<a target="_blank" rel="noopener" href="http://huaban.com/">花瓣网</a></p>
+<h2 id="遮罩层效果"><a href="#遮罩层效果" class="headerlink" title="遮罩层效果"></a>遮罩层效果</h2><p>第二种效果也非常常见，就是在图片上面添加一层遮罩层，鼠标移动到图片上方时实现各种效果。</p>
+<h3 id="遮罩层透明度改变效果"><a href="#遮罩层透明度改变效果" class="headerlink" title="遮罩层透明度改变效果"></a>遮罩层透明度改变效果</h3><p>与上面改变透明度的方法类似，但是这里不是直接改变图片的透明度，而是在图片外添加一个透明的遮罩层。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 加上遮罩层 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;pic&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2015-03_example-picture.jpg&quot;</span> <span class="attr">id</span>=<span class="string">&quot;pic1&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;mask&quot;</span> <span class="attr">id</span>=<span class="string">&quot;mask1&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.pic</span> &#123;</span><br><span class="line">    <span class="attribute">position</span>: relative;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.mask</span> &#123;</span><br><span class="line">    <span class="attribute">position</span>: absolute;</span><br><span class="line">    <span class="attribute">top</span>: <span class="number">0</span>;</span><br><span class="line">    <span class="attribute">left</span>: <span class="number">0</span>;</span><br><span class="line">    <span class="attribute">width</span>: <span class="number">100%</span>;</span><br><span class="line">    <span class="attribute">height</span>: <span class="number">100%</span>;</span><br><span class="line">    <span class="attribute">transition</span>: .<span class="number">5s</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后就可以添加不同的效果。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-id">#mask1</span> &#123;</span><br><span class="line">    <span class="attribute">background-color</span>: chocolate;</span><br><span class="line">    <span class="attribute">opacity</span>:<span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.pic</span><span class="selector-pseudo">:hover</span> <span class="selector-id">#mask1</span> &#123;</span><br><span class="line">    <span class="attribute">opacity</span>: <span class="number">0.3</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-id">#mask2</span> &#123;</span><br><span class="line">     <span class="attribute">background-color</span>:black;</span><br><span class="line">     <span class="attribute">opacity</span>:<span class="number">0.3</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.pic</span><span class="selector-pseudo">:hover</span> <span class="selector-id">#mask2</span> &#123;</span><br><span class="line">     <span class="attribute">opacity</span>: <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 渐变效果 */</span></span><br><span class="line"><span class="selector-id">#mask3</span> &#123;</span><br><span class="line">    <span class="attribute">background</span>:<span class="built_in">linear-gradient</span>(top,orange,chocolate);</span><br><span class="line">    <span class="attribute">background</span>:<span class="built_in">-webkit-linear-gradient</span>(top,orange,chocolate);</span><br><span class="line">    <span class="attribute">background</span>:<span class="built_in">-moz-linear-gradient</span>(top,orange,chocolate);</span><br><span class="line">    <span class="attribute">opacity</span>:<span class="number">0.5</span> </span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.pic</span><span class="selector-pseudo">:hover</span> <span class="selector-id">#mask3</span> &#123;</span><br><span class="line">     <span class="attribute">opacity</span>: <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://jsfiddle.net/acwong/nrwkfq91/1/">看例子</a></p>
+<p>网站实例：<a target="_blank" rel="noopener" href="http://www.lofter.com/">LOFTER</a>、<a target="_blank" rel="noopener" href="http://www.36kr.com/">36氪</a></p>
+<h3 id="遮罩层位移效果"><a href="#遮罩层位移效果" class="headerlink" title="遮罩层位移效果"></a>遮罩层位移效果</h3><p>第二种遮罩层显示效果是遮罩层从各个方向移动到图片上方，此时遮罩层通常会承载对图片补充文字说明的功能。常见与内容、资讯、新闻网站。</p>
+<p>首先设置外层元素 <code>overflow:hidden</code> 暂时隐藏或隐藏一部分遮罩层，当鼠标移到图片上时候才以各种形式出现。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.pic</span> &#123;</span><br><span class="line">    <span class="attribute">position</span>: relative;</span><br><span class="line">    <span class="attribute">width</span>: <span class="number">256px</span>;</span><br><span class="line">    <span class="attribute">height</span>: <span class="number">256px</span>;</span><br><span class="line">    <span class="attribute">overflow</span>: hidden;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.mask</span> &#123;</span><br><span class="line">    <span class="attribute">position</span>: absolute;</span><br><span class="line">    <span class="attribute">width</span>: <span class="number">100%</span>;</span><br><span class="line">    <span class="attribute">height</span>: <span class="number">100%</span>;</span><br><span class="line">    <span class="attribute">opacity</span>:<span class="number">0.5</span>;</span><br><span class="line">    <span class="attribute">transition</span>: .<span class="number">5s</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>添加各种效果。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-id">#mask1</span> &#123;</span><br><span class="line">    <span class="attribute">background-color</span>:chocolate;</span><br><span class="line">    <span class="attribute">left</span>:<span class="number">0</span>;<span class="attribute">top</span>:<span class="number">256px</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.pic</span><span class="selector-pseudo">:hover</span> <span class="selector-id">#mask1</span> &#123;</span><br><span class="line">    <span class="attribute">top</span>:<span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-id">#mask2</span> &#123;</span><br><span class="line">    <span class="attribute">background-color</span>:black;</span><br><span class="line">    <span class="attribute">left</span>:<span class="number">0</span>;</span><br><span class="line">    <span class="attribute">top</span>:<span class="number">200px</span>;</span><br><span class="line">    <span class="attribute">color</span>:white;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.pic</span><span class="selector-pseudo">:hover</span> <span class="selector-id">#mask2</span> &#123;</span><br><span class="line">    <span class="attribute">top</span>:<span class="number">100px</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>还可以配合 JavaScript做出更加复杂的动画效果。</p>
+<p>仿照<a target="_blank" rel="noopener" href="http://news.baidu.com/#media">百度新闻</a>做一个鼠标从不同方向进入图片显示不同效果的功能。</p>
+<p>首先将遮罩层隐藏。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.pic</span>&#123;</span><br><span class="line">    <span class="attribute">position</span>:relative;</span><br><span class="line">    <span class="attribute">width</span>:<span class="number">256px</span>;</span><br><span class="line">    <span class="attribute">height</span>:<span class="number">256px</span>;</span><br><span class="line">    <span class="attribute">overflow</span>:hidden;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.mask</span>&#123;</span><br><span class="line">    <span class="attribute">position</span>:absolute;</span><br><span class="line">    <span class="attribute">width</span>:<span class="number">100%</span>;</span><br><span class="line">    <span class="attribute">height</span>:<span class="number">100%</span>;</span><br><span class="line">    <span class="attribute">background-color</span>:chocolate;</span><br><span class="line">    <span class="attribute">opacity</span>:<span class="number">0.5</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-id">#mask1</span> &#123;</span><br><span class="line">    <span class="attribute">top</span>:<span class="number">256px</span>;</span><br><span class="line">    <span class="attribute">left</span>:<span class="number">256px</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>判断鼠标进入图片的方向（算法参考<a target="_blank" rel="noopener" href="http://stackoverflow.com/questions/3627042/jquery-animation-for-a-hover-with-mouse-direction">stackoverflow的一个回答</a>）。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">getDirection</span>(<span class="params">element, event</span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> w = element.<span class="property">offsetWidth</span>,</span><br><span class="line">        h = element.<span class="property">offsetHeight</span>,</span><br><span class="line">        x = (event.<span class="property">pageX</span> - element.<span class="property">offsetLeft</span> - (w/<span class="number">2</span>)) * (w &gt; h ? (h/w) : <span class="number">1</span>),</span><br><span class="line">        y = (event.<span class="property">pageY</span> - element.<span class="property">offsetTop</span> - (h/<span class="number">2</span>)) * (h &gt; w ? (w/h) : <span class="number">1</span>),</span><br><span class="line">        direction = <span class="title class_">Math</span>.<span class="title function_">round</span>((((<span class="title class_">Math</span>.<span class="title function_">atan2</span>(y, x) * (<span class="number">180</span>/<span class="title class_">Math</span>.<span class="property">PI</span>)) + <span class="number">180</span>) / <span class="number">90</span>) + <span class="number">3</span>) % <span class="number">4</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> direction</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个函数会返回0、1、2、3分别代表上、右、下、左四个方向。</p>
+<p>然后写动画的代码。利用 jQuery库。</p>
+<p><a target="_blank" rel="noopener" href="https://jsfiddle.net/acwong/nrwkfq91/2/">看完整代码</a></p>
+<p>网站实例：<a target="_blank" rel="noopener" href="http://news.baidu.com/">百度新闻</a></p>
+<h2 id="图片变换效果"><a href="#图片变换效果" class="headerlink" title="图片变换效果"></a>图片变换效果</h2><p>图片变换最常见于电商类网站。鼠标移动到图片上的时候通常会出现位移、大小、旋转等变换方式。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">img</span> &#123;</span><br><span class="line">    <span class="attribute">transition</span>: all <span class="number">1s</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-id">#img1</span><span class="selector-pseudo">:hover</span> &#123;</span><br><span class="line">    <span class="attribute">transform</span>: <span class="built_in">translateX</span>(<span class="number">20px</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-id">#img2</span><span class="selector-pseudo">:hover</span> &#123;</span><br><span class="line">    <span class="attribute">transform</span>: <span class="built_in">scale</span>(<span class="number">1.2</span>,<span class="number">1.2</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-id">#img3</span><span class="selector-pseudo">:hover</span> &#123;</span><br><span class="line">    <span class="attribute">transform</span>: <span class="built_in">rotate</span>(<span class="number">360deg</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>还可以做更加复杂的 3D 变换。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;pic&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2015-03_example-picture.jpg&quot;</span> <span class="attr">id</span>=<span class="string">&quot;img4&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;info&quot;</span>&gt;</span>Hello<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.pic</span> &#123;</span><br><span class="line">    <span class="attribute">position</span>:relative;</span><br><span class="line">    <span class="attribute">width</span>:<span class="number">256px</span>;</span><br><span class="line">    <span class="attribute">height</span>:<span class="number">256px</span>;</span><br><span class="line">    <span class="attribute">transform-style</span>: preserve-<span class="number">3</span>d;</span><br><span class="line">    <span class="attribute">transition</span>: transform <span class="number">1s</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.pic</span><span class="selector-pseudo">:hover</span> &#123;</span><br><span class="line">    <span class="attribute">transform</span>: <span class="built_in">translateZ</span>(-<span class="number">128px</span>) <span class="built_in">rotateX</span>(<span class="number">90deg</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.pic</span> <span class="selector-tag">img</span> &#123;</span><br><span class="line">    <span class="attribute">transform</span>: <span class="built_in">translateZ</span>(<span class="number">128px</span>);</span><br><span class="line">    <span class="attribute">transition</span>: all <span class="number">1s</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.info</span> &#123;</span><br><span class="line">    <span class="attribute">position</span>:absolute;</span><br><span class="line">    <span class="attribute">top</span>:<span class="number">0</span>;</span><br><span class="line">    <span class="attribute">left</span>:<span class="number">0</span>;</span><br><span class="line">    <span class="attribute">width</span>:<span class="number">100%</span>;</span><br><span class="line">    <span class="attribute">height</span>:<span class="number">100%</span>;</span><br><span class="line">    <span class="attribute">background-color</span>:black;</span><br><span class="line">    <span class="attribute">transform</span>: <span class="built_in">rotateX</span>(-<span class="number">90deg</span>) <span class="built_in">translateZ</span>(<span class="number">128px</span>);</span><br><span class="line">    <span class="attribute">transition</span>: all <span class="number">1s</span>;</span><br><span class="line">    <span class="attribute">color</span>: white;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://jsfiddle.net/acwong/nrwkfq91/3/">看完整代码</a></p>
+<p>网站实例：<a target="_blank" rel="noopener" href="http://www.jd.com/?utm_source=jd.com">京东</a>、<a target="_blank" rel="noopener" href="http://www.html-js.com/article">前端乱炖</a></p>
+<p>感谢您的阅读，有不足之处请为我指出。</p>
+<p><strong>参考</strong></p>
+<p><a target="_blank" rel="noopener" href="http://stackoverflow.com/questions/3627042/jquery-animation-for-a-hover-with-mouse-direction">jQuery animation for a hover with ‘mouse direction’ —— stackoverflow</a></p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/技术研究/">技术研究</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/CSS/">CSS</a><a href="/tags/CSS3/">CSS3</a><a href="/tags/CSS3动画/">CSS3动画</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2022 acwong
+    
+  </p>
+</footer>
+    
+    
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,185 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>JavaScript 设计模式笔记（九）—— 享元模式 | ac黄的博客 | acwong&#39;s blog</title>
+
+  
+  <meta name="author" content="acwong">
+  
+
+  
+  <meta name="description" content="JavaScript 设计模式笔记 —— 享元模式">
+  
+
+  
+  
+  <meta name="keywords" content="JavaScript,设计模式">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="JavaScript 设计模式笔记（九）—— 享元模式"/>
+
+  <meta property="og:site_name" content="ac黄的博客"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="ac黄的博客" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">ac黄的博客</a>
+    </h1>
+    <p class="site-description">acwong&#39;s blog</p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">Home</a></li>
+        
+      
+        <li><a href="/archives">Archives</a></li>
+        
+      
+        <li><a href="/tags">Tags</a></li>
+        
+      
+        
+        <li><a href="mailto:acwong@yeah.net">Email</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>JavaScript 设计模式笔记（九）—— 享元模式</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2016/12/16/notes-of-javascript-patterns-flyweight/" rel="bookmark">
+        <time class="entry-date published" datetime="2016-12-16T06:13:52.000Z">
+          2016-12-16
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><p>享元模式（Flyweight）使用共享技术，用来支持大量细粒度的对象。是一种为了提高性能而诞生的设计模式。</p>
+<p>享元模式通过将大量相似的对象的属性划分内部状态和外部状态，将内部状态相同的对象指定为同一个共享对象，外部状态储存在外部，在调用方法在传进来，达到节省对象数目的目的。</p>
+<h2 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h2><p>现在有一个咖啡馆，销售各种咖啡给顾客，定义咖啡的属性，味道、台号、数量：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">flavor</span><br><span class="line">table</span><br><span class="line">num</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> <span class="title class_">CoffeeOrder</span> = <span class="keyword">function</span>(<span class="params">id, flavor, table, num</span>)&#123;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">id</span> = id;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">flavor</span> = flavor;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">table</span> = table;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">num</span> = num</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="title class_">CoffeeOrder</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">serving</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;送到&#x27;</span> + <span class="variable language_">this</span>.<span class="property">table</span> + <span class="string">&#x27;号台的&#x27;</span> + <span class="variable language_">this</span>.<span class="property">flavor</span> + <span class="string">&#x27;共&#x27;</span> + <span class="variable language_">this</span>.<span class="property">num</span> + <span class="string">&#x27;杯&#x27;</span>);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> id = <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> startServing = <span class="keyword">function</span>(<span class="params">orders</span>) &#123;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>, order; order = orders[i++];) &#123;</span><br><span class="line">    <span class="keyword">var</span> coffeeOrder = <span class="keyword">new</span> <span class="title class_">CoffeeOrder</span>(id++, order.<span class="property">flavor</span>, order.<span class="property">table</span>, order.<span class="property">num</span>);</span><br><span class="line">    coffeeOrder.<span class="title function_">serving</span>();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="title function_">startServing</span>([</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="attr">flavor</span>: <span class="string">&#x27;Cappuccino&#x27;</span>,</span><br><span class="line">    <span class="attr">table</span>: <span class="number">1</span>,</span><br><span class="line">    <span class="attr">num</span>: <span class="number">1</span></span><br><span class="line">  &#125;, &#123;</span><br><span class="line">    <span class="attr">flavor</span>: <span class="string">&#x27;Xpresso&#x27;</span>,</span><br><span class="line">    <span class="attr">table</span>: <span class="number">1</span>,</span><br><span class="line">    <span class="attr">num</span>: <span class="number">1</span></span><br><span class="line">  &#125;, &#123;</span><br><span class="line">    <span class="attr">flavor</span>: <span class="string">&#x27;Xpresso&#x27;</span>,</span><br><span class="line">    <span class="attr">table</span>: <span class="number">2</span>,</span><br><span class="line">    <span class="attr">num</span>: <span class="number">2</span></span><br><span class="line">  &#125;, &#123;</span><br><span class="line">    <span class="attr">flavor</span>: <span class="string">&#x27;Latte&#x27;</span>,</span><br><span class="line">    <span class="attr">table</span>: <span class="number">3</span>,</span><br><span class="line">    <span class="attr">num</span>: <span class="number">1</span></span><br><span class="line">  &#125;</span><br><span class="line">]);</span><br></pre></td></tr></table></figure>
+
+<h2 id="内部状态和外部状态"><a href="#内部状态和外部状态" class="headerlink" title="内部状态和外部状态"></a>内部状态和外部状态</h2><p>上述的代码没有用享元模式优化的情况下，有多少个咖啡订单的时候就会创建多少个对象。</p>
+<p>要用享元模式重构，首先要划分内部状态和外部状态，划分方法有以下几条经验：</p>
+<blockquote>
+<ul>
+<li>内部状态存储于对象内部</li>
+<li>内部状态可以被一些对象共享</li>
+<li>内部状态独立于具体的场景，通常不会改变。</li>
+<li>外部状态取决于具体的场景，并根据场景而变化，外部状态不能被共享</li>
+</ul>
+</blockquote>
+<p>上述的例子中可以看出，味道 <code>flavor</code> 是内部状态，台号 <code>table</code> 和数量 <code>num</code> 就是外部状态。</p>
+<h2 id="享元模式重构例子"><a href="#享元模式重构例子" class="headerlink" title="享元模式重构例子"></a>享元模式重构例子</h2><h3 id="创建-Coffee-工厂"><a href="#创建-Coffee-工厂" class="headerlink" title="创建 Coffee 工厂"></a>创建 Coffee 工厂</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> <span class="title class_">Coffee</span> = <span class="keyword">function</span>(<span class="params">flavor</span>) &#123;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">flavor</span> = flavor;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="title class_">Coffee</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">serving</span> = <span class="keyword">function</span>(<span class="params">id</span>) &#123;</span><br><span class="line">  orderManager.<span class="title function_">setExternalState</span>(id, <span class="variable language_">this</span>);</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;送到&#x27;</span> + <span class="variable language_">this</span>.<span class="property">table</span> + <span class="string">&#x27;号台的&#x27;</span> + <span class="variable language_">this</span>.<span class="property">flavor</span> + <span class="string">&#x27;共&#x27;</span> + <span class="variable language_">this</span>.<span class="property">num</span> + <span class="string">&#x27;杯&#x27;</span>);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> <span class="title class_">CoffeeFactory</span> = (<span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> existingCoffee = &#123;&#125;;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    <span class="attr">createCoffee</span>: <span class="keyword">function</span>(<span class="params">flavor</span>) &#123;</span><br><span class="line">      <span class="keyword">if</span> (existingCoffee[flavor]) &#123;</span><br><span class="line">        <span class="keyword">return</span> existingCoffee[flavor];</span><br><span class="line">      &#125;</span><br><span class="line">      </span><br><span class="line">      <span class="keyword">return</span> existingCoffee[flavor] = <span class="keyword">new</span> <span class="title class_">Coffee</span>(flavor);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure>
+
+<h3 id="管理封装外部状态"><a href="#管理封装外部状态" class="headerlink" title="管理封装外部状态"></a>管理封装外部状态</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> orderManager = (<span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> orderDatabase = &#123;&#125;;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    <span class="attr">add</span>: <span class="keyword">function</span>(<span class="params">id, flavor, table, num</span>) &#123;</span><br><span class="line">      <span class="keyword">var</span> flyWeightObj = <span class="title class_">CoffeeFactory</span>.<span class="title function_">createCoffee</span>(flavor);</span><br><span class="line">      </span><br><span class="line">      orderDatabase[id] = &#123;</span><br><span class="line">        <span class="attr">table</span>: table,</span><br><span class="line">        <span class="attr">num</span>: num</span><br><span class="line">      &#125;;</span><br><span class="line">      <span class="keyword">return</span> flyWeightObj;</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">setExternalState</span>: <span class="keyword">function</span>(<span class="params">id, flyWeightObj</span>) &#123;</span><br><span class="line">      <span class="keyword">var</span> orderData = orderDatabase[id];</span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">var</span> i <span class="keyword">in</span> orderData) &#123;</span><br><span class="line">        flyWeightObj[i] = orderData[i];</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure>
+
+<h3 id="执行"><a href="#执行" class="headerlink" title="执行"></a>执行</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> id = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> startServing = <span class="keyword">function</span>(<span class="params">orders</span>) &#123;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>, order; order = orders[i++];) &#123;</span><br><span class="line">    <span class="keyword">var</span> coffeeOrder = orderManager.<span class="title function_">add</span>(id, order.<span class="property">flavor</span>, order.<span class="property">table</span>, order.<span class="property">num</span>);</span><br><span class="line">    coffeeOrder.<span class="title function_">serving</span>(id++);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="title function_">startServing</span>([</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="attr">flavor</span>: <span class="string">&#x27;Cappuccino&#x27;</span>,</span><br><span class="line">    <span class="attr">table</span>: <span class="number">1</span>,</span><br><span class="line">    <span class="attr">num</span>: <span class="number">1</span></span><br><span class="line">  &#125;, &#123;</span><br><span class="line">    <span class="attr">flavor</span>: <span class="string">&#x27;Xpresso&#x27;</span>,</span><br><span class="line">    <span class="attr">table</span>: <span class="number">1</span>,</span><br><span class="line">    <span class="attr">num</span>: <span class="number">1</span></span><br><span class="line">  &#125;, &#123;</span><br><span class="line">    <span class="attr">flavor</span>: <span class="string">&#x27;Xpresso&#x27;</span>,</span><br><span class="line">    <span class="attr">table</span>: <span class="number">2</span>,</span><br><span class="line">    <span class="attr">num</span>: <span class="number">2</span></span><br><span class="line">  &#125;, &#123;</span><br><span class="line">    <span class="attr">flavor</span>: <span class="string">&#x27;Latte&#x27;</span>,</span><br><span class="line">    <span class="attr">table</span>: <span class="number">3</span>,</span><br><span class="line">    <span class="attr">num</span>: <span class="number">1</span></span><br><span class="line">  &#125;</span><br><span class="line">]);</span><br></pre></td></tr></table></figure>
+
+<p>可以看到使用了享元模式之后，只要为每个咖啡味道创建一个对象就可以了。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>享元模式的优点在于可以大量减少内存里面的对象数量，通过分离外部状态使 flyweight 对象可以被共享。</p>
+<p>享元模式的缺点是分离外部与内部状态使程序复杂性增加，另外因为用时间换取空间，会导致程序运行时间变长。</p>
+<p><strong>参考</strong></p>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://book.douban.com/subject/26382780/">JavaScript设计模式与开发实践</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.cnblogs.com/TomXu/archive/2012/04/09/2379774.html">深入理解JavaScript系列（37）：设计模式之享元模式</a></li>
+</ol>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/学习笔记/">学习笔记</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/JavaScript/">JavaScript</a><a href="/tags/设计模式/">设计模式</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2022 acwong
+    
+  </p>
+</footer>
+    
+    
+  </div>
+</div>
+</body>
+</html>

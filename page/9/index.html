@@ -1,0 +1,686 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Page 9 | ac黄的博客 | acwong&#39;s blog</title>
+
+  
+  <meta name="author" content="acwong">
+  
+
+  
+  <meta name="description" content="ac黄的博客">
+  
+
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  
+
+  <meta property="og:site_name" content="ac黄的博客"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="ac黄的博客" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">ac黄的博客</a>
+    </h1>
+    <p class="site-description">acwong&#39;s blog</p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">Home</a></li>
+        
+      
+        <li><a href="/archives">Archives</a></li>
+        
+      
+        <li><a href="/tags">Tags</a></li>
+        
+      
+        
+        <li><a href="mailto:acwong@yeah.net">Email</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2014/12/21/css3-middle-translate-and-relative/"><span>从一个居中方法说起 —— 谈 translate 与 相对、绝对定位</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2014/12/21/css3-middle-translate-and-relative/" rel="bookmark">
+        <time class="entry-date published" datetime="2014-12-21T07:59:47.000Z">
+          2014-12-21
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="方法介绍"><a href="#方法介绍" class="headerlink" title="方法介绍"></a>方法介绍</h2><p>垂直水平居中是日常前端开发当中一个常见的需求，在支持 CSS3 属性的现代浏览器当中，有一个利用 CSS3 属性的垂直水平居中方法：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.center</span> &#123;</span><br><span class="line">    <span class="attribute">position</span>: absolute;</span><br><span class="line">    <span class="attribute">top</span>: <span class="number">50%</span>;</span><br><span class="line">    <span class="attribute">left</span>: <span class="number">50%</span>;</span><br><span class="line">    -ms-<span class="attribute">transform</span>: <span class="built_in">translate</span>(-<span class="number">50%</span>,-<span class="number">50%</span>);</span><br><span class="line">    -moz-<span class="attribute">transform</span>: <span class="built_in">translate</span>(-<span class="number">50%</span>,-<span class="number">50%</span>);</span><br><span class="line">    -o-<span class="attribute">transform</span>: <span class="built_in">translate</span>(-<span class="number">50%</span>,-<span class="number">50%</span>);</span><br><span class="line">    <span class="attribute">transform</span>: <span class="built_in">translate</span>(-<span class="number">50%</span>,-<span class="number">50%</span>); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>**<a target="_blank" rel="noopener" href="http://jsfiddle.net/acwong/kjcvss1a/">例子传送门</a>**（请用现代浏览器打开）</p>
+<p>从上面的例子看到，无论我们怎样调整窗口的大小，红色方块始终会在窗口垂直、水平居中。</p>
+<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>为了解释原理，我们创建两个元素:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;outer&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;inner&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>先不加上 <code>transform</code> 属性：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-id">#outer</span> &#123;</span><br><span class="line">    <span class="attribute">position</span>: relative;</span><br><span class="line">    <span class="attribute">width</span>: <span class="number">500px</span>;</span><br><span class="line">    <span class="attribute">height</span>: <span class="number">500px</span>;</span><br><span class="line">    <span class="attribute">border</span>: <span class="number">2px</span> solid yellow;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-id">#inner</span> &#123;</span><br><span class="line">    <span class="attribute">position</span>: absolute;</span><br><span class="line">    <span class="attribute">top</span>: <span class="number">50%</span>;</span><br><span class="line">    <span class="attribute">left</span>: <span class="number">50%</span>;</span><br><span class="line">    <span class="attribute">width</span>: <span class="number">100px</span>;</span><br><span class="line">    <span class="attribute">height</span>: <span class="number">100px</span>;</span><br><span class="line">    <span class="attribute">background-color</span>: red;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="http://jsfiddle.net/acwong/kjcvss1a/1">未加上 <code>transform</code> 属性的例子</a>。</p>
+<p><a target="_blank" rel="noopener" href="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2014-12_middle-position.PNG"><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2014-12_middle-position.PNG"></a></p>
+<p>可以看到红色方块左、上方距离外层方块的距离都是250个像素，如果我们想实现垂直水平居中，就应该将红色方块的中心点移动到目前元素左上角的位置，也就是分别向上和向左移动一半方块边长的长度，50个像素。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"> <span class="selector-id">#inner</span> &#123;</span><br><span class="line">    <span class="attribute">position</span>: absolute;</span><br><span class="line">    <span class="attribute">top</span>: <span class="number">50%</span>;</span><br><span class="line">    <span class="attribute">left</span>: <span class="number">50%</span>;</span><br><span class="line">    <span class="attribute">width</span>: <span class="number">100px</span>;</span><br><span class="line">    <span class="attribute">height</span>: <span class="number">100px</span>;</span><br><span class="line">    <span class="attribute">background-color</span>: red;</span><br><span class="line">    -ms-<span class="attribute">transform</span>: <span class="built_in">translate</span>(-<span class="number">50%</span>,-<span class="number">50%</span>);</span><br><span class="line">    -moz-<span class="attribute">transform</span>: <span class="built_in">translate</span>(-<span class="number">50%</span>,-<span class="number">50%</span>);</span><br><span class="line">    -o-<span class="attribute">transform</span>: <span class="built_in">translate</span>(-<span class="number">50%</span>,-<span class="number">50%</span>);</span><br><span class="line">    <span class="attribute">transform</span>: <span class="built_in">translate</span>(-<span class="number">50%</span>,-<span class="number">50%</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="http://jsfiddle.net/acwong/kjcvss1a/2/">加上 <code>transform</code> 属性</a>。</p>
+<p>所以我们可以看到在 <code>translate</code> 函数当中使用百分比是以该元素的内容区、补白(<code>padding</code>)、边框(<code>border</code>)为标准计算的，为了说明这一点，我们在 <em>innner</em> 元素加上一些 <code>padding</code> 和 <code>border</code>:</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"> <span class="selector-id">#inner</span> &#123;</span><br><span class="line">     <span class="attribute">position</span>: absolute;</span><br><span class="line">     <span class="attribute">top</span>: <span class="number">50%</span>;</span><br><span class="line">     <span class="attribute">left</span>: <span class="number">50%</span>;</span><br><span class="line">     <span class="attribute">width</span>: <span class="number">100px</span>;</span><br><span class="line">     <span class="attribute">height</span>: <span class="number">100px</span>;</span><br><span class="line">     <span class="attribute">border</span>: <span class="number">25px</span> solid yellow;</span><br><span class="line">     <span class="attribute">padding</span>: <span class="number">25px</span>;</span><br><span class="line">     <span class="attribute">background-color</span>: red;</span><br><span class="line">     -ms-<span class="attribute">transform</span>: <span class="built_in">translate</span>(-<span class="number">50%</span>,-<span class="number">50%</span>);</span><br><span class="line">     -moz-<span class="attribute">transform</span>: <span class="built_in">translate</span>(-<span class="number">50%</span>,-<span class="number">50%</span>);</span><br><span class="line">     -o-<span class="attribute">transform</span>: <span class="built_in">translate</span>(-<span class="number">50%</span>,-<span class="number">50%</span>);</span><br><span class="line">     <span class="attribute">transform</span>: <span class="built_in">translate</span>(-<span class="number">50%</span>,-<span class="number">50%</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="http://jsfiddle.net/acwong/kjcvss1a/3/">加上 <code>padding</code> 和 <code>border</code> 以后</a>。</p>
+<p>可以看到 <em>inner</em> 元素一样做到了垂直、水平居中。</p>
+<h2 id="translate-与绝对定位、相对定位"><a href="#translate-与绝对定位、相对定位" class="headerlink" title="translate 与绝对定位、相对定位"></a>translate 与绝对定位、相对定位</h2><p>在表现上看，使用 CSS3 <code>translate</code> 函数和绝对定位、相对定位属性加上 <code>top</code>、<code>left</code> 数值都可以使元素产生位移。实际上它们还是有不少的区别。</p>
+<h3 id="元素视图属性中的-offsetLeft-和-offsetTop-属性。"><a href="#元素视图属性中的-offsetLeft-和-offsetTop-属性。" class="headerlink" title="元素视图属性中的 offsetLeft 和 offsetTop 属性。"></a>元素视图属性中的 <code>offsetLeft</code> 和 <code>offsetTop</code> 属性。</h3><p>我们分别用相对定位和 <code>translate</code> 的方法来使元素产生位移：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"> <span class="selector-id">#box1</span> &#123;</span><br><span class="line">     <span class="attribute">position</span>: relative;</span><br><span class="line">     <span class="attribute">width</span>: <span class="number">50px</span>;</span><br><span class="line">     <span class="attribute">height</span>: <span class="number">50px</span>;</span><br><span class="line">     <span class="attribute">background-color</span>: blue;</span><br><span class="line">     <span class="attribute">top</span>: <span class="number">100px</span>;</span><br><span class="line">     <span class="attribute">left</span>: <span class="number">300px</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-id">#box2</span> &#123;</span><br><span class="line">    <span class="attribute">width</span>: <span class="number">50px</span>;</span><br><span class="line">    <span class="attribute">height</span>: <span class="number">50px</span>;</span><br><span class="line">    <span class="attribute">background-color</span>: red;</span><br><span class="line">    -ms-<span class="attribute">transform</span>: <span class="built_in">translate</span>(<span class="number">300px</span>,<span class="number">100px</span>);</span><br><span class="line">    -moz-<span class="attribute">transform</span>: <span class="built_in">translate</span>(<span class="number">300px</span>,<span class="number">100px</span>);</span><br><span class="line">    -o-<span class="attribute">transform</span>: <span class="built_in">translate</span>(<span class="number">300px</span>,<span class="number">100px</span>);</span><br><span class="line">    <span class="attribute">transform</span>: <span class="built_in">translate</span>(<span class="number">300px</span>,<span class="number">100px</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后看看两者的 <code>offsetTop</code> 和 <code>offsetLeft</code> 的数值：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> box1 = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;box1&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="title function_">alert</span>(box1.<span class="property">offsetLeft</span>);</span><br><span class="line"><span class="title function_">alert</span>(box1.<span class="property">offsetTop</span>);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> box2 = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;box1&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="title function_">alert</span>(box2.<span class="property">offsetLeft</span>);</span><br><span class="line"><span class="title function_">alert</span>(box2.<span class="property">offsetTop</span>);</span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="http://jsfiddle.net/acwong/kjcvss1a/5/">使用相对定位的例子</a></p>
+<p><a target="_blank" rel="noopener" href="http://jsfiddle.net/acwong/kjcvss1a/6/">使用 translate 的例子</a></p>
+<p>可以看出使用 <code>translate</code> 的例子的 <code>offsetTop</code> 和 <code>offsetLeft</code> 的数值与没有产生位移的元素没有然后区别，无论位移多少这两个数值都是固定不变的。</p>
+<p>而使用相对定位的例子 <code>offsetTop</code> 和 <code>offsetLeft</code> 的数值则根据位移的长度发生了改变。</p>
+<h3 id="动画表现的区别"><a href="#动画表现的区别" class="headerlink" title="动画表现的区别"></a>动画表现的区别</h3><p>在 CSS3 属性还没很好地被浏览器支持的时候，我们常常会使用绝对定位(<code>position:absolute</code>)，然后结合 <em>jQuery</em> 改变元素的 <code>top</code>、<code>left</code> 的数值来做位移的动画效果。</p>
+<p>然而，两者在位移动画的表现上也有一定的区别。借用国外博主 Paul Irish 的两个例子：</p>
+<p><a target="_blank" rel="noopener" href="http://codepen.io/paulirish/pen/nkwKs">Animating with Top/Left</a></p>
+<p><a target="_blank" rel="noopener" href="http://codepen.io/paulirish/pen/LsxyF">Animating with Translate</a></p>
+<p>对比两个例子来看，可以看出使用 <code>translate</code> 来制作的动画比绝对定位的动画更加平滑。</p>
+<p>原因在于使用绝对定位的动画效果会受制于利用像素(<em>px</em>)为单位进行位移，而使用 <code>translate</code> 函数的动画则可以不受像素的影响，以更小的单位进行位移。</p>
+<p>另外，绝对定位的动画效果完全使用 CPU 进行计算，而使用 <code>translate</code> 函数的动画则是利用 GPU，因此在视觉上使用  <code>translate</code> 函数的动画可以有比绝对定位动画有更高的帧数。</p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>CSS3 动画相关的属性出现以后，可以让我们更加轻松地制作复杂的动画，同时 <code>position:relative</code> 和 <code>position:absolute</code> 这一类的属性可以回归它们原本的定位，为定位、布局服务，而将动画的重任交给 CSS3 的相关属性。</p>
+<p>感谢您的阅读，有不足之处请在评论为我指出。</p>
+<p><strong>参考</strong></p>
+<p><a target="_blank" rel="noopener" href="http://www.paulirish.com/2012/why-moving-elements-with-translate-is-better-than-posabs-topleft/">Why Moving Elements With Translate() Is Better Than Pos:abs Top/left</a></p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/技术研究/">技术研究</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/CSS/">CSS</a><a href="/tags/CSS3/">CSS3</a><a href="/tags/定位/">定位</a><a href="/tags/CSS3动画/">CSS3动画</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2014/12/06/negative-margins/"><span>实用的margin负值</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2014/12/06/negative-margins/" rel="bookmark">
+        <time class="entry-date published" datetime="2014-12-06T03:33:58.000Z">
+          2014-12-06
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>无论是在介绍前端知识的书籍还是谈论盒模型的文章，margin 都是最重要的属性之一，然而它的负值用法却极少被提到。其实 margin 负值是一个相当实用的属性，可以被应用于日常前端开发当中的不少场景。</p>
+<h2 id="margin-负值初体验"><a href="#margin-负值初体验" class="headerlink" title="margin 负值初体验"></a>margin 负值初体验</h2><p>与正值的 margin 一样，margin 的负值同样可以被用于上下左右四个方向，我把它所起到的效果总结为：</p>
+<p><strong>上和左方的 margin 负值使该元素向上和左方向移动。</strong></p>
+<p><strong>下和右方的 margin 负值使该元素下方、右方的元素被拉向该元素。</strong></p>
+<p>我们通过几个简单的小例子去理解。**<a target="_blank" rel="noopener" href="http://jsfiddle.net/acwong/j8x2r6a7/">传送门……</a>**</p>
+<p>在例子当中一个大的正方形包裹着两个分别是蓝色和黄色的正方形，分别对蓝色的正方形使用上、下、左、右四个方向的 margin 负值。</p>
+<p>结果我们可以看到，使用<code>margin-top: -50px</code> 和 <code>margin-left: -50px</code> 的例子，蓝色正方形分别向上方和左方移动了50个像素。</p>
+<p><a target="_blank" rel="noopener" href="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2014-12_negative-margin-top.PNG"><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2014-12_negative-margin-top.PNG" alt="negative margin-top"></a></p>
+<p><a target="_blank" rel="noopener" href="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2014-12_negative-margin-left.PNG"><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2014-12_negative-margin-left.PNG" alt="negative margin-left"></a></p>
+<p>而使用 <code>margin-bottom: -50px</code> 和 <code>margin-right: -50px</code> 的例子，位于下方和右方的黄色正方形向蓝色正方形方向移动了50个像素，覆盖了蓝色正方形的一部分。</p>
+<p><a target="_blank" rel="noopener" href="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2014-12_negative-margin-bottom.PNG"><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2014-12_negative-margin-bottom.PNG" alt="negative margin-bottom"></a></p>
+<p><a target="_blank" rel="noopener" href="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2014-12_negative-margin-right.PNG"><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2014-12_negative-margin-right.PNG" alt="negative margin-right"></a></p>
+<h2 id="原理浅析"><a href="#原理浅析" class="headerlink" title="原理浅析"></a>原理浅析</h2><p>产生上述两种情况的差异是由于 margin 在上、左方和下、右方解析逻辑有所不同。这里引用怿飞博客**<a target="_blank" rel="noopener" href="http://www.planabc.net/2007/03/18/css_attribute_margin/">《由浅入深漫谈margin属性》</a>** 中参考线的概念。</p>
+<p><a target="_blank" rel="noopener" href="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2014-12_margin-move.png"><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2014-12_margin-move.png" alt="margin-move"></a></p>
+<p>简单来说就是上、左方和下、右方参考线的不同导致的。</p>
+<p><strong>margin 上方负值以包含块(Containing block) 内容区域的上边或者上方相连元素 margin 的下边为参考线</strong></p>
+<p><strong>margin 左方负值以包含块(Containing block) 内容区域的左边或者左方相连元素 margin 的右边为参考线</strong></p>
+<p><strong>margin 下方负值以元素本身 border 的下边为参考线</strong></p>
+<p><strong>margin 右方负值以元素本身 border 的右边为参考线</strong></p>
+<p>所以使用 margin 上、左方负值时可以理解为与参考线的距离减少，导致元素产生位移；使用使用 margin 下、右方负值时可以理解为参考线向上、右方移动。</p>
+<p>深入理解可以看**<a target="_blank" rel="noopener" href="http://www.planabc.net/2007/03/18/css_attribute_margin/">《由浅入深漫谈margin属性》</a><strong>。另外，关于</strong><a target="_blank" rel="noopener" href="http://w3help.org/zh-cn/kb/008/">包含块( Containing block )</a>**。</p>
+<h2 id="margin-负值在实际当中的应用"><a href="#margin-负值在实际当中的应用" class="headerlink" title="margin 负值在实际当中的应用"></a>margin 负值在实际当中的应用</h2><p>margin 负值虽然不是常常被提起，但是在实际当中已经有相当广泛的应用。现在来看几个实例。</p>
+<h3 id="大众点评团购城市列表"><a href="#大众点评团购城市列表" class="headerlink" title="大众点评团购城市列表"></a>大众点评团购城市列表</h3><p><a target="_blank" rel="noopener" href="http://t.dianping.com/citylist">http://t.dianping.com/citylist</a></p>
+<p><a target="_blank" rel="noopener" href="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2014-12_dianpin-list.PNG"><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2014-12_dianpin-list.PNG" alt="dianping-list"></a></p>
+<p>上图每一个城市之间都有一条浅灰色竖线作为分割符，查看源码我们可以发现它其实是每个<code>li</code>元素的左边界，然而通常使用<code>border</code>来完成类似需求时我们不希望第一个（或最后一个）<code>li</code> 元素出现<code>border</code>，因此我们通常会在第一个（或最后一个）<code>li</code> 元素添加 <em>frist-item</em>(或 <em>last-item</em>) 的 class 使他们不显示，而这里的城市列表用了一个更加简单的方法：每一个<code>li</code> 元素添加一个像素左方向的 <code>margin</code> 负值。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.list</span> <span class="selector-tag">li</span> <span class="selector-class">.cityes</span> <span class="selector-tag">li</span> &#123;</span><br><span class="line">    <span class="attribute">border-left</span>: <span class="number">1px</span> solid <span class="number">#ccc</span>;</span><br><span class="line">    <span class="attribute">margin</span>: <span class="number">17px</span> <span class="number">0</span> <span class="number">0</span> -<span class="number">1px</span>;</span><br><span class="line">    <span class="comment">/* 省略其余代码 */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>第一个城市的左方 <code>border</code> 就这样被隐藏了。</p>
+<h3 id="segmentfault-首页tab"><a href="#segmentfault-首页tab" class="headerlink" title="segmentfault 首页tab"></a>segmentfault 首页tab</h3><p><a target="_blank" rel="noopener" href="http://segmentfault.com/">http://segmentfault.com/</a></p>
+<p><a target="_blank" rel="noopener" href="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2014-12_segmentfault-tab.PNG"><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2014-12_segmentfault-tab.PNG" alt="segmentfault-tab"></a></p>
+<p>完成类似的tab效果，我们需要分别给各个 tab 元素和其父元素添加 <code>border</code>，这个时候会出现双边框的情况。segmentfault 的解决方法是给每一个tab元素添加一像素下方的 <code>margin</code> 负值。</p>
+<p>另外，为了类似上一个例子中的城市列表，这里的元素添加了一个像素的右方的 <code>margin</code> 负值，tab 元素之间不会出现双边框的情况。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.nav-tabs</span> &#123;</span><br><span class="line">    <span class="attribute">border-bottom</span>: <span class="number">1px</span> solid <span class="number">#ddd</span>;</span><br><span class="line">    <span class="comment">/* 父元素ul */</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.nav-tabs</span> &gt; <span class="selector-tag">li</span> &#123;</span><br><span class="line">    <span class="attribute">margin-bottom</span>: -<span class="number">1px</span>;</span><br><span class="line">    <span class="comment">/* 省略其余代码 */</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.nav-tabs-zen</span> &gt; <span class="selector-tag">li</span> &gt; <span class="selector-tag">a</span> &#123;</span><br><span class="line">    <span class="attribute">margin-right</span>： <span class="number">1px</span>;</span><br><span class="line">    <span class="attribute">border</span>: <span class="number">1px</span> solid <span class="number">#ddd</span>;</span><br><span class="line">    <span class="comment">/* 省略其余代码 */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Bootstrap-网格系统"><a href="#Bootstrap-网格系统" class="headerlink" title="Bootstrap 网格系统"></a>Bootstrap 网格系统</h3><p>在 Bootstrap 的网格系统当中，每一个使用 <code>col-**-*</code> 类的列元素都应该包裹在 <code>row</code> 类的元素当中。为了使页面美观每个 <code>col-**-*</code> 的类都设置了左、右15个像素的补白 <code>padding</code>，这样会导致一个结果，第一个和最后一个元素会离开容器15个像素的距离。为此，Bootstrap在 <code>row</code> 类当中分别定义了左、右方向15个像素的 <code>margin</code> 负值来抵消第一列和最后一列产生的左右补白。</p>
+<p><a target="_blank" rel="noopener" href="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2014-12_bootstrap-grid-system.jpg"><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2014-12_bootstrap-grid-system.jpg" alt="bootstrap-grid-system"></a></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.col-xs-1</span>, <span class="selector-class">.col-sm-1</span>, <span class="selector-class">.col-md-1</span>, <span class="selector-class">.col-lg-1</span>, </span><br><span class="line"><span class="selector-class">.col-xs-2</span>, <span class="selector-class">.col-sm-2</span>, <span class="selector-class">.col-md-2</span>, <span class="selector-class">.col-lg-2</span>, </span><br><span class="line"><span class="selector-class">.col-xs-3</span>, <span class="selector-class">.col-sm-3</span>, <span class="selector-class">.col-md-3</span>, <span class="selector-class">.col-lg-3</span>, </span><br><span class="line"><span class="selector-class">.col-xs-4</span>, <span class="selector-class">.col-sm-4</span>, <span class="selector-class">.col-md-4</span>, <span class="selector-class">.col-lg-4</span>, </span><br><span class="line"><span class="selector-class">.col-xs-5</span>, <span class="selector-class">.col-sm-5</span>, <span class="selector-class">.col-md-5</span>, <span class="selector-class">.col-lg-5</span>, </span><br><span class="line"><span class="selector-class">.col-xs-6</span>, <span class="selector-class">.col-sm-6</span>, <span class="selector-class">.col-md-6</span>, <span class="selector-class">.col-lg-6</span>, </span><br><span class="line"><span class="selector-class">.col-xs-7</span>, <span class="selector-class">.col-sm-7</span>, <span class="selector-class">.col-md-7</span>, <span class="selector-class">.col-lg-7</span>, </span><br><span class="line"><span class="selector-class">.col-xs-8</span>, <span class="selector-class">.col-sm-8</span>, <span class="selector-class">.col-md-8</span>, <span class="selector-class">.col-lg-8</span>, </span><br><span class="line"><span class="selector-class">.col-xs-9</span>, <span class="selector-class">.col-sm-9</span>, <span class="selector-class">.col-md-9</span>, <span class="selector-class">.col-lg-9</span>, </span><br><span class="line"><span class="selector-class">.col-xs-10</span>, <span class="selector-class">.col-sm-10</span>, <span class="selector-class">.col-md-10</span>, <span class="selector-class">.col-lg-10</span>, </span><br><span class="line"><span class="selector-class">.col-xs-11</span>, <span class="selector-class">.col-sm-11</span>, <span class="selector-class">.col-md-11</span>, <span class="selector-class">.col-lg-11</span>, </span><br><span class="line"><span class="selector-class">.col-xs-12</span>, <span class="selector-class">.col-sm-12</span>, <span class="selector-class">.col-md-12</span>, <span class="selector-class">.col-lg-12</span> &#123;</span><br><span class="line">  <span class="attribute">position</span>: relative;</span><br><span class="line">  <span class="attribute">min-height</span>: <span class="number">1px</span>;</span><br><span class="line">  <span class="attribute">padding-right</span>: <span class="number">15px</span>;</span><br><span class="line">  <span class="attribute">padding-left</span>: <span class="number">15px</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.row</span> &#123;</span><br><span class="line">  <span class="attribute">margin-right</span>: -<span class="number">15px</span>;</span><br><span class="line">  <span class="attribute">margin-left</span>: -<span class="number">15px</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="左右并排布局"><a href="#左右并排布局" class="headerlink" title="左右并排布局"></a>左右并排布局</h3><p>在做左右并排布局时候，除了可以使用 <code>float</code> 或者 <code>inline-block</code> 之外，还可以尝试使用 margin 负值。</p>
+<p><a target="_blank" rel="noopener" href="http://jsfiddle.net/acwong/r0ujysb9/">直接上例子</a></p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>利用 margin 负值可以简单直接的解决某些我们日常开发当中遇到的问题，margin 负值还有很多其余的使用实例，这里不一一叙述，只要平时多看看别人写的代码，就会发现 margin 负值的应用其实无处不在。</p>
+<p>感谢您的阅读，有不足之处请在评论为我指出。</p>
+<p><strong>参考</strong></p>
+<ol>
+<li><a target="_blank" rel="noopener" href="http://www.planabc.net/2007/03/18/css_attribute_margin/">由浅入深漫谈margin属性</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.hicss.net/i-know-you-do-not-know-the-negative-margin/">我知道你不知道的负Margin</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.imooc.com/code/2325">Bootstrap框架的网格系统工作原理</a></li>
+</ol>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/技术研究/">技术研究</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/CSS/">CSS</a><a href="/tags/布局/">布局</a><a href="/tags/盒模型/">盒模型</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2014/11/16/2048-with-seajs-and-spm3/"><span>Seajs 实践(二)—— 使用 spm3 构建项目</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2014/11/16/2048-with-seajs-and-spm3/" rel="bookmark">
+        <time class="entry-date published" datetime="2014-11-15T16:06:02.000Z">
+          2014-11-16
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="回顾"><a href="#回顾" class="headerlink" title="回顾"></a>回顾</h2><p>在<a target="_blank" rel="noopener" href="http://blog.acwong.org/2014/11/15/2048-with-seajs/">上一篇文章</a>中，利用 Seajs 对 2048 游戏进行了模块化。现在我们可以看到，在页面中使用<code>seajs.use(&quot;game/main&quot;)</code> 就能够自动加载其余的2个js文件。</p>
+<p><a target="_blank" rel="noopener" href="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2048s-network.PNG"><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2048s-network.PNG" alt="2048网络请求"></a></p>
+<h2 id="构建的意义"><a href="#构建的意义" class="headerlink" title="构建的意义"></a>构建的意义</h2><p>但是在实际的开发当中，通常会利用工具把多个 js 文件进行合并和压缩，减少服务器的请求次数，降低服务器的压力。</p>
+<p>然而，使用传统的压缩工具对 CMD 模块进行压缩并不奏效，原因在于我们在写CMD模块的时候写的都是“匿名模块”，所以在使用普通工具合并之后 seajs 并不能识别出每一个“匿名模块”。因此，在合并之前还需要多一个步骤，就是将我们手写的 CMD 模块使用构建工具转换为 Modules/Transport 格式：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">define</span>(<span class="string">&quot;id&quot;</span>, [<span class="string">&quot;dep-1&quot;</span>, <span class="string">&quot;dep-2&quot;</span>], <span class="keyword">function</span>(<span class="params"><span class="built_in">require</span>, <span class="built_in">exports</span>, <span class="variable language_">module</span></span>) &#123;</span><br><span class="line">  <span class="comment">// code</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>第一个参数id 用于识别各个模块。第二个参数指明该模块所依赖的模块，第三个就是原来写的函数。</p>
+<h2 id="构建过程"><a href="#构建过程" class="headerlink" title="构建过程"></a>构建过程</h2><h3 id="spm3-介绍"><a href="#spm3-介绍" class="headerlink" title="spm3 介绍"></a>spm3 介绍</h3><p><strong>spm</strong>(static package manager) 静态包管理工具，可以使用它来对CMD模块进行构建。spm3 是 spm 的新版本，它集成了<strong>spm-build-deps</strong> 的功能，可以直接使用它来构建。</p>
+<p>spm3 与 spm2 的差异非常大，了解更多可以看<a target="_blank" rel="noopener" href="https://github.com/spmjs/spm/issues/819">《spm3 发布通告》</a> 和 <a target="_blank" rel="noopener" href="https://github.com/spmjs/spm/issues/718">《spm@3.0 和 spmjs.org 的未来》</a> 两篇文章。</p>
+<h3 id="去掉-CMD-模块的包装"><a href="#去掉-CMD-模块的包装" class="headerlink" title="去掉 CMD 模块的包装"></a>去掉 CMD 模块的包装</h3><p>spm3 当中，支持的书写规范从 CMD 模块 转向了 CommonJS。因此在构建之前，要先把原 CMD 模块的 <code>define</code> 包装去掉。构建之后 spm3 会自动在代码外添加</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">define</span>(<span class="string">&quot;id&quot;</span>, [<span class="string">&quot;dep-1&quot;</span>, <span class="string">&quot;dep-2&quot;</span>], <span class="keyword">function</span>(<span class="params"><span class="built_in">require</span>, <span class="built_in">exports</span>, <span class="variable language_">module</span></span>)</span><br></pre></td></tr></table></figure>
+
+<p>包装(如果没有去掉，构建后会发现原 <code>define</code> 外又添加了一层 <code>define</code>，会导致代码不能执行)。</p>
+<h3 id="安装-spm3"><a href="#安装-spm3" class="headerlink" title="安装 spm3"></a>安装 spm3</h3><p>要安装 spm3 先要安装 nodejs(这个应该大家都安装了吧)。然后,打开命令行工具安装 spm</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install spm -g</span><br></pre></td></tr></table></figure>
+
+<p>输入</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">spm -v</span><br></pre></td></tr></table></figure>
+
+<p>出现版本号3.x.x安装成功。</p>
+<h3 id="创建-package-json"><a href="#创建-package-json" class="headerlink" title="创建 package.json"></a>创建 package.json</h3><p>spm 使用与 npm 同样的文件 <em>package.json</em> 来描述要构建的项目。</p>
+<p>package.json 可以手动创建，也可以用 <code>npm init</code> 等方法去创建。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2048&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;version&quot;</span><span class="punctuation">:</span> <span class="string">&quot;1.0.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;description&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2048 with seajs&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;author&quot;</span><span class="punctuation">:</span> <span class="string">&quot;acwong&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;license&quot;</span><span class="punctuation">:</span> <span class="string">&quot;MIT&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;spm&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;main&quot;</span><span class="punctuation">:</span> <span class="string">&quot;static/game/main.js&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><code>spm</code> 字段是包含与 spm 构建相关的一些属性。这里我们把入口文件定义为 <em>main.js</em> (默认为 <em>index.js</em>)。其余的属性可以参考<a target="_blank" rel="noopener" href="http://spmjs.io/documentation/package.json">spm3官网的介绍</a>。</p>
+<h3 id="build"><a href="#build" class="headerlink" title="build"></a>build</h3><p>在项目的目录打开命令行工具，输入构建命令</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">spm build</span><br></pre></td></tr></table></figure>
+
+<p>等待一段时间，构建完成。</p>
+<h3 id="构建完成"><a href="#构建完成" class="headerlink" title="构建完成"></a>构建完成</h3><p>构建完成之后,可以发现项目目录下多了一个文件夹 <em>dist</em>，这个就是存放构建后代码的地方。现在只要在页面文件中改动一下构建后的路径，就可以运行游戏了。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">seajs.<span class="title function_">config</span>(&#123;</span><br><span class="line">    <span class="attr">base</span>: <span class="string">&quot;../dist/&quot;</span>,</span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">// 构建后入口文件的id</span></span><br><span class="line">seajs.<span class="title function_">use</span>(<span class="string">&quot;2048/1.0.0/static/game/main&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>打开游戏，可以发现原来的3个 js 文件，现在只剩下 <em>main.js</em> 一个了。</p>
+<p><a target="_blank" rel="noopener" href="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2048ss-network.PNG"><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2048ss-network.PNG" alt="2048构建后网络请求"></a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/acwong00/blog-demo-code/tree/master/seajs-2048/2048-with-seajs-and-spm3">这里</a>可以查看最终的代码。</p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>由于 spm3 从 CMD 模块转向了 CommonJS 所以会导致一个问题，去掉 <code>define</code> 之后线下文件不能直接打开调试，所以 Seajs 退出了一个 seajs-wrap 的插件可以动态添加</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">define(function(require, exports, module) &#123;&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>seajs-wrap 在 <em>sea.js</em> 之后引入。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;path/to/sea.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;path/to/seajs-wrap.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>虽然有了这个插件，但是我认为还是不太便于使用，希望未来的版本可以有更好的解决方案。<a target="_blank" rel="noopener" href="https://github.com/seajs/seajs-wrap">了解更多请戳…</a></p>
+<p>这里只是简单谈谈我自己的一次实践过程，seajs还有更多强大的功能等着我们去学习。</p>
+<p>感谢您的阅读，有不足之处请为我指出。</p>
+<p><strong>参考</strong></p>
+<ol>
+<li><a target="_blank" rel="noopener" href="http://spmjs.io/documentation/develop-a-package">Develop A Package – spmjs.io</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/seajs/seajs/issues/426">为什么要有约定和构建工具</a></li>
+<li><a target="_blank" rel="noopener" href="http://chaoskeh.com/blog/why-its-hard-to-combo-seajs-modules.html">为什么 SeaJS 模块的合并这么麻烦</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/seajs/seajs-wrap/issues/1">seajs-wrap 中文文档</a></li>
+</ol>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/技术实践/">技术实践</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/前端模块化/">前端模块化</a><a href="/tags/seajs/">seajs</a><a href="/tags/spm/">spm</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2014/11/15/2048-with-seajs/"><span>Seajs 实践(一)—— 模块化 2048 游戏</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2014/11/15/2048-with-seajs/" rel="bookmark">
+        <time class="entry-date published" datetime="2014-11-15T15:43:42.000Z">
+          2014-11-15
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>前段时间在<a target="_blank" rel="noopener" href="http://www.imooc.com/">慕课网</a>跟着视频做了一个简单的 2048 游戏，发现这个小项目非常适合用来实践 Seajs 模块化，现在就把我的实践过程和大家分享一下。</p>
+<h2 id="实践过程"><a href="#实践过程" class="headerlink" title="实践过程"></a>实践过程</h2><h3 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h3><p>没有进行模块化之前总共有5个文件：</p>
+<ul>
+<li><strong>index.html</strong>        游戏页面</li>
+<li><strong>2048.css</strong>          游戏样式文件</li>
+<li><strong>main.js</strong>           程序入口文件</li>
+<li><strong>showanimation.js</strong>  游戏动画文件</li>
+<li><strong>support.js</strong>        基础函数文件</li>
+</ul>
+<p><em>main.js</em> 需要使用 <em>showanimation.js</em> 和 <em>support.js</em> 定义的函数。</p>
+<p><em>showanimation.js</em> 需要使用 <em>support.js</em> 定义的函数。</p>
+<p>除了这些文件之外，这个项目还用了jQuery的库，用了<a target="_blank" rel="noopener" href="http://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js">百度的cdn</a>。</p>
+<p>目前 js 文件引入顺序如下:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;http://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;../static/game/support.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;../static/game/showanimation.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;../static/game/main.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="目录结构"><a href="#目录结构" class="headerlink" title="目录结构"></a>目录结构</h3><p><a target="_blank" rel="noopener" href="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2048-folder-structure.PNG"><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2048-folder-structure.PNG" alt="2048文件目录结构"></a></p>
+<p>源文件可以在<a target="_blank" rel="noopener" href="https://github.com/acwong00/blog-demo-code/tree/master/seajs-2048/2048">这里</a>找到，有兴趣的朋友可以下载下来尝试一下。</p>
+<h3 id="引入Sea-js"><a href="#引入Sea-js" class="headerlink" title="引入Sea.js"></a>引入Sea.js</h3><p>在<a target="_blank" rel="noopener" href="http://seajs.org/docs/#downloads">Seajs官网</a>下载Sea.js(本文用到的版本是 2.3.0)。在<em>static</em>目录下建立一个<em>lib</em>文件夹，存放下载下来的<em>sea.js</em>。</p>
+<p>然后引入：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;../static/lib/sea.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="CMD规范改写"><a href="#CMD规范改写" class="headerlink" title="CMD规范改写"></a>CMD规范改写</h3><p>CMD ( Common Module Definition ) 是Seajs遵循的一种模块定义规范。规范当中，一个模块就是一个文件，因此我按照CMD规范改写 2048 游戏的3个 js 文件。</p>
+<blockquote>
+<p>SeaJS 里，推崇的 Modules/Wrappings 规范是 CMD 规范：<code>define(function()&#123; &#125;)</code> 直接是由开发者手写的，写完后，可直接不经过任何构建工具就在浏览器上加载运行。</p>
+</blockquote>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">define</span>(<span class="keyword">function</span>(<span class="params"><span class="built_in">require</span>, <span class="built_in">exports</span>, <span class="variable language_">module</span></span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> a = <span class="built_in">require</span>(<span class="string">&quot;a&quot;</span>)</span><br><span class="line">    <span class="built_in">exports</span>.<span class="property">foo</span> = ...</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>首先，<em>main.js</em>、<em>showanimation.js</em> 和 <em>support.js</em> 三个文件都用 <code>defined</code> 函数包裹起来，<code>define</code> 接收一个匿名函数作为参数，该函数传入默认的三个参数  <code>require</code>、<code>exports</code> 和 <code>moudule</code> 。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">define</span>(<span class="keyword">function</span>(<span class="params"><span class="built_in">require</span>, <span class="built_in">exports</span>, moudule</span>)&#123;</span><br><span class="line">	<span class="comment">// support.js 代码</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">define</span>(<span class="keyword">function</span>(<span class="params"><span class="built_in">require</span>, <span class="built_in">exports</span>, moudule</span>)&#123;</span><br><span class="line">	<span class="comment">// showanimation.js 代码</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">define</span>(<span class="keyword">function</span>(<span class="params"><span class="built_in">require</span>, <span class="built_in">exports</span>, moudule</span>)&#123;</span><br><span class="line">	<span class="comment">// main.js 代码</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>接着，把 <em>showanimation.js</em> 和 <em>support.js</em> 当中需要被其他模块调用的函数和变量使用 <code>exports</code> 暴露给其他模块。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 暴露变量</span></span><br><span class="line"><span class="built_in">exports</span>.<span class="property">documentWidth</span> = documentWidth;</span><br><span class="line"><span class="built_in">exports</span>.<span class="property">gridContainerWidth</span> = gridContainerWidth;</span><br><span class="line"><span class="built_in">exports</span>.<span class="property">cellSideLength</span> = cellSideLength;</span><br><span class="line"><span class="built_in">exports</span>.<span class="property">cellSpace</span> = cellSpace;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 暴露函数</span></span><br><span class="line"><span class="built_in">exports</span>.<span class="property">getPostTop</span> = <span class="keyword">function</span>(<span class="params">i,j</span>) &#123;</span><br><span class="line">    <span class="comment">// code</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="built_in">exports</span>.<span class="property">getPostLeft</span> = <span class="keyword">function</span>(<span class="params">i,j</span>) &#123;</span><br><span class="line">    <span class="comment">// code</span></span><br><span class="line">&#125;;</span><br><span class="line">......</span><br></pre></td></tr></table></figure>
+
+<p>然后，使用 <code>require</code> 来获取其他模块暴露的接口.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// main.js</span></span><br><span class="line"><span class="keyword">var</span> support = <span class="built_in">require</span>(<span class="string">&#x27;./support&#x27;</span>);</span><br><span class="line"><span class="keyword">var</span> animation = <span class="built_in">require</span>(<span class="string">&#x27;./showanimation&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// showanimation.js</span></span><br><span class="line"><span class="keyword">var</span> support = <span class="built_in">require</span>(<span class="string">&#x27;./support&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>最后，将原来调用其它模块的方法或变量改写为，以下形式：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a = <span class="built_in">require</span>(<span class="string">&#x27;./a&#x27;</span>);</span><br><span class="line"><span class="comment">// 调用模块 a 的方法</span></span><br><span class="line">a.<span class="title function_">doSomething</span>();</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// main.js</span></span><br><span class="line"><span class="comment">// 调用变量</span></span><br><span class="line">support.<span class="property">cellSpace</span> = <span class="number">20</span>;</span><br><span class="line">support.<span class="property">cellSideLength</span> = <span class="number">100</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 调用 showanimation.js 方法</span></span><br><span class="line">animation.<span class="title function_">showNumberWithAnimation</span>(randx, randy, randNumber);</span><br><span class="line"><span class="comment">// 调用 support.js 方法</span></span><br><span class="line">support.<span class="title function_">canMoveDown</span>(board)</span><br></pre></td></tr></table></figure>
+
+<h3 id="在页面当中加载入口模块"><a href="#在页面当中加载入口模块" class="headerlink" title="在页面当中加载入口模块"></a>在页面当中加载入口模块</h3><p>在引入 <em>sea.js</em> 之后，在该 <strong>script</strong> 标签之后，再写一段 seajs 的配置代码：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">seajs.<span class="title function_">config</span>(&#123;</span><br><span class="line">    <span class="attr">base</span>: <span class="string">&quot;../static&quot;</span></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 加载入口模块 </span></span><br><span class="line">seajs.<span class="title function_">use</span>([<span class="string">&quot;game/main&quot;</span>]);</span><br></pre></td></tr></table></figure>
+
+<h3 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h3><p>经过上述过程之后 2048 游戏已经完成了模块化，现在打开浏览器运行一下,就可以正确运行了。</p>
+<p><a target="_blank" rel="noopener" href="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2048s-start.PNG"><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2048s-start.PNG" alt="2048运行效果"></a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/acwong00/blog-demo-code/tree/master/seajs-2048/2048-with-seajs">这里</a>是完成后的代码。</p>
+<h2 id="使用Seajs的意义"><a href="#使用Seajs的意义" class="headerlink" title="使用Seajs的意义"></a>使用Seajs的意义</h2><p>使用 Seajs 将各个文件转变成一个个独立的模块，模块当中可以方便的对函数和变量进行命名，免去了多个文件之间命名冲突的烦恼。除此之外，使用 Seajs 还可以在 js 文件当中声明所需的依赖，不再需要手动在引入过程中管理，降低了开发时出错的几率。</p>
+<p>在 EMCAScript6 <code>import</code> 功能出现之前，Seajs 的确是一个不错的前端模块化工具。</p>
+<p><a target="_blank" rel="noopener" href="http://blog.acwong.org/2014/11/16/2048-with-seajs-and-spm3/">下一篇文章</a>，我会谈一下如何用 spm3 进行Seajs标准构建。</p>
+<p>感谢您的阅读，有不足之处请为我指出。</p>
+<p><strong>参考</strong></p>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://github.com/seajs/seajs/issues/242">CMD 模块定义规范</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.zhihu.com/question/20789867/answer/16187950">CommonJS 的 Modules/Transport 和 Modules/Wrappings 规范有什么区别？ – 知乎</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/seajs/seajs/issues/547">前端模块化开发的价值</a></li>
+</ol>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/技术实践/">技术实践</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/前端模块化/">前端模块化</a><a href="/tags/seajs/">seajs</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2014/11/08/drag-and-drop/"><span>不在HTML5标准中的特性 —— 浅谈原生拖放</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2014/11/08/drag-and-drop/" rel="bookmark">
+        <time class="entry-date published" datetime="2014-11-08T06:54:36.000Z">
+          2014-11-08
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="久等的HTML5标准"><a href="#久等的HTML5标准" class="headerlink" title="久等的HTML5标准"></a>久等的HTML5标准</h2><p>2014年10月28日，W3C正式公布了耗时8年时间制订的 HTML5 标准。尽管标准在最近才正式公布，但 HTML5 激动人心的特性一早就被开发者热议了。在这份标准当中有一个我们熟悉的身影并没有出现，那就是原生拖放 —— Drag and Drop。</p>
+<blockquote>
+<p>10月28日发布的<a target="_blank" rel="noopener" href="http://www.w3.org/TR/html5/">HTML5版本</a>当中没有原生拖放。</p>
+</blockquote>
+<blockquote>
+<p>而制订当中的<a target="_blank" rel="noopener" href="http://www.w3.org/html/wg/drafts/html/master/editing.html#dnd">HTML5.1版本</a>当中则可以看到。</p>
+</blockquote>
+<p>没有人知道HTML5标准为什么没有了原生拖放特性，我想可能与其设计上的缺陷有关，在谈这个问题之前，先简单介绍一下原生拖放的特性。</p>
+<h2 id="Drag-and-Drop-简介"><a href="#Drag-and-Drop-简介" class="headerlink" title="Drag and Drop 简介"></a>Drag and Drop 简介</h2><h3 id="可拖动属性"><a href="#可拖动属性" class="headerlink" title="可拖动属性"></a>可拖动属性</h3><p>图像、链接和文本是浏览器默认可以被拖动的，HTML5 为所有的HTML元素都提供了一个<strong>draggable</strong>属性，当这个属性的值为<strong>true</strong>的时候，元素被视为可以拖动。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 禁止元素被拖动 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&quot;#&quot;</span> <span class="attr">alt</span>=<span class="string">&quot;不能拖动我&quot;</span> <span class="attr">draggable</span>=<span class="string">&quot;true&quot;</span>&gt;</span>不能拖动我<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 让元素可以被拖动 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">draggable</span>=<span class="string">&quot;false&quot;</span>&gt;</span>可以被拖动<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="拖放事件"><a href="#拖放事件" class="headerlink" title="拖放事件"></a>拖放事件</h3><p>利用拖放事件，我们可以控制拖放过程中的各个阶段。</p>
+<p>对于被拖放的元素包括下列事件：</p>
+<ul>
+<li>dragstart <em>鼠标点击被拖动元素开始拖动时在该元素触发</em>       </li>
+<li>drag <em>拖动元素时频繁在被拖动元素触发</em></li>
+<li>dragend <em>拖动停止并放置之后触发</em></li>
+</ul>
+<p>对于目标放置元素包括下列事件</p>
+<ul>
+<li>dragenter <em>元素被拖动时鼠标进入目标放置元素时触发</em></li>
+<li>dragover <em>元素被拖动时鼠标在目标放置元素时频繁触发</em></li>
+<li>dragleave <em>元素被拖动时鼠标离开目标放置元素时触发</em></li>
+<li>drop <em>元素被拖动到目标放置元素并放开鼠标进行放置时触发</em></li>
+</ul>
+<p>可以看出，拖放特性的核心就是拖动一个元素放置到一个目标元素当中。</p>
+<h3 id="dataTransfer"><a href="#dataTransfer" class="headerlink" title="dataTransfer"></a>dataTransfer</h3><p>我认为原生拖放当中最令人兴奋的特性就是可以利用拖放事件传递数据，这样使浏览器原生就可以支持类似于桌面应用的拖放交互功能。</p>
+<p>要使用数据传输功能就需要一个名为 dataTransfer 的接口。</p>
+<p>dataTransfer 主要包括 getData() 和 setData() 方法。 setData() 用于保存值，getData() 用于获得 setData() 保存的值。</p>
+<blockquote>
+<p>dataTransfer.setData(format, data)</p>
+</blockquote>
+<blockquote>
+<p>dataTransfer.getData(format)</p>
+</blockquote>
+<p>format 参数支持MIME数据类型。</p>
+<p>一个小例子 <a target="_blank" rel="noopener" href="http://jsfiddle.net/acwong/00p1mppp/2/embedded/result/">传送门</a>。</p>
+<h3 id="dropEffect-和-effectAllowed"><a href="#dropEffect-和-effectAllowed" class="headerlink" title="dropEffect 和 effectAllowed"></a>dropEffect 和 effectAllowed</h3><p>dataTransfer 接口还有两个有趣的属性。</p>
+<p><strong>dropEffect</strong> 浏览器会根据不同的值显示不同类型的光标，提升用户放置后的行为。 dropEffect 包括以下几个值:</p>
+<ul>
+<li>none <em>不能把拖动的元素放置在这里</em></li>
+<li>move <em>把元素移动到这里</em></li>
+<li>copy <em>把元素复制到这里</em></li>
+<li>link <em>放置到这里后打开链接</em></li>
+</ul>
+<p>浏览器仅仅会帮你改变光标的类型，但是要实现怎样的效果都是要开发者自己去实现。</p>
+<p><strong>effectAllowed</strong> 搭配 dropEffect 使用，表示允许dropEffect的哪种行为，它的值有以下几种：</p>
+<ul>
+<li>none <em>被拖动元素不能有任何行为</em></li>
+<li>copy <em>允许值为 “copy” 的放置行为</em></li>
+<li>link <em>允许值为 “link” 的放置行为</em></li>
+<li>move <em>允许值为 “move” 的放置行为</em></li>
+<li>copyLink <em>允许值为 “copy” 和 “link” 的放置行为</em></li>
+<li>copyMove <em>允许值为 “copy” 和 “move” 的放置行为</em></li>
+<li>linkMove <em>允许值为 “link” 和 “move” 的放置行为</em></li>
+<li>all <em>允许所有放置行为</em></li>
+</ul>
+<p>便于理解请看例子 <a target="_blank" rel="noopener" href="http://help.dottoro.com/external/examples/ljffjemc/dropEffect_1.htm">传送门</a></p>
+<h2 id="Drag-and-Drop-的坑"><a href="#Drag-and-Drop-的坑" class="headerlink" title="Drag and Drop 的坑"></a>Drag and Drop 的坑</h2><h3 id="Drag-and-Drop-的历史"><a href="#Drag-and-Drop-的历史" class="headerlink" title="Drag and Drop 的历史"></a>Drag and Drop 的历史</h3><p>与其他的 HTML5 特性不同，Drag and Drop 的<a target="_blank" rel="noopener" href="http://fmbip.com/litmus#html5-web-applications">浏览器兼容性</a>可以说鹤立鸡群。</p>
+<p><a target="_blank" rel="noopener" href="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/dnd-compatibility.PNG"><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/dnd-compatibility.PNG" alt="addEventListener"></a></p>
+<p>拖放功能最早在IE4时候就被引入，而在目前的拖放模型则是基于IE5.5的模型建立的。由于这个原因导致了原生拖放当中出现了各种不同的坑。</p>
+<h3 id="我开发中遇到的问题"><a href="#我开发中遇到的问题" class="headerlink" title="我开发中遇到的问题"></a>我开发中遇到的问题</h3><p>前阵子做了一个360度全景效果的demo，一开始想到用drag事件来做。</p>
+<p>首先准备图片:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;container&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;panorama&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;images/0.jpg&quot;</span> <span class="attr">alt</span>=<span class="string">&quot;&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;images/1.jpg&quot;</span> <span class="attr">alt</span>=<span class="string">&quot;&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;images/2.jpg&quot;</span> <span class="attr">alt</span>=<span class="string">&quot;&quot;</span>&gt;</span></span><br><span class="line">        .......</span><br><span class="line">        <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;images/74.jpg&quot;</span> <span class="attr">alt</span>=<span class="string">&quot;&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;images/75.jpg&quot;</span> <span class="attr">alt</span>=<span class="string">&quot;&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;images/76.jpg&quot;</span> <span class="attr">alt</span>=<span class="string">&quot;&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>然后利用 drag 事件频繁发生，在 drag 事件触发时，判断鼠标位移，然后显示下一张图片，利用人的视觉残留，做出360度全景图片的效果。(使用了 jQuery 库)</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> panorama = $(<span class="string">&#x27;#panorama&#x27;</span>);</span><br><span class="line"><span class="keyword">var</span> images = panorama.<span class="title function_">find</span>(<span class="string">&#x27;img&#x27;</span>);</span><br><span class="line"><span class="keyword">var</span> len = images.<span class="property">length</span>;</span><br><span class="line"><span class="keyword">var</span> start_X = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">var</span> start_Y = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">panorama.<span class="title function_">on</span>(<span class="string">&#x27;dragstart&#x27;</span>, <span class="keyword">function</span>(<span class="params">event</span>) &#123;</span><br><span class="line">	start_X = event.<span class="property">originalEvent</span>.<span class="property">x</span>;</span><br><span class="line">	start_Y = event.<span class="property">originalEvent</span>.<span class="property">y</span>;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">panorama.<span class="title function_">on</span>(<span class="string">&#x27;drag&#x27;</span>, <span class="keyword">function</span>(<span class="params">event</span>) &#123;</span><br><span class="line">	<span class="keyword">var</span> mouse_X = event.<span class="property">originalEvent</span>.<span class="property">x</span>;</span><br><span class="line">	<span class="keyword">var</span> mouse_Y = event.<span class="property">originalEvent</span>.<span class="property">y</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (mouse_X - start_X &gt; <span class="number">0</span>) &#123;</span><br><span class="line">		<span class="title function_">moveImg</span>(<span class="string">&#x27;right&#x27;</span>);</span><br><span class="line">		start_X = mouse_X;</span><br><span class="line">	&#125; <span class="keyword">else</span> <span class="keyword">if</span> (start_X - mouse_X &gt; <span class="number">0</span>) &#123;</span><br><span class="line">		<span class="title function_">moveImg</span>(<span class="string">&#x27;left&#x27;</span>);</span><br><span class="line">		start_X = mouse_X;</span><br><span class="line">	&#125;		</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">moveImg</span>(<span class="params">dir</span>) &#123;</span><br><span class="line">	<span class="keyword">var</span> current_img = panorama.<span class="title function_">find</span>(<span class="string">&#x27;img:visible&#x27;</span>);</span><br><span class="line">	<span class="keyword">var</span> index = current_img.<span class="title function_">index</span>();</span><br><span class="line">	<span class="keyword">if</span> (dir === <span class="string">&#x27;right&#x27;</span>) &#123;</span><br><span class="line">		<span class="keyword">if</span> (index + <span class="number">1</span> === len) &#123;</span><br><span class="line">			images.<span class="title function_">eq</span>(<span class="number">0</span>).<span class="title function_">show</span>().<span class="title function_">siblings</span>().<span class="title function_">hide</span>();</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			images.<span class="title function_">eq</span>(index + <span class="number">1</span>).<span class="title function_">show</span>().<span class="title function_">siblings</span>().<span class="title function_">hide</span>();</span><br><span class="line">		&#125;</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		<span class="keyword">if</span> (index - <span class="number">1</span> === <span class="number">0</span>) &#123;</span><br><span class="line">			images.<span class="title function_">eq</span>(len - <span class="number">1</span>).<span class="title function_">show</span>().<span class="title function_">siblings</span>().<span class="title function_">hide</span>();</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			images.<span class="title function_">eq</span>(index - <span class="number">1</span>).<span class="title function_">show</span>().<span class="title function_">siblings</span>().<span class="title function_">hide</span>();</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong><a target="_blank" rel="noopener" href="http://jsfiddle.net/acwong/xpk5932b/">demo</a></strong></p>
+<p>完成demo之后发现，浏览器对图片有默认的拖动效果。</p>
+<p><a target="_blank" rel="noopener" href="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/drag360.PNG"><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/drag360.PNG" alt="图片默认拖动效果"></a></p>
+<p>要去掉这个效果可以在 dragstart 或 mousedown 事件中调用 event.preventDefault() 方法。但是无论使用上述哪一种方法都会导致 drag 事件失效。找了很多资料也没有找到很好的解决方法。所以最后我还是老老实实地用了 mouse 事件的方法重写了一遍。</p>
+<p><strong><a target="_blank" rel="noopener" href="http://jsfiddle.net/acwong/xpk5932b/1/">demo</a></strong></p>
+<h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><p>除了图片默认拖动效果的小问题之外，在网络上也有许多使用 drag and drop 的吐槽，像<a target="_blank" rel="noopener" href="https://ghsky.com/2012/09/talk-about-html5-drag-and-drop.html">这一篇</a>说出了很多拖放特性相关事件在使用上的很多坑。</p>
+<p>当然还有PPK对拖放特性的<a target="_blank" rel="noopener" href="http://www.quirksmode.org/blog/archives/2009/09/the_html5_drag.html">吐槽</a>。09年的时候PPK就说应该把拖放特性在 HTML5 里面删除。</p>
+<blockquote>
+<p>The module should be removed from the HTML5 specification straight away, and conforming browsers should disable it at their earliest opportunity pending a complete rewrite from the ground up.</p>
+</blockquote>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>原生拖放的设计的确是极大地提高了浏览器与用户的交互性，但是基于 IE5.5 设计的 HTML5 原生拖放却并不是十分好用，使用过程中总会遇到一些麻烦，而且我认为 dropEffect 和 effectAllowed 略显鸡肋并且难以理解。我想这些都是 HTML5 暂时没有这个特性的原因。</p>
+<p>希望后续的版本原生拖放成为一个让人眼前一亮的功能。</p>
+<p>感谢您的阅读，有不足之处请在评论为我指出。</p>
+<p><strong>参考</strong></p>
+<ol>
+<li><a target="_blank" rel="noopener" href="http://help.dottoro.com/ljffjemc.php">dropEffect property (dataTransfer)</a></li>
+<li><a target="_blank" rel="noopener" href="http://book.douban.com/subject/10546125/">JavaScript高级程序设计(第3版)</a></li>
+<li><a target="_blank" rel="noopener" href="https://ghsky.com/2012/09/talk-about-html5-drag-and-drop.html">浅谈 HTML5 的 Drag and Drop</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.quirksmode.org/blog/archives/2009/09/the_html5_drag.html">The HTML5 drag and drop disaster</a></li>
+<li><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/19036977/why-is-event-preventdefault-in-dragstart-interrupting-furthur-drag-events-from?nsukey=nAJoypRJ/Y1BrOvXfa1fWU2dcz2tJ4S0mv0B4f5G0a+6zdcX0XO6q9QGbfadlJ1eeYaogaKSDjRa4xL4wzNLIQ==">Why is event.preventDefault() in dragstart interrupting furthur drag events from executing? – stackoverflow</a></li>
+</ol>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/技术研究/">技术研究</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/事件/">事件</a><a href="/tags/HTML5/">HTML5</a><a href="/tags/原生拖放/">原生拖放</a><a href="/tags/Drag-and-Drop/">Drag and Drop</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+
+<nav class="pagination">
+  
+  <a href="/page/8/" class="pagination-prev">Prev</a>
+  
+  
+  <a href="/page/10/" class="pagination-next">Next</a>
+  
+</nav>
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2022 acwong
+    
+  </p>
+</footer>
+    
+    
+  </div>
+</div>
+</body>
+</html>

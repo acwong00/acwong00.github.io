@@ -1,0 +1,177 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Node.js 练习 —— 逼死强迫症头像 | ac黄的博客 | acwong&#39;s blog</title>
+
+  
+  <meta name="author" content="acwong">
+  
+
+  
+  <meta name="description" content="Node.js 小练习，使用 Node.js 在图像上添加模拟提示信息数字。">
+  
+
+  
+  
+  <meta name="keywords" content="Node.js,图像处理">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="Node.js 练习 —— 逼死强迫症头像"/>
+
+  <meta property="og:site_name" content="ac黄的博客"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="ac黄的博客" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">ac黄的博客</a>
+    </h1>
+    <p class="site-description">acwong&#39;s blog</p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">Home</a></li>
+        
+      
+        <li><a href="/archives">Archives</a></li>
+        
+      
+        <li><a href="/tags">Tags</a></li>
+        
+      
+        
+        <li><a href="mailto:acwong@yeah.net">Email</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>Node.js 练习 —— 逼死强迫症头像</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2015/01/29/node-draw-number-on-head-image/" rel="bookmark">
+        <time class="entry-date published" datetime="2015-01-29T03:35:27.000Z">
+          2015-01-29
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>最近在 GitHub 上看到了一个名为 <a target="_blank" rel="noopener" href="https://github.com/Show-Me-the-Code/show-me-the-code">Python 练习册</a>的项目。这个项目让大家用 Python 来完成一些简单的小练习，题目也同样适用于其他的语言，这里就 Node.js 来写完成一些小练习。</p>
+<h2 id="题目0000"><a href="#题目0000" class="headerlink" title="题目0000"></a>题目0000</h2><blockquote>
+<p>将你的 QQ 头像（或者微博头像）右上角加上红色的数字，类似于微信未读信息数量那种提示效果。 类似于图中效果</p>
+</blockquote>
+<blockquote>
+<p> <img src="https://camo.githubusercontent.com/d518d3929e4054ce2f9183b23e52908da7e5632d/687474703a2f2f692e696d6775722e636f6d2f736732646b75592e706e673f31" alt="题目0000图片"></p>
+</blockquote>
+<h2 id="图片库选择"><a href="#图片库选择" class="headerlink" title="图片库选择"></a>图片库选择</h2><p>这个题目要求的是在图片上添加一个数字，然后完成前阵子很流行的模拟提示数字逼死强迫症的效果。在 Python 当中要作图通常会使用 Pillow 库。而在 Node.js 当中我选择了较为全面的 <a target="_blank" rel="noopener" href="http://aheckmann.github.io/gm/">gm</a> 库。当然，还有其他的选择，可以参考 <a target="_blank" rel="noopener" href="http://stackoverflow.com/questions/10692075/which-library-should-i-use-for-server-side-image-manipulation-on-node-js">StackOverflow 的答案</a>。</p>
+<h2 id="安装-gm"><a href="#安装-gm" class="headerlink" title="安装 gm"></a>安装 gm</h2><p>要使用 gm 首先要在系统安装 <a target="_blank" rel="noopener" href="http://www.graphicsmagick.org/">GraphicsMagick</a> 或者 <a target="_blank" rel="noopener" href="http://www.imagemagick.org/">ImageMagick</a>。这里我选择了 ImageMagick。在 Ubuntu 系统里面非常简单：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install imagemagick</span><br></pre></td></tr></table></figure>
+
+<p>然后用 <em>npm</em> 安装 gm 库：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install gm</span><br></pre></td></tr></table></figure>
+
+<h2 id="开始作图"><a href="#开始作图" class="headerlink" title="开始作图"></a>开始作图</h2><p>先来看看最终的效果：</p>
+<p><img src="https://raw.githubusercontent.com/acwong00/node_exercise/master/0000/acwong2.jpg" alt="acwong_afeter"></p>
+<p>因此，现在就要在原图的右上角画上一个红色的圆和白色的数字。</p>
+<p>这里我主要用到 gm 的 <code>drawCircle</code> 和 <code>drawCircle</code> 的方法分别用来画圆和数字。</p>
+<p>直接上代码：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> fs = <span class="built_in">require</span>(<span class="string">&#x27;fs&#x27;</span>)</span><br><span class="line">  , gm = <span class="built_in">require</span>(<span class="string">&#x27;gm&#x27;</span>)  <span class="comment">// 加载 gm 模块</span></span><br><span class="line">  , readStream = fs.<span class="title function_">createReadStream</span>(<span class="string">&quot;acwong.jpg&quot;</span>);  <span class="comment">// 创建流</span></span><br><span class="line"><span class="title function_">gm</span>(readStream,<span class="string">&#x27;acwong.jpg&#x27;</span>)</span><br><span class="line">    .<span class="title function_">options</span>(&#123;<span class="attr">imageMagick</span>: <span class="literal">true</span>&#125;)  <span class="comment">// 使用 ImageMagick </span></span><br><span class="line">    .<span class="title function_">size</span>(&#123;<span class="attr">bufferStream</span>: <span class="literal">true</span>&#125;, <span class="keyword">function</span>(<span class="params">err, size</span>)&#123;</span><br><span class="line">        <span class="comment">// 使用 size 方法获取图像的尺寸</span></span><br><span class="line">        <span class="keyword">if</span> (err) &#123;</span><br><span class="line">            <span class="keyword">throw</span> err;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">var</span> width = <span class="built_in">parseInt</span>(size.<span class="property">width</span>);</span><br><span class="line">            <span class="keyword">var</span> height = <span class="built_in">parseInt</span>(size.<span class="property">width</span>);</span><br><span class="line">            <span class="variable language_">this</span>.<span class="title function_">fill</span>(<span class="string">&quot;#ff0000&quot;</span>);</span><br><span class="line">            <span class="comment">// 画圆</span></span><br><span class="line">            <span class="variable language_">this</span>.<span class="title function_">drawCircle</span>(width-<span class="number">30</span>, <span class="number">30</span>, width-<span class="number">30</span>, <span class="number">0</span>);</span><br><span class="line">            <span class="variable language_">this</span>.<span class="title function_">fill</span>(<span class="string">&quot;#ffffff&quot;</span>);</span><br><span class="line">            <span class="variable language_">this</span>.<span class="title function_">fontSize</span>(<span class="string">&quot;50&quot;</span>);</span><br><span class="line">            <span class="comment">// 画数字</span></span><br><span class="line">            <span class="variable language_">this</span>.<span class="title function_">drawText</span>(width-<span class="number">45</span>, <span class="number">50</span>, <span class="string">&quot;7&quot;</span>);</span><br><span class="line">            <span class="variable language_">this</span>.<span class="title function_">write</span>(<span class="string">&quot;acwong2.jpg&quot;</span>, <span class="keyword">function</span>(<span class="params">err</span>)&#123;</span><br><span class="line">                <span class="keyword">if</span> (err) &#123;</span><br><span class="line">                    <span class="keyword">throw</span> err;</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;done&quot;</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br></pre></td></tr></table></figure>
+
+<p>运行程序：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">node test</span><br></pre></td></tr></table></figure>
+
+<p>命令行中出现 <strong>done</strong> 打开新的图片 <em>acwong2.jpg</em> 就可以看到效果了。</p>
+<p>感谢您的阅读，有不足之处请为我指出。</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/技术实践/">技术实践</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Node-js/">Node.js</a><a href="/tags/图像处理/">图像处理</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2022 acwong
+    
+  </p>
+</footer>
+    
+    
+  </div>
+</div>
+</body>
+</html>

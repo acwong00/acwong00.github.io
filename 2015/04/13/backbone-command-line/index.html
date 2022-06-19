@@ -1,0 +1,217 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Backbone实践 —— 伪命令行制作 | ac黄的博客 | acwong&#39;s blog</title>
+
+  
+  <meta name="author" content="acwong">
+  
+
+  
+  <meta name="description" content="利用 Backbone 库在前端模仿命令行系统。">
+  
+
+  
+  
+  <meta name="keywords" content="Backbone">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="Backbone实践 —— 伪命令行制作"/>
+
+  <meta property="og:site_name" content="ac黄的博客"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="ac黄的博客" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">ac黄的博客</a>
+    </h1>
+    <p class="site-description">acwong&#39;s blog</p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">Home</a></li>
+        
+      
+        <li><a href="/archives">Archives</a></li>
+        
+      
+        <li><a href="/tags">Tags</a></li>
+        
+      
+        
+        <li><a href="mailto:acwong@yeah.net">Email</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>Backbone实践 —— 伪命令行制作</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2015/04/13/backbone-command-line/" rel="bookmark">
+        <time class="entry-date published" datetime="2015-04-13T09:10:56.000Z">
+          2015-04-13
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>最近学习了一下 Backbone 这个库，对于想学习制作单页应用的朋友来说，Backbone 确实是一个不错的选择。为了让自己更加熟悉 Backbone，最近用它制作了一个伪命令行应用来装修了本人博客的 <a target="_blank" rel="noopener" href="http://blog.acwong.org/#">about 页面</a>。</p>
+<h2 id="构思"><a href="#构思" class="headerlink" title="构思"></a>构思</h2><p>说是“伪”命令行，当然没有真命令行那么多复杂的功能(⊙ˍ⊙)，它主要的功能就是，当输入一个命令的时候在伪命令行界面打印出相应的信息。</p>
+<h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><h3 id="文件结构"><a href="#文件结构" class="headerlink" title="文件结构"></a>文件结构</h3><p><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2015-04_commandline-files-structure.PNG" alt="文件结构"></p>
+<p>文件结构非常简单，<em>index.html</em> 是应用的页面，<em>main.css</em> 样式文件，<em>test.js</em> 是测试的数据，js文件夹中存放了应用的 JavaScript 代码。</p>
+<h3 id="index-html-和-main-css"><a href="#index-html-和-main-css" class="headerlink" title="index.html 和 main.css"></a>index.html 和 main.css</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;container&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;terminal&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;terminalPrint&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;command&quot;</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">id</span>=<span class="string">&quot;commandInput&quot;</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><em>index.html</em> 结构也非常简单，<em>terminal</em> 下包含两个 <code>div</code>, <em>terminalPrint</em> 用于显示打印的信息，<em>command</em> 用于输入命令。</p>
+<p><em>main.css</em> 文件就不多说了，就是把页面做到很像命令行的样子。</p>
+<p><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2015-04_command-line-view.PNG" alt="命令行的样子"></p>
+<h2 id="JavaScript-部分"><a href="#JavaScript-部分" class="headerlink" title="JavaScript 部分"></a>JavaScript 部分</h2><p>首先在 <em>index.html</em> 文件当中引入 Backbone 和它依赖的库，除了 Backbone 强依赖的 underscore.js 之外这里还引入了 jQuery。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- &lt;/body&gt; 前引入 --&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 这里使用了百度静态资源公共库 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;http://apps.bdimg.com/libs/jquery/1.9.1/jquery.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;http://apps.bdimg.com/libs/underscore.js/1.7.0/underscore-min.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;http://apps.bdimg.com/libs/backbone.js/1.1.2/backbone-min.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Model-amp-Collection"><a href="#Model-amp-Collection" class="headerlink" title="Model &amp; Collection"></a>Model &amp; Collection</h3><p>这里定义了一个 Model 用来表示命令的属性。包含两部分，<code>name</code> 代表命令的名称。<code>messages</code> 表示该命令要打印的信息，这里我用了数组来表示信息，每一项代表一行的信息。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// command-model.js</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> app = app || &#123;&#125;; <span class="comment">// 全局变量</span></span><br><span class="line"></span><br><span class="line">app.<span class="property">CommandModel</span> = <span class="title class_">Backbone</span>.<span class="property">Model</span>.<span class="title function_">extend</span>(&#123;</span><br><span class="line">    <span class="attr">default</span>: &#123;</span><br><span class="line">        <span class="attr">name</span>: <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">        <span class="attr">messages</span>: []</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>建立一个 Collection 用于保存命令的集合。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// command-collection.js</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> app = app || &#123;&#125;;</span><br><span class="line"></span><br><span class="line">app.<span class="property">CommandCollection</span> = <span class="title class_">Backbone</span>.<span class="property">Collection</span>.<span class="title function_">extend</span>(&#123;</span><br><span class="line">    <span class="attr">model</span>: app.<span class="property">CommandModel</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h3 id="View"><a href="#View" class="headerlink" title="View"></a>View</h3><p>View 我认为是 Backbone 较为重要的一个部分，我理解 View 的工作是根据应用发生的事件去重新渲染页面。在这里我为应用定义了3个 View，分别是对于整个应用的 <code>AppView</code>，用于显示命令输入行的 <code>CommandView</code> 和为了让打印信息具有更强大功能的 <code>MessageView</code>。</p>
+<h4 id="MessageView"><a href="#MessageView" class="headerlink" title="MessageView"></a>MessageView</h4><p>首先介绍 MessageView，上文提到过 <code>CommandModel</code> 是用来定义命令和命令打印的信息，其中打印的信息是一个数组。我的设想是数组当中每一项包含一个对象，分别含有3个属性：</p>
+<ul>
+<li><code>messages</code> 保存打印到命令行的信息</li>
+<li><code>color</code>    打印信息的颜色</li>
+<li><code>link</code>     打印信息的链接</li>
+</ul>
+<p>因此，在 <code>MessageView</code> 初始化的函数当中就为它定义了一个默认的对象。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// message-view.js</span></span><br><span class="line"></span><br><span class="line">app.<span class="property">MessageView</span> = <span class="title class_">Backbone</span>.<span class="property">View</span>.<span class="title function_">extend</span>(&#123;</span><br><span class="line">    <span class="comment">// 省略其他代码</span></span><br><span class="line"></span><br><span class="line">    <span class="attr">initialize</span>: <span class="keyword">function</span> (<span class="params">model</span>) &#123;</span><br><span class="line">        <span class="keyword">var</span> defaults = &#123;</span><br><span class="line">            <span class="attr">messages</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">            <span class="attr">color</span>: <span class="string">&quot;rgb(57, 219, 31)&quot;</span>,</span><br><span class="line">            <span class="attr">link</span>: <span class="string">&quot;&quot;</span></span><br><span class="line">        &#125;;</span><br><span class="line"></span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">model</span> = $.<span class="title function_">extend</span>(defaults, model);</span><br><span class="line">    &#125;,</span><br><span class="line"></span><br><span class="line">    <span class="attr">render</span>: <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">$el</span>.<span class="title function_">html</span>(<span class="variable language_">this</span>.<span class="title function_">template</span>(<span class="variable language_">this</span>.<span class="property">model</span>));</span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>当创建 <code>MessageView</code> 的时候需要为它传入对象(就是存储在 <code>CommandModel</code> <code>messages</code> 数组当中的每一项)。</p>
+<p><code>MessageView</code> 对应的模版如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;script id=&quot;messageTemplate&quot; type=&quot;text/template&quot;&gt;</span><br><span class="line">    &lt;div &lt;%= color ? (&#x27;style=&quot;color:&#x27; + color + &#x27;&quot;&#x27;) : &#x27;&#x27; %&gt;&gt;</span><br><span class="line">        &lt;%= link ? (&#x27;&lt;a href=&quot;&#x27; + link + &#x27;&quot;&gt;&#x27;) : &#x27;&#x27; %&gt;</span><br><span class="line">            &lt;%= message %&gt;</span><br><span class="line">        &lt;%= link ? (&#x27;&lt;/a&gt;&#x27;) : &#x27;&#x27; %&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<p>根据 <code>color</code> 为信息添加相应的颜色样式，根据 <code>link</code> 的值为打印内容添加链接。</p>
+<h4 id="CommandView"><a href="#CommandView" class="headerlink" title="CommandView"></a>CommandView</h4><p><code>CommandView</code> 比较简单，只是用来显示输入命令的那一行，主要任务就算显示提示信息也就是 prompt。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//command-view.js</span></span><br><span class="line"></span><br><span class="line">app.<span class="property">CommandView</span> = <span class="title class_">Backbone</span>.<span class="property">View</span>.<span class="title function_">extend</span>(&#123;</span><br><span class="line">    <span class="comment">// 省略其他代码</span></span><br><span class="line"></span><br><span class="line">    <span class="attr">initialize</span>: <span class="keyword">function</span> (<span class="params">prompt</span>) &#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">prompt</span> = prompt;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="title function_">render</span>();</span><br><span class="line">    &#125;,</span><br><span class="line"></span><br><span class="line">    <span class="attr">render</span>: <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">$el</span>.<span class="title function_">html</span>(<span class="variable language_">this</span>.<span class="title function_">template</span>(&#123;<span class="attr">prompt</span>: <span class="variable language_">this</span>.<span class="property">prompt</span>&#125;));</span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p><code>CommandView</code> 对应的模版如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;script id=&quot;commandTemplate&quot; type=&quot;text/template&quot;&gt;</span><br><span class="line">    &lt;label&gt;&lt;%- prompt %&gt;&lt;/label&gt;</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<p><strong>一个小点</strong></p>
+<p>可以看到上面两个 View 的 <code>render</code> 函数都返回了 <code>this</code>，这是一种推荐的做法，可以方便链式调用。</p>
+<h4 id="AppView"><a href="#AppView" class="headerlink" title="AppView"></a>AppView</h4><p><code>AppView</code> 比较复杂，主要工作是完成整个应用的初始化和监听各种事件发生。</p>
+<p>首先是应用的初始化。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// app-view.js</span></span><br><span class="line"></span><br><span class="line">app.<span class="property">AppView</span> = <span class="title class_">Backbone</span>.<span class="property">View</span>.<span class="title function_">extend</span>(&#123;</span><br><span class="line">    <span class="attr">initialize</span>: <span class="keyword">function</span>(<span class="params">commands, prompt, greeting</span>) &#123;</span><br><span class="line">		</span><br><span class="line">        <span class="comment">// 获得 DOM 对象</span></span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">$printEl</span> = <span class="variable language_">this</span>.$(<span class="string">&#x27;#terminalPrint&#x27;</span>);</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">$input</span> = <span class="variable language_">this</span>.$(<span class="string">&#x27;#commandInput&#x27;</span>);</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">$command</span> = <span class="variable language_">this</span>.$(<span class="string">&#x27;#command&#x27;</span>);</span><br><span class="line">		</span><br><span class="line">        <span class="comment">// 初始化命令输入行</span></span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">commandView</span> = <span class="keyword">new</span> app.<span class="title class_">CommandView</span>(prompt);</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">$command</span>.<span class="title function_">prepend</span>(<span class="variable language_">this</span>.<span class="property">commandView</span>.<span class="title function_">render</span>().<span class="property">el</span>);</span><br><span class="line">		</span><br><span class="line">        <span class="comment">// 打印欢迎信息</span></span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">messages</span> = greeting;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="title function_">renderMessage</span>();</span><br><span class="line">		</span><br><span class="line">        <span class="comment">// 保存命令的集合</span></span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">collection</span> = <span class="keyword">new</span> app.<span class="title class_">CommandCollection</span>(commands);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 省略其他代码</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>由于这里的应用没有后台系统，所以所有的数据都是通过参赛在创建应用的时候传进去。<code>commands</code> 保存着命令的集合、<code>prompt</code> 提示信息、<code>greeting</code> 欢迎信息。</p>
+<p>打印到命令行的信息这里一律用 <code>renderMessage</code> 函数来处理。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">renderMessage</span>: <span class="keyword">function</span>(<span class="params">value</span>) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="variable language_">this</span>.<span class="property">messages</span>.<span class="property">length</span>; i++) &#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">messageView</span> = <span class="keyword">new</span> app.<span class="title class_">MessageView</span>(<span class="variable language_">this</span>.<span class="property">messages</span>[i]);</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">$printEl</span>.<span class="title function_">append</span>(<span class="variable language_">this</span>.<span class="property">messageView</span>.<span class="title function_">render</span>().<span class="property">el</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>传入一个数组为需要打印的信息，然后为每一条信息创建一个 <code>MessageView</code> 来显示。</p>
+<p>然后定义应用发生的事件。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">events</span>: &#123;</span><br><span class="line">    <span class="string">&#x27;click&#x27;</span>: <span class="string">&#x27;inputFocus&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;keypress #commandInput&#x27;</span>: <span class="string">&#x27;runCommand&#x27;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其中 <code>inputFocus</code> 是用于点击应用的时候将焦点聚集在命令输入框，不作详细介绍，这里主要介绍一下输入命令时发生的 <code>runCommand</code>。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">runCommand</span>: <span class="keyword">function</span>(<span class="params">e</span>) &#123;</span><br><span class="line">    <span class="comment">// 输出信息超过30行自动删除</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="variable language_">this</span>.<span class="property">$printEl</span>.<span class="title function_">children</span>(<span class="string">&#x27;div&#x27;</span>).<span class="property">length</span> &gt; <span class="number">30</span>) &#123;</span><br><span class="line">        <span class="keyword">var</span> len = <span class="variable language_">this</span>.<span class="property">$printEl</span>.<span class="title function_">children</span>(<span class="string">&#x27;div&#x27;</span>).<span class="property">length</span> - <span class="number">30</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; len; i++) &#123;</span><br><span class="line">            <span class="variable language_">this</span>.<span class="property">$printEl</span>.<span class="title function_">children</span>(<span class="string">&#x27;div&#x27;</span>).<span class="title function_">eq</span>(i).<span class="title function_">remove</span>();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (e.<span class="property">which</span> === <span class="number">13</span>) &#123;</span><br><span class="line">		<span class="comment">// 打印输入的命令</span></span><br><span class="line">        <span class="keyword">var</span> value = <span class="variable language_">this</span>.<span class="property">$input</span>.<span class="title function_">val</span>().<span class="title function_">trim</span>();</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">$printEl</span>.<span class="title function_">append</span>(<span class="string">&quot;&lt;div&gt;&quot;</span> + <span class="variable language_">this</span>.<span class="property">commandView</span>.<span class="property">prompt</span> + <span class="string">&quot; &quot;</span> + value + <span class="string">&quot;&lt;/div&gt;&quot;</span>);</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">$input</span>.<span class="title function_">val</span>(<span class="string">&#x27;&#x27;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (value === <span class="string">&#x27;&#x27;</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (<span class="variable language_">this</span>.<span class="property">collection</span>.<span class="title function_">findWhere</span>(&#123;<span class="attr">command</span>: value&#125;)) &#123;</span><br><span class="line">            <span class="comment">// 获得相应命令对应的信息</span></span><br><span class="line">            <span class="variable language_">this</span>.<span class="property">model</span> = <span class="variable language_">this</span>.<span class="property">collection</span>.<span class="title function_">findWhere</span>(&#123;</span><br><span class="line">                <span class="attr">command</span>: value</span><br><span class="line">            &#125;);</span><br><span class="line">            <span class="variable language_">this</span>.<span class="property">messages</span> = <span class="variable language_">this</span>.<span class="property">model</span>.<span class="title function_">get</span>(<span class="string">&quot;messages&quot;</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="variable language_">this</span>.<span class="property">messages</span> = <span class="variable language_">this</span>.<span class="property">errorMessage</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="title function_">renderMessage</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>该函数传入事件对象，当用户点击回车的时候，首先在命令行界面打印用户输入的命令，然后如果找到该命令就打印相应的 <code>messages</code> 信息，否则打印错误信息。</p>
+<h2 id="运行应用"><a href="#运行应用" class="headerlink" title="运行应用"></a>运行应用</h2><p>将 <code>AppView</code> 的参数定义好并且传入就可以启动应用了。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="keyword">var</span> commands = [&#123;</span><br><span class="line">        <span class="attr">command</span>: <span class="string">&quot;Hello&quot;</span>,</span><br><span class="line">        <span class="attr">messages</span>: [&#123;</span><br><span class="line">            <span class="attr">message</span>: <span class="string">&quot;Good morning!&quot;</span>,</span><br><span class="line">            <span class="attr">color</span>: <span class="string">&quot;yellow&quot;</span></span><br><span class="line">        &#125;]</span><br><span class="line">    &#125;],</span><br><span class="line">        prompt = <span class="string">&quot;js &gt;&quot;</span>,</span><br><span class="line">        greeting = [&#123;</span><br><span class="line">            <span class="attr">message</span>: <span class="string">&quot;Wellcome!&quot;</span></span><br><span class="line">        &#125;];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">new</span> app.<span class="title class_">AppView</span>(commands, prompt, greeting);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2015-04_command-line-demo-view.PNG" alt="demo截图"></p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>完整的 demo 可以看我的博客 <a target="_blank" rel="noopener" href="http://blog.acwong.org/about/"><del>about 页面</del></a>。</p>
+<p>源代码请点<a target="_blank" rel="noopener" href="https://github.com/acwong00/blog-demo-code/tree/master/backbone-command-line/old_demo">这里</a>。</p>
+<p>我只是一个 Backbone 初学者，有些实现方法可能不够合理，希望看到这篇文章的您多多与我交流。</p>
+<p><a target="_blank" rel="noopener" href="http://blog.acwong.org/2015/04/22/backbone-command-line-with-webpack-and-gulp/">下一篇文章</a>会说一下如何构建这个小项目。</p>
+<p>感谢您的阅读，有不足之处请为我指出。</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/技术实践/">技术实践</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Backbone/">Backbone</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2022 acwong
+    
+  </p>
+</footer>
+    
+    
+  </div>
+</div>
+</body>
+</html>

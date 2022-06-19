@@ -1,0 +1,206 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Node.js 练习 —— 操作 MySQL 和 Redis | ac黄的博客 | acwong&#39;s blog</title>
+
+  
+  <meta name="author" content="acwong">
+  
+
+  
+  <meta name="description" content="Node.js 小练习，生成随机激活码并把生成的激活码分别保存到 MySQL 和 Redis 当中。">
+  
+
+  
+  
+  <meta name="keywords" content="Node.js,MySQL,Redis,关系型数据库,NoSQL数据库">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="Node.js 练习 —— 操作 MySQL 和 Redis"/>
+
+  <meta property="og:site_name" content="ac黄的博客"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="ac黄的博客" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">ac黄的博客</a>
+    </h1>
+    <p class="site-description">acwong&#39;s blog</p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">Home</a></li>
+        
+      
+        <li><a href="/archives">Archives</a></li>
+        
+      
+        <li><a href="/tags">Tags</a></li>
+        
+      
+        
+        <li><a href="mailto:acwong@yeah.net">Email</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>Node.js 练习 —— 操作 MySQL 和 Redis</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2015/03/03/node-test-of-mysql-and-redis/" rel="bookmark">
+        <time class="entry-date published" datetime="2015-03-03T07:28:04.000Z">
+          2015-03-03
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>新年新气象，博客换了一个新主题，继续 Node.js 小练习。</p>
+<p>这次小联系的内容是生成随机激活码并把生成的激活码分别保存到 MySQL 和 Redis 当中。</p>
+<p>题目来源 <a target="_blank" rel="noopener" href="https://github.com/Show-Me-the-Code/show-me-the-code">Python 练习册</a>。</p>
+<h2 id="题目0001"><a href="#题目0001" class="headerlink" title="题目0001"></a>题目0001</h2><blockquote>
+<p>第 0001 题：做为 Apple Store App 独立开发者，你要搞限时促销，为你的应用生成激活码（或者优惠券），使用 Python 如何生成 200 个激活码（或者优惠券）？</p>
+</blockquote>
+<p>这个题目需要我们生成 200个激活码。生成激活码有许多不同的方式，为了简单起见这里直接用 UUID 来代替。</p>
+<p><strong>UUID(Universally Unique Identifier)</strong> 可以帮助我们简单地创建随机而且不重复的字符串。</p>
+<h3 id="node-uuid"><a href="#node-uuid" class="headerlink" title="node-uuid"></a>node-uuid</h3><p>在 Node.js 中使用 <a target="_blank" rel="noopener" href="https://github.com/broofa/node-uuid">node-uuid</a> 库来生成 UUID。该库可以简单地生成符合 RFC4122 标准的版本1 和版本4的UUID。版本1和版本4之间的区别是版本1根据时间戳来生成，而版本4是随机生成。</p>
+<p>安装 node-uuid</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install node-uuid</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// code.js</span></span><br><span class="line"><span class="keyword">var</span> uuid = <span class="built_in">require</span>(<span class="string">&#x27;node-uuid&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">getCode</span>(<span class="params">number</span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> codes = [];</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> i=<span class="number">0</span>; i &lt; number; i++) &#123;</span><br><span class="line">        codes.<span class="title function_">push</span>(uuid.<span class="title function_">v4</span>());</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> codes</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">getCode</span>(<span class="number">200</span>));</span><br></pre></td></tr></table></figure>
+
+<p>运行 <em>code.js</em></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">node code</span><br></pre></td></tr></table></figure>
+
+<p>结果</p>
+<p><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2015-03_node-uuid.PNG" alt="Node.js 生成 UUID"></p>
+<h2 id="题目0002"><a href="#题目0002" class="headerlink" title="题目0002"></a>题目0002</h2><blockquote>
+<p>第 0002 题：将 0001 题生成的 200 个激活码（或者优惠券）保存到 MySQL 关系型数据库中。</p>
+</blockquote>
+<p>首先，我们使用 <code>exports</code> 将上一题当中 <code>getCode</code> 可以被调用：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// code.js</span></span><br><span class="line"><span class="built_in">exports</span>.<span class="property">getCode</span> = getCode;</span><br></pre></td></tr></table></figure>
+
+<h3 id="node-mysql"><a href="#node-mysql" class="headerlink" title="node-mysql"></a>node-mysql</h3><p>要使用 Node.js 操作 MySQL 数据库，这里使用 <a target="_blank" rel="noopener" href="https://github.com/felixge/node-mysql/">node-mysql</a> 库。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install mysql</span><br></pre></td></tr></table></figure>
+
+<p>直接上代码：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// code_insert_mysql.js</span></span><br><span class="line"><span class="keyword">var</span> mysql = <span class="built_in">require</span>(<span class="string">&#x27;mysql&#x27;</span>);</span><br><span class="line"><span class="keyword">var</span> code = <span class="built_in">require</span>(<span class="string">&#x27;./code.js&#x27;</span>); <span class="comment">// 引入上一题的 code.js</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> codes = code.<span class="title function_">getCode</span>(<span class="number">200</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建连接</span></span><br><span class="line"><span class="keyword">var</span> conn = mysql.<span class="title function_">createConnection</span>(&#123;</span><br><span class="line">    <span class="attr">host</span>: <span class="string">&#x27;localhost&#x27;</span>,</span><br><span class="line">    <span class="attr">user</span>: <span class="string">&#x27;test0002&#x27;</span>,</span><br><span class="line">    <span class="attr">password</span>: <span class="string">&#x27;test0002&#x27;</span>,</span><br><span class="line">    <span class="attr">database</span>: <span class="string">&#x27;test0002&#x27;</span></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">conn.<span class="title function_">connect</span>(<span class="keyword">function</span>(<span class="params">err</span>)&#123;</span><br><span class="line">    <span class="keyword">if</span> (err) &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">error</span>(err);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> sql_create_table = <span class="string">&#x27;CREATE TABLE IF NOT EXISTS code( &#x27;</span> +</span><br><span class="line">                       <span class="string">&#x27;id SMALLINT AUTO_INCREMENT,&#x27;</span> +</span><br><span class="line">                       <span class="string">&#x27;code CHAR(20),&#x27;</span> +</span><br><span class="line">                       <span class="string">&#x27;PRIMARY KEY(id)&#x27;</span> +</span><br><span class="line">                       <span class="string">&#x27;)&#x27;</span>;</span><br><span class="line">conn.<span class="title function_">query</span>(sql_create_table, <span class="keyword">function</span>(<span class="params">err, res</span>)&#123;</span><br><span class="line">    <span class="keyword">if</span> (err) &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(err);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> i=<span class="number">0</span>; i &lt; codes.<span class="property">length</span>; i++) &#123;</span><br><span class="line">        <span class="keyword">var</span> sql_insert_code = <span class="string">&quot;INSERT code VALUES(&#x27;code&#x27;,&#x27;&quot;</span> + codes[i] + <span class="string">&quot;&#x27;)&quot;</span>;</span><br><span class="line">        conn.<span class="title function_">query</span>(sql_insert_code, <span class="keyword">function</span>(<span class="params">err, res</span>)&#123;</span><br><span class="line">            <span class="keyword">if</span> (err) &#123;</span><br><span class="line">                <span class="variable language_">console</span>.<span class="title function_">error</span>(err);</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="variable language_">console</span>.<span class="title function_">log</span>(res);</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">    conn.<span class="title function_">end</span>(); <span class="comment">// 关闭连接</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>运行：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">node code_insert_mysql</span><br></pre></td></tr></table></figure>
+
+<p>进入 MySQL 查询一下就可以看到数据了。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT * FROM code;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2015-03_node-mysql.PNG" alt="node-mysql"></p>
+<h2 id="题目0003"><a href="#题目0003" class="headerlink" title="题目0003"></a>题目0003</h2><blockquote>
+<p>第 0003 题：将 0001 题生成的 200 个激活码（或者优惠券）保存到 Redis 非关系型数据库中。</p>
+</blockquote>
+<h3 id="node-redis"><a href="#node-redis" class="headerlink" title="node_redis"></a>node_redis</h3><p>使用 Node.js 操作 Redis，这里使用 <a target="_blank" rel="noopener" href="https://github.com/mranney/node_redis">node_redis</a> 库。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install redis</span><br></pre></td></tr></table></figure>
+
+<p>直接上代码：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// code_insert_redis.js</span></span><br><span class="line"><span class="keyword">var</span> redis = <span class="built_in">require</span>(<span class="string">&#x27;redis&#x27;</span>);</span><br><span class="line"><span class="keyword">var</span> code = <span class="built_in">require</span>(<span class="string">&#x27;./code.js&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> client = redis.<span class="title function_">createClient</span>();</span><br><span class="line"><span class="keyword">var</span> codes = code.<span class="title function_">getCode</span>(<span class="number">200</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 用 LIST 形式存储，KEY 为 codes</span></span><br><span class="line">client.<span class="title function_">rpush</span>(<span class="string">&#x27;codes&#x27;</span>, codes, <span class="keyword">function</span>(<span class="params">err, res</span>)&#123;</span><br><span class="line">    <span class="keyword">if</span> (err) &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(err);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(res); <span class="comment">// 输出 1</span></span><br><span class="line">    client.<span class="title function_">quit</span>();</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>运行：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">node code_insert_redis</span><br></pre></td></tr></table></figure>
+
+<p>查看结果</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lrange codes 0 -1</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2015-03_node-redis.PNG" alt="node-redis"></p>
+<p>感谢您的阅读，有不足之处请为我指出。</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/技术实践/">技术实践</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Node-js/">Node.js</a><a href="/tags/MySQL/">MySQL</a><a href="/tags/Redis/">Redis</a><a href="/tags/关系型数据库/">关系型数据库</a><a href="/tags/NoSQL数据库/">NoSQL数据库</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2022 acwong
+    
+  </p>
+</footer>
+    
+    
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,183 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>立即执行函数表达式 —— IIFE | ac黄的博客 | acwong&#39;s blog</title>
+
+  
+  <meta name="author" content="acwong">
+  
+
+  
+  <meta name="description" content="立即执行函数表达式 —— IIFE">
+  
+
+  
+  
+  <meta name="keywords" content="JavaScript,闭包,作用域,设计模式">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="立即执行函数表达式 —— IIFE"/>
+
+  <meta property="og:site_name" content="ac黄的博客"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="ac黄的博客" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">ac黄的博客</a>
+    </h1>
+    <p class="site-description">acwong&#39;s blog</p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">Home</a></li>
+        
+      
+        <li><a href="/archives">Archives</a></li>
+        
+      
+        <li><a href="/tags">Tags</a></li>
+        
+      
+        
+        <li><a href="mailto:acwong@yeah.net">Email</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>立即执行函数表达式 —— IIFE</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/04/18/introduction-to-IIFE/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-04-18T13:06:04.000Z">
+          2018-04-18
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>无论阅读源码还是日常开发当中常常会见到 <code>(function()&#123; ... &#125;)()</code> 这种形式的表达式，它就是 IIFE，立即执行函数表达式（Immediately Invoked Function Expression）。除了上述的结构以外还有另一种形式同样非常常见 <code>(function() &#123; ... &#125;())</code>。下面介绍 IIFE 常见的应用。</p>
+<h2 id="避免污染全局作用域"><a href="#避免污染全局作用域" class="headerlink" title="避免污染全局作用域"></a>避免污染全局作用域</h2><p>IIFE 最常见的应用可见于各种前端 Javascript 库当中，避免库中定义的变量污染全局作用域。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// jQuery 3.3.1</span></span><br><span class="line">(<span class="keyword">function</span>(<span class="params"><span class="variable language_">global</span>, factory</span>) &#123;</span><br><span class="line">  <span class="comment">// ... jQuery code</span></span><br><span class="line">&#125;)(<span class="keyword">typeof</span> <span class="variable language_">window</span> !== <span class="string">&quot;undefined&quot;</span> ? <span class="variable language_">window</span> : <span class="variable language_">this</span>, <span class="keyword">function</span>(<span class="params"><span class="variable language_">window</span>, noGlobal</span>) &#123;</span><br><span class="line">  <span class="comment">// ... factory code</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// lodash 4.17.5</span></span><br><span class="line">(<span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="comment">// ... lodash code</span></span><br><span class="line">&#125;.<span class="title function_">call</span>(<span class="variable language_">this</span>))</span><br></pre></td></tr></table></figure>
+
+<p>上述两个例子分别是 jQuery 和 lodash 使用 IIFE 的例子，可以看到除了避免全局作用域被污染以外，两者都利用 IIFE 的参数将全局的变量传入函数作用域当中，jQuery 还统一将不同环境当中的全局作用域通通重命名为 <code>global</code>。</p>
+<p>另外，除了传入全局变量以外，还可以传入任何你想传入的东西，如 jQuery 代码当中就传入了一个名为 <code>factory</code> 的函数。另一个常见传入的就是 <code>undefined</code>，避免 <code>undefined</code> 被覆盖而导致的异常。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">(<span class="keyword">function</span> (<span class="params"><span class="literal">undefined</span></span>) &#123;</span><br><span class="line">  <span class="comment">// 可以确定使用 undefined 是安全的</span></span><br><span class="line">&#125;)()</span><br></pre></td></tr></table></figure>
+
+<h2 id="闭包"><a href="#闭包" class="headerlink" title="闭包"></a>闭包</h2><p>在学习 JavaScript 作用域知识的时候常常见到下面这样的问题：</p>
+<p>定时输出数字 1~5，但结果输出的全部是6.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">1</span>; i &lt;= <span class="number">5</span>; i++) &#123;</span><br><span class="line">  <span class="built_in">setTimeout</span>(<span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(i)</span><br><span class="line">  &#125;, i * <span class="number">1000</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>又如希望点击列表元素输出相应数字，结果输出的全部是6.</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;list&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">li</span>&gt;</span>1<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">li</span>&gt;</span>2<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">li</span>&gt;</span>3<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">li</span>&gt;</span>4<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">li</span>&gt;</span>5<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> lists = <span class="variable language_">document</span>.<span class="title function_">querySelectorAll</span>(<span class="string">&#x27;#list li&#x27;</span>)</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="number">5</span>; i++) &#123;</span><br><span class="line">  lists[i].<span class="title function_">addEventListener</span>(<span class="string">&#x27;click&#x27;</span>, <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(i + <span class="number">1</span>)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>由于回调函数是在循环结束之后才被执行，在语义上我们感觉是每次回调函数绑定的是当时循环的 <code>i</code>，而实际上所有的匿名函数都是共用一个 <code>i</code> 的引用，所以会发现输出的都是6，并不是原来希望的结果。</p>
+<p>为了解决这个问题，我们可以使用 IIFE 来创建一个作用域来捕获当时循环的 <code>i</code>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">for (var i = 1; i &lt;= 5; i++) &#123;</span><br><span class="line">  (function(j) &#123;</span><br><span class="line">    setTimeout(function() &#123;</span><br><span class="line">      console.log(j)</span><br><span class="line">    &#125;, j * 1000)</span><br><span class="line">  &#125;)(i)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">var lists = document.querySelectorAll(&#x27;#list li&#x27;)</span><br><span class="line">for (var i = 0; i &lt; 5; i++) &#123;</span><br><span class="line">  (function(j) &#123;</span><br><span class="line">    lists[j].addEventListener(&#x27;click&#x27;, function() &#123;</span><br><span class="line">      console.log(j + 1)</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;)(i)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当然，上述只是用来说明 IIFE 的作用，更好的方案应该使用 <code>let</code> 关键字以及不在每个元素绑定事件而是使用事件代理。</p>
+<p>同样利用 IIFE 结合闭包可以实现简单的单例模式。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> foo = (<span class="keyword">function</span> <span class="title function_">CoolModule</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> something = <span class="string">&#x27;cool&#x27;</span></span><br><span class="line">  <span class="keyword">var</span> another = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">doSomething</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(something)</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">doAnother</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(another.<span class="title function_">join</span>(<span class="string">&#x27;!&#x27;</span>))</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">changeSomething</span>(<span class="params"></span>) &#123;</span><br><span class="line">    something += <span class="string">&#x27;!&#x27;</span></span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    <span class="attr">doSomething</span>: doSomething,</span><br><span class="line">    <span class="attr">doAnother</span>: doAnother,</span><br><span class="line">    <span class="attr">changeSomething</span>: changeSomething</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)()</span><br><span class="line"></span><br><span class="line">foo.<span class="title function_">doSomething</span>() <span class="comment">// cool</span></span><br><span class="line">foo.<span class="title function_">doAnother</span>() <span class="comment">// 1!2!3</span></span><br><span class="line">foo.<span class="title function_">changeSomething</span>()</span><br><span class="line">foo.<span class="title function_">doSomething</span>() <span class="comment">// cool!</span></span><br></pre></td></tr></table></figure>
+
+<p>最后，IIFE 给我们提供了非常强大的功能，使用的时候最重要的是理解 IIFE 包装了一个函数作用域，使得外部作用域无法访问函数内的内容，同时通过访问函数内部以各种形式暴露的函数形成闭包，从而实现各种强大的功能。</p>
+<p><strong>参考</strong></p>
+<p><a target="_blank" rel="noopener" href="https://book.douban.com/subject/26351021/">你不知道的JavaScript（上卷）</a></p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/学习笔记/">学习笔记</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/JavaScript/">JavaScript</a><a href="/tags/闭包/">闭包</a><a href="/tags/作用域/">作用域</a><a href="/tags/设计模式/">设计模式</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2022 acwong
+    
+  </p>
+</footer>
+    
+    
+  </div>
+</div>
+</body>
+</html>
