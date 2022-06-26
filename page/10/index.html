@@ -56,6 +56,9 @@
         <li><a href="/tags">Tags</a></li>
         
       
+        <li><a href="/categories">Categories</a></li>
+        
+      
         
         <li><a href="mailto:acwong@yeah.net">Email</a></li>
       
@@ -65,6 +68,126 @@
 
     <main class="site-main posts-loop">
     
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2014/11/15/2048-with-seajs/"><span>Seajs 实践(一)—— 模块化 2048 游戏</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2014/11/15/2048-with-seajs/" rel="bookmark">
+        <time class="entry-date published" datetime="2014-11-15T15:43:42.000Z">
+          2014-11-15
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>前段时间在<a target="_blank" rel="noopener" href="http://www.imooc.com/">慕课网</a>跟着视频做了一个简单的 2048 游戏，发现这个小项目非常适合用来实践 Seajs 模块化，现在就把我的实践过程和大家分享一下。</p>
+<h2 id="实践过程"><a href="#实践过程" class="headerlink" title="实践过程"></a>实践过程</h2><h3 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h3><p>没有进行模块化之前总共有5个文件：</p>
+<ul>
+<li><strong>index.html</strong>        游戏页面</li>
+<li><strong>2048.css</strong>          游戏样式文件</li>
+<li><strong>main.js</strong>           程序入口文件</li>
+<li><strong>showanimation.js</strong>  游戏动画文件</li>
+<li><strong>support.js</strong>        基础函数文件</li>
+</ul>
+<p><em>main.js</em> 需要使用 <em>showanimation.js</em> 和 <em>support.js</em> 定义的函数。</p>
+<p><em>showanimation.js</em> 需要使用 <em>support.js</em> 定义的函数。</p>
+<p>除了这些文件之外，这个项目还用了jQuery的库，用了<a target="_blank" rel="noopener" href="http://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js">百度的cdn</a>。</p>
+<p>目前 js 文件引入顺序如下:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;http://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;../static/game/support.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;../static/game/showanimation.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;../static/game/main.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="目录结构"><a href="#目录结构" class="headerlink" title="目录结构"></a>目录结构</h3><p><a target="_blank" rel="noopener" href="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2048-folder-structure.PNG"><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2048-folder-structure.PNG" alt="2048文件目录结构"></a></p>
+<p>源文件可以在<a target="_blank" rel="noopener" href="https://github.com/acwong00/blog-demo-code/tree/master/seajs-2048/2048">这里</a>找到，有兴趣的朋友可以下载下来尝试一下。</p>
+<h3 id="引入Sea-js"><a href="#引入Sea-js" class="headerlink" title="引入Sea.js"></a>引入Sea.js</h3><p>在<a target="_blank" rel="noopener" href="http://seajs.org/docs/#downloads">Seajs官网</a>下载Sea.js(本文用到的版本是 2.3.0)。在<em>static</em>目录下建立一个<em>lib</em>文件夹，存放下载下来的<em>sea.js</em>。</p>
+<p>然后引入：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;../static/lib/sea.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="CMD规范改写"><a href="#CMD规范改写" class="headerlink" title="CMD规范改写"></a>CMD规范改写</h3><p>CMD ( Common Module Definition ) 是Seajs遵循的一种模块定义规范。规范当中，一个模块就是一个文件，因此我按照CMD规范改写 2048 游戏的3个 js 文件。</p>
+<blockquote>
+<p>SeaJS 里，推崇的 Modules/Wrappings 规范是 CMD 规范：<code>define(function()&#123; &#125;)</code> 直接是由开发者手写的，写完后，可直接不经过任何构建工具就在浏览器上加载运行。</p>
+</blockquote>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">define</span>(<span class="keyword">function</span>(<span class="params"><span class="built_in">require</span>, <span class="built_in">exports</span>, <span class="variable language_">module</span></span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> a = <span class="built_in">require</span>(<span class="string">&quot;a&quot;</span>)</span><br><span class="line">    <span class="built_in">exports</span>.<span class="property">foo</span> = ...</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>首先，<em>main.js</em>、<em>showanimation.js</em> 和 <em>support.js</em> 三个文件都用 <code>defined</code> 函数包裹起来，<code>define</code> 接收一个匿名函数作为参数，该函数传入默认的三个参数  <code>require</code>、<code>exports</code> 和 <code>moudule</code> 。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">define</span>(<span class="keyword">function</span>(<span class="params"><span class="built_in">require</span>, <span class="built_in">exports</span>, moudule</span>)&#123;</span><br><span class="line">	<span class="comment">// support.js 代码</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">define</span>(<span class="keyword">function</span>(<span class="params"><span class="built_in">require</span>, <span class="built_in">exports</span>, moudule</span>)&#123;</span><br><span class="line">	<span class="comment">// showanimation.js 代码</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">define</span>(<span class="keyword">function</span>(<span class="params"><span class="built_in">require</span>, <span class="built_in">exports</span>, moudule</span>)&#123;</span><br><span class="line">	<span class="comment">// main.js 代码</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>接着，把 <em>showanimation.js</em> 和 <em>support.js</em> 当中需要被其他模块调用的函数和变量使用 <code>exports</code> 暴露给其他模块。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 暴露变量</span></span><br><span class="line"><span class="built_in">exports</span>.<span class="property">documentWidth</span> = documentWidth;</span><br><span class="line"><span class="built_in">exports</span>.<span class="property">gridContainerWidth</span> = gridContainerWidth;</span><br><span class="line"><span class="built_in">exports</span>.<span class="property">cellSideLength</span> = cellSideLength;</span><br><span class="line"><span class="built_in">exports</span>.<span class="property">cellSpace</span> = cellSpace;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 暴露函数</span></span><br><span class="line"><span class="built_in">exports</span>.<span class="property">getPostTop</span> = <span class="keyword">function</span>(<span class="params">i,j</span>) &#123;</span><br><span class="line">    <span class="comment">// code</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="built_in">exports</span>.<span class="property">getPostLeft</span> = <span class="keyword">function</span>(<span class="params">i,j</span>) &#123;</span><br><span class="line">    <span class="comment">// code</span></span><br><span class="line">&#125;;</span><br><span class="line">......</span><br></pre></td></tr></table></figure>
+
+<p>然后，使用 <code>require</code> 来获取其他模块暴露的接口.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// main.js</span></span><br><span class="line"><span class="keyword">var</span> support = <span class="built_in">require</span>(<span class="string">&#x27;./support&#x27;</span>);</span><br><span class="line"><span class="keyword">var</span> animation = <span class="built_in">require</span>(<span class="string">&#x27;./showanimation&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// showanimation.js</span></span><br><span class="line"><span class="keyword">var</span> support = <span class="built_in">require</span>(<span class="string">&#x27;./support&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>最后，将原来调用其它模块的方法或变量改写为，以下形式：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a = <span class="built_in">require</span>(<span class="string">&#x27;./a&#x27;</span>);</span><br><span class="line"><span class="comment">// 调用模块 a 的方法</span></span><br><span class="line">a.<span class="title function_">doSomething</span>();</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// main.js</span></span><br><span class="line"><span class="comment">// 调用变量</span></span><br><span class="line">support.<span class="property">cellSpace</span> = <span class="number">20</span>;</span><br><span class="line">support.<span class="property">cellSideLength</span> = <span class="number">100</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 调用 showanimation.js 方法</span></span><br><span class="line">animation.<span class="title function_">showNumberWithAnimation</span>(randx, randy, randNumber);</span><br><span class="line"><span class="comment">// 调用 support.js 方法</span></span><br><span class="line">support.<span class="title function_">canMoveDown</span>(board)</span><br></pre></td></tr></table></figure>
+
+<h3 id="在页面当中加载入口模块"><a href="#在页面当中加载入口模块" class="headerlink" title="在页面当中加载入口模块"></a>在页面当中加载入口模块</h3><p>在引入 <em>sea.js</em> 之后，在该 <strong>script</strong> 标签之后，再写一段 seajs 的配置代码：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">seajs.<span class="title function_">config</span>(&#123;</span><br><span class="line">    <span class="attr">base</span>: <span class="string">&quot;../static&quot;</span></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 加载入口模块 </span></span><br><span class="line">seajs.<span class="title function_">use</span>([<span class="string">&quot;game/main&quot;</span>]);</span><br></pre></td></tr></table></figure>
+
+<h3 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h3><p>经过上述过程之后 2048 游戏已经完成了模块化，现在打开浏览器运行一下,就可以正确运行了。</p>
+<p><a target="_blank" rel="noopener" href="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2048s-start.PNG"><img src="https://acwong-blog.oss-cn-shenzhen.aliyuncs.com/2048s-start.PNG" alt="2048运行效果"></a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/acwong00/blog-demo-code/tree/master/seajs-2048/2048-with-seajs">这里</a>是完成后的代码。</p>
+<h2 id="使用Seajs的意义"><a href="#使用Seajs的意义" class="headerlink" title="使用Seajs的意义"></a>使用Seajs的意义</h2><p>使用 Seajs 将各个文件转变成一个个独立的模块，模块当中可以方便的对函数和变量进行命名，免去了多个文件之间命名冲突的烦恼。除此之外，使用 Seajs 还可以在 js 文件当中声明所需的依赖，不再需要手动在引入过程中管理，降低了开发时出错的几率。</p>
+<p>在 EMCAScript6 <code>import</code> 功能出现之前，Seajs 的确是一个不错的前端模块化工具。</p>
+<p><a target="_blank" rel="noopener" href="http://blog.acwong.org/2014/11/16/2048-with-seajs-and-spm3/">下一篇文章</a>，我会谈一下如何用 spm3 进行Seajs标准构建。</p>
+<p>感谢您的阅读，有不足之处请为我指出。</p>
+<p><strong>参考</strong></p>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://github.com/seajs/seajs/issues/242">CMD 模块定义规范</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.zhihu.com/question/20789867/answer/16187950">CommonJS 的 Modules/Transport 和 Modules/Wrappings 规范有什么区别？ – 知乎</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/seajs/seajs/issues/547">前端模块化开发的价值</a></li>
+</ol>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/技术实践/">技术实践</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/前端模块化/">前端模块化</a><a href="/tags/seajs/">seajs</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
   <article>
 
   

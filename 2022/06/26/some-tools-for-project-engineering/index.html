@@ -1,0 +1,203 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>一些项目工程化的小工具 | ac黄的博客 | acwong&#39;s blog</title>
+
+  
+  <meta name="author" content="acwong">
+  
+
+  
+  <meta name="description" content="ac黄的博客">
+  
+
+  
+  
+  <meta name="keywords" content="工程化">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="一些项目工程化的小工具"/>
+
+  <meta property="og:site_name" content="ac黄的博客"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="ac黄的博客" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">ac黄的博客</a>
+    </h1>
+    <p class="site-description">acwong&#39;s blog</p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">Home</a></li>
+        
+      
+        <li><a href="/archives">Archives</a></li>
+        
+      
+        <li><a href="/tags">Tags</a></li>
+        
+      
+        <li><a href="/categories">Categories</a></li>
+        
+      
+        
+        <li><a href="mailto:acwong@yeah.net">Email</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>一些项目工程化的小工具</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2022/06/26/some-tools-for-project-engineering/" rel="bookmark">
+        <time class="entry-date published" datetime="2022-06-26T10:58:46.000Z">
+          2022-06-26
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="一、Prettier：配合-git-进行代码格式化"><a href="#一、Prettier：配合-git-进行代码格式化" class="headerlink" title="一、Prettier：配合 git 进行代码格式化"></a>一、Prettier：配合 git 进行代码格式化</h2><p>Prettier是一个常用的代码格式化的工具，在个人开发当中一般会在代码编辑器（如：vscode）安装相应的插件，然后设置在保存时进行代码格式化。而在多人协作的项目当中，这里推荐在 git 提交代码的时候自动格式化。</p>
+<p><a target="_blank" rel="noopener" href="https://prettier.io/docs/en/install.html">Prettier的官网</a>有详细的介绍，在这里简单的实践一下。</p>
+<p>以一个简单的 react 项目作为例子，首先创建一个初始项目</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npx create-react-app test-prettier</span><br></pre></td></tr></table></figure>
+
+<p>然后添加依赖</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn add --dev --exact prettier</span><br></pre></td></tr></table></figure>
+
+<p>添加配置文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> &#123;&#125;&gt; .prettierrc.json</span><br></pre></td></tr></table></figure>
+
+<p>添加 ignore 文件，并添加初始的忽略文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">touch</span> .prettierignore </span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># Ignore artifacts:</span><br><span class="line">build</span><br><span class="line">coverage</span><br></pre></td></tr></table></figure>
+
+<p>然后我们把 App.js 的代码格式改得混乱一点</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> logo <span class="keyword">from</span> <span class="string">&#x27;./logo.svg&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="string">&#x27;./App.css&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">App</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">div</span> </span></span></span><br><span class="line"><span class="tag"><span class="language-xml">    <span class="attr">className</span>=<span class="string">&quot;App&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">header</span> <span class="attr">className</span>=<span class="string">&quot;App-header&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&#123;</span> <span class="attr">logo</span>&#125; <span class="attr">className</span>=<span class="string">&quot;App-logo&quot;</span> <span class="attr">alt</span>=<span class="string">&quot;logo&quot;</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">          Edit <span class="tag">&lt;<span class="name">code</span>&gt;</span>src/App.js<span class="tag">&lt;/<span class="name">code</span>&gt;</span> and save to reload.</span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">a</span>  <span class="attr">className</span>=<span class="string">&quot;App-link&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">href</span>=<span class="string">&quot;https://reactjs.org&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">target</span>=<span class="string">&quot;_blank&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">rel</span>=<span class="string">&quot;noopener noreferrer&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        &gt;</span></span></span><br><span class="line"><span class="language-xml">          Learn React</span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">a</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;/<span class="name">header</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="title class_">App</span>;</span><br></pre></td></tr></table></figure>
+
+<p>执行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npx prettier --write .</span><br></pre></td></tr></table></figure>
+
+<p>可以发现代码已经成功格式化了，但是在多人协作的项目当中更好的做法是自动化去做，因此借助 git hook 来实现提交代码的时候自动格式化。</p>
+<p>首先执行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npx mrm@2 lint-staged</span><br></pre></td></tr></table></figure>
+
+<p>安装之后发现，package.json 添加了一个 <code>lint-staged</code> 它会对 js、css、md 文件进行格式化，在 typeScript 或者 vue 等项目也可以添加相应的文件后缀名。然后需要在 git commit 之前进行格式化，我们还需要在 package.json 添加一个配置</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">&quot;lint-staged&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;*.&#123;js,css,md&#125;&quot;</span><span class="punctuation">:</span> <span class="string">&quot;prettier --write&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line"><span class="attr">&quot;husky&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;hooks&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;pre-commit&quot;</span><span class="punctuation">:</span> <span class="string">&quot;lint-staged&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>在 pre-commit 的时候执行格式化。现在我们再次将代码格式弄乱，之后执行 git commit 就发现代码自动格式化成功了。</p>
+<p>如果需要和 eslint 一同工作的话还需要安装 eslint-config-prettier 插件，这样 prettier 就可以和 eslint 共同工作了。</p>
+<h2 id="二、commitlint：代码提交信息格式化"><a href="#二、commitlint：代码提交信息格式化" class="headerlink" title="二、commitlint：代码提交信息格式化"></a>二、commitlint：代码提交信息格式化</h2><p>在多人协作的项目当中总有一些同事会在 commit message 中随便写写，或者大家使用不同的格式，会导致提交信息造成混乱，commitlint 就可以很好地解决这个问题。</p>
+<p>它可以订立一个提交 commit message 的规范，当某为协作者提交的信息不符合这个规范就会导致提交失败。</p>
+<p>还是用上文的项目做例子，首先安装依赖</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn add @commitlint/&#123;config-conventional,cli&#125; -D</span><br></pre></td></tr></table></figure>
+
+<p>然后按照文档配置一下</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&quot;module.exports = &#123;extends: [&#x27;@commitlint/config-conventional&#x27;]&#125;&quot;</span> &gt; commitlint.config.js</span><br></pre></td></tr></table></figure>
+
+<p>添加 hook</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> &lt;&lt;<span class="string">EEE &gt; .husky/commit-msg</span></span><br><span class="line"><span class="string">#!/bin/sh</span></span><br><span class="line"><span class="string">. &quot;\$(dirname &quot;\$0&quot;)/_/husky.sh&quot;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">npx --no -- commitlint --edit &quot;\$&#123;1&#125;&quot;</span></span><br><span class="line"><span class="string">EEE</span></span><br></pre></td></tr></table></figure>
+
+<p>在 package.json 添加 husky 配置</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">&quot;husky&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;hooks&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;pre-commit&quot;</span><span class="punctuation">:</span> <span class="string">&quot;lint-staged&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;commit-msg&quot;</span><span class="punctuation">:</span> <span class="string">&quot;commitlint -E HUSKY_GIT_PARAMS&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>现在随便写一个 commit message 提交，发现会报错，然后尝试一下符合格式的 commit message</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git commit -m <span class="string">&quot;fix:add config&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>发现可以正常提交了。</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/其他/">其他</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/工程化/">工程化</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2022 acwong
+    
+  </p>
+</footer>
+    
+    
+  </div>
+</div>
+</body>
+</html>

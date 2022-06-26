@@ -56,6 +56,9 @@
         <li><a href="/tags">Tags</a></li>
         
       
+        <li><a href="/categories">Categories</a></li>
+        
+      
         
         <li><a href="mailto:acwong@yeah.net">Email</a></li>
       
@@ -65,6 +68,114 @@
 
     <main class="site-main posts-loop">
     
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2022/06/26/some-tools-for-project-engineering/"><span>一些项目工程化的小工具</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2022/06/26/some-tools-for-project-engineering/" rel="bookmark">
+        <time class="entry-date published" datetime="2022-06-26T10:58:46.000Z">
+          2022-06-26
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="一、Prettier：配合-git-进行代码格式化"><a href="#一、Prettier：配合-git-进行代码格式化" class="headerlink" title="一、Prettier：配合 git 进行代码格式化"></a>一、Prettier：配合 git 进行代码格式化</h2><p>Prettier是一个常用的代码格式化的工具，在个人开发当中一般会在代码编辑器（如：vscode）安装相应的插件，然后设置在保存时进行代码格式化。而在多人协作的项目当中，这里推荐在 git 提交代码的时候自动格式化。</p>
+<p><a target="_blank" rel="noopener" href="https://prettier.io/docs/en/install.html">Prettier的官网</a>有详细的介绍，在这里简单的实践一下。</p>
+<p>以一个简单的 react 项目作为例子，首先创建一个初始项目</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npx create-react-app test-prettier</span><br></pre></td></tr></table></figure>
+
+<p>然后添加依赖</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn add --dev --exact prettier</span><br></pre></td></tr></table></figure>
+
+<p>添加配置文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> &#123;&#125;&gt; .prettierrc.json</span><br></pre></td></tr></table></figure>
+
+<p>添加 ignore 文件，并添加初始的忽略文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">touch</span> .prettierignore </span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># Ignore artifacts:</span><br><span class="line">build</span><br><span class="line">coverage</span><br></pre></td></tr></table></figure>
+
+<p>然后我们把 App.js 的代码格式改得混乱一点</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> logo <span class="keyword">from</span> <span class="string">&#x27;./logo.svg&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="string">&#x27;./App.css&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">App</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">div</span> </span></span></span><br><span class="line"><span class="tag"><span class="language-xml">    <span class="attr">className</span>=<span class="string">&quot;App&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">header</span> <span class="attr">className</span>=<span class="string">&quot;App-header&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&#123;</span> <span class="attr">logo</span>&#125; <span class="attr">className</span>=<span class="string">&quot;App-logo&quot;</span> <span class="attr">alt</span>=<span class="string">&quot;logo&quot;</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">          Edit <span class="tag">&lt;<span class="name">code</span>&gt;</span>src/App.js<span class="tag">&lt;/<span class="name">code</span>&gt;</span> and save to reload.</span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">a</span>  <span class="attr">className</span>=<span class="string">&quot;App-link&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">href</span>=<span class="string">&quot;https://reactjs.org&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">target</span>=<span class="string">&quot;_blank&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">rel</span>=<span class="string">&quot;noopener noreferrer&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        &gt;</span></span></span><br><span class="line"><span class="language-xml">          Learn React</span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">a</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;/<span class="name">header</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="title class_">App</span>;</span><br></pre></td></tr></table></figure>
+
+<p>执行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npx prettier --write .</span><br></pre></td></tr></table></figure>
+
+<p>可以发现代码已经成功格式化了，但是在多人协作的项目当中更好的做法是自动化去做，因此借助 git hook 来实现提交代码的时候自动格式化。</p>
+<p>首先执行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npx mrm@2 lint-staged</span><br></pre></td></tr></table></figure>
+
+<p>安装之后发现，package.json 添加了一个 <code>lint-staged</code> 它会对 js、css、md 文件进行格式化，在 typeScript 或者 vue 等项目也可以添加相应的文件后缀名。然后需要在 git commit 之前进行格式化，我们还需要在 package.json 添加一个配置</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">&quot;lint-staged&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;*.&#123;js,css,md&#125;&quot;</span><span class="punctuation">:</span> <span class="string">&quot;prettier --write&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line"><span class="attr">&quot;husky&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;hooks&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;pre-commit&quot;</span><span class="punctuation">:</span> <span class="string">&quot;lint-staged&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>在 pre-commit 的时候执行格式化。现在我们再次将代码格式弄乱，之后执行 git commit 就发现代码自动格式化成功了。</p>
+<p>如果需要和 eslint 一同工作的话还需要安装 eslint-config-prettier 插件，这样 prettier 就可以和 eslint 共同工作了。</p>
+<h2 id="二、commitlint：代码提交信息格式化"><a href="#二、commitlint：代码提交信息格式化" class="headerlink" title="二、commitlint：代码提交信息格式化"></a>二、commitlint：代码提交信息格式化</h2><p>在多人协作的项目当中总有一些同事会在 commit message 中随便写写，或者大家使用不同的格式，会导致提交信息造成混乱，commitlint 就可以很好地解决这个问题。</p>
+<p>它可以订立一个提交 commit message 的规范，当某为协作者提交的信息不符合这个规范就会导致提交失败。</p>
+<p>还是用上文的项目做例子，首先安装依赖</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn add @commitlint/&#123;config-conventional,cli&#125; -D</span><br></pre></td></tr></table></figure>
+
+<p>然后按照文档配置一下</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&quot;module.exports = &#123;extends: [&#x27;@commitlint/config-conventional&#x27;]&#125;&quot;</span> &gt; commitlint.config.js</span><br></pre></td></tr></table></figure>
+
+<p>添加 hook</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> &lt;&lt;<span class="string">EEE &gt; .husky/commit-msg</span></span><br><span class="line"><span class="string">#!/bin/sh</span></span><br><span class="line"><span class="string">. &quot;\$(dirname &quot;\$0&quot;)/_/husky.sh&quot;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">npx --no -- commitlint --edit &quot;\$&#123;1&#125;&quot;</span></span><br><span class="line"><span class="string">EEE</span></span><br></pre></td></tr></table></figure>
+
+<p>在 package.json 添加 husky 配置</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">&quot;husky&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;hooks&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;pre-commit&quot;</span><span class="punctuation">:</span> <span class="string">&quot;lint-staged&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;commit-msg&quot;</span><span class="punctuation">:</span> <span class="string">&quot;commitlint -E HUSKY_GIT_PARAMS&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>现在随便写一个 commit message 提交，发现会报错，然后尝试一下符合格式的 commit message</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git commit -m <span class="string">&quot;fix:add config&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>发现可以正常提交了。</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/其他/">其他</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/工程化/">工程化</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
   <article>
 
   
@@ -357,123 +468,6 @@
 <p><code>writable</code> 代表是否可以修改该属性的值，若为 <code>false</code> 则不能修改。</p>
 <p><code>configurable</code> 代表是否可以使用 <code>defineProperty</code> 来修改属性描述符。若为 <code>true</code> 还同时会禁止删除该属性。</p>
 <p><code>enumerable</code> 代表该属性是否可枚举，例如使用 <code>for..in</code> 循环时，就不会出现 <code>enumerable</code> 为 <code>false</code> 的属性。</p>
-<p><strong>参考</strong></p>
-<p><a target="_blank" rel="noopener" href="https://book.douban.com/subject/26351021/">你不知道的JavaScript（上卷）</a></p>
-
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/学习笔记/">学习笔记</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/JavaScript/">JavaScript</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2018/07/23/javascript-this/"><span>JavaScript 中 this 绑定的对象</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2018/07/23/javascript-this/" rel="bookmark">
-        <time class="entry-date published" datetime="2018-07-23T12:41:53.000Z">
-          2018-07-23
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <p>在 JavaScript 工程师的面试当中， <code>this</code> 的绑定常常是考察的重点，现在就来总结一下如何判断 <code>this</code> 所绑定的对象。</p>
-<p>在开始之前，首先要清楚一点是 ** 函数中的 <code>this</code> 是函数调用的时候被绑定的<strong>。因此，判断  <code>this</code> 所绑定的对象也就是判断函数</strong>调用的位置**。</p>
-<h2 id="new-绑定"><a href="#new-绑定" class="headerlink" title="new 绑定"></a>new 绑定</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">foo</span>(<span class="params">a</span>) &#123;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">a</span> = a</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> bar = <span class="keyword">new</span> <span class="title function_">foo</span>(<span class="number">2</span>)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(bar.<span class="property">a</span>) <span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
-
-<p>在有 <code>class</code> 关键字之前，通常会使用 <code>new</code> 关键字配合构造函数来实现面向对象编程。 使用 <code>new</code> 调用构造函数时，会执行下面的操作：</p>
-<ol>
-<li>创建一个新的对象</li>
-<li>新对象执行 [[Prototype]] 连接</li>
-<li>新对象会绑定到函数调用的 <code>this</code></li>
-<li>如果函数没有返回其他对象，那么 <code>new</code> 表达式中的函数调用会自动返回该新对象</li>
-</ol>
-<p>因此当使用 <code>new</code> 关键字构造新对象的时候，<code>this</code> 会被绑定到新创建的对象上面。</p>
-<h2 id="显式绑定"><a href="#显式绑定" class="headerlink" title="显式绑定"></a>显式绑定</h2><h3 id="call-和-apply"><a href="#call-和-apply" class="headerlink" title="call 和 apply"></a>call 和 apply</h3><p> <code>call</code> 和 <code>apply</code> 函数的第一个参数是一个对象，可以为当前调用的函数 强制指定一个 <code>this</code> 的绑定对象，此时， <code>this</code> 指向绑定的对象。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">foo</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">this</span>.<span class="property">a</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> obj = &#123; <span class="attr">a</span>: <span class="number">2</span> &#125;</span><br><span class="line"></span><br><span class="line">foo.<span class="title function_">call</span>(obj) <span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="bind"><a href="#bind" class="headerlink" title="bind"></a>bind</h3><p><code>bind</code> 是 ES5 提供的一个方法，它 同样会为原始函数绑定一个 <code>this</code> 但不同的是它不会直接调用该函数，而是返回一个新的被包裹之后的函数，之后调用包裹后的函数，函数 <code>this</code> 都会指向新绑定的对象。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">foo</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">this</span>.<span class="property">a</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> obj = &#123; <span class="attr">a</span>: <span class="number">2</span> &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> bar = foo.<span class="title function_">bind</span>(obj)</span><br><span class="line"></span><br><span class="line"><span class="title function_">bar</span>() <span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="上下文参数"><a href="#上下文参数" class="headerlink" title="上下文参数"></a>上下文参数</h3><p>一些 JavaScrip 内置的函数也会提供用于显式绑定的参数，可以手动指定回调函数当中 <code>this</code> 的指向。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">foo</span>(<span class="params">el</span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(el, <span class="variable language_">this</span>.<span class="property">id</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> obj = &#123;</span><br><span class="line">  <span class="attr">id</span>: <span class="string">&#x27;acwong&#x27;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// forEach 第二个参数用于指定回调的 this</span></span><br><span class="line">[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>].<span class="title function_">forEach</span>(foo, obj) <span class="comment">// 1 acwong 2 acwong 3 acwong</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="隐式绑定"><a href="#隐式绑定" class="headerlink" title="隐式绑定"></a>隐式绑定</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">foo</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">this</span>.<span class="property">a</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> obj = &#123;</span><br><span class="line">  <span class="attr">a</span>: <span class="number">2</span>,</span><br><span class="line">  <span class="attr">foo</span>: foo</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">obj.<span class="title function_">foo</span>() <span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
-
-<p>看上方的代码，函数 <code>foo</code> 并非在对象当中定义，而是定义之后当作属性添加到对象当中。但是由于使用 <code>obj</code> 调用，因此 <code>obj</code> 隐性绑定到  <code>foo</code> 上，成为其 <code>this</code> 上下文。</p>
-<p>隐性绑定只与最后一层调用有关。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">foo</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">this</span>.<span class="property">a</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> obj2 = &#123;</span><br><span class="line">  <span class="attr">a</span>: <span class="number">42</span>,</span><br><span class="line">  <span class="attr">foo</span>: foo</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> obj1 = &#123;</span><br><span class="line">  <span class="attr">a</span>: <span class="number">2</span>,</span><br><span class="line">  <span class="attr">obj2</span>: obj2</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">obj1.<span class="property">obj2</span>.<span class="title function_">foo</span>() <span class="comment">// 42</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="隐性丢失"><a href="#隐性丢失" class="headerlink" title="隐性丢失"></a>隐性丢失</h3><p>隐性绑定有一个值得注意的现象——隐性丢失，隐性丢失是指 隐性绑定的函数会丢失对象，变为应用默认绑定，也就是将 <code>this</code> 绑定到全局对象或 <code>undefined</code>（严格模式时）上。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">foo</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">this</span>.<span class="property">a</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> obj = &#123;</span><br><span class="line">  <span class="attr">a</span>: <span class="number">2</span>,</span><br><span class="line">  <span class="attr">foo</span>: foo</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> bar = obj.<span class="property">foo</span> <span class="comment">// 实际上是引用 foo 函数本身</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> a = <span class="string">&#x27;global&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="title function_">bar</span>() <span class="comment">// global</span></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">foo</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">this</span>.<span class="property">a</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">doFoo</span>(<span class="params">fn</span>) &#123;</span><br><span class="line">  <span class="comment">//  传入参数也相当于赋值</span></span><br><span class="line">  <span class="title function_">fn</span>()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> obj = &#123;</span><br><span class="line">  <span class="attr">a</span>: <span class="number">2</span>,</span><br><span class="line">  <span class="attr">foo</span>: foo</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> a = <span class="string">&#x27;global&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="title function_">doFoo</span>(obj.<span class="property">foo</span>) <span class="comment">// &#x27;global&#x27;</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="默认绑定"><a href="#默认绑定" class="headerlink" title="默认绑定"></a>默认绑定</h2><p>当上面规则到不能应用的时候就可以判断为默认绑定，<code>this</code> 会被绑定为全局对象或被绑定为 <code>undefined</code>（ 严格模式下）。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">foo</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">this</span>.<span class="property">a</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> a = <span class="number">2</span></span><br><span class="line"></span><br><span class="line"><span class="title function_">foo</span>() <span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">foo</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="string">&#x27;use strict&#x27;</span></span><br><span class="line"></span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">this</span>.<span class="property">a</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> a = <span class="number">2</span></span><br><span class="line"></span><br><span class="line"><span class="title function_">foo</span>() <span class="comment">// TypeError: this is undefined</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="被忽略的-this-和-箭头函数"><a href="#被忽略的-this-和-箭头函数" class="headerlink" title="被忽略的 this 和 箭头函数"></a>被忽略的 this 和 箭头函数</h2><p>接下来分享两种 比较常见的例外情况。</p>
-<p> <strong>被忽略的  this</strong></p>
-<p>当我们使用 <code>call</code> 和 <code>apply</code> 或者 <code>bind</code> 传入的绑定参数为 <code>null</code> 和 <code>undefined</code> 会被忽略， 取而代之会执行默认绑定。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">foo</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">this</span>.<span class="property">a</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> a = <span class="number">2</span></span><br><span class="line"></span><br><span class="line">foo.<span class="title function_">call</span>(<span class="literal">null</span>) <span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
-
-<p><strong>箭头函数</strong></p>
-<p>ES6 当中新增的箭头函数，不应用上述的四条规则，不为函数绑定 <code>this</code> ,而是根据外层的作用域而定。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">foo</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="built_in">setTimeout</span>(<span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">this</span>.<span class="property">a</span>)</span><br><span class="line">  &#125;, <span class="number">100</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> obj = &#123;</span><br><span class="line">  <span class="attr">a</span>: <span class="number">2</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">foo.<span class="title function_">call</span>(obj) <span class="comment">// undefined</span></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">foo</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">this</span>.<span class="property">a</span>)</span><br><span class="line">  &#125;, <span class="number">100</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> obj = &#123;</span><br><span class="line">  <span class="attr">a</span>: <span class="number">2</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">foo.<span class="title function_">call</span>(obj) <span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>当我们遇到需要判断 <code>this</code> 所绑定对象的 问题时，可以遵循下面列出的规则来逐一判断：</p>
-<ol>
-<li><code>new</code> 关键字调用，绑定到新创建的对象。</li>
-<li><code>call</code>、<code> apply</code>、<code>bind</code> 调用，绑定到参数指定的对象（<code>null</code> 和 <code>undefined</code> 除外）。</li>
-<li>由上下文对象调用，绑定到改上下文。</li>
-<li> 默认绑定，严格模式下为 <code>undefined</code>，否则为全局对象。</li>
-</ol>
-<p>最后要留意例外规则。</p>
 <p><strong>参考</strong></p>
 <p><a target="_blank" rel="noopener" href="https://book.douban.com/subject/26351021/">你不知道的JavaScript（上卷）</a></p>
 
